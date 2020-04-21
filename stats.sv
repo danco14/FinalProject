@@ -44,26 +44,16 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     85,
     100,
     // flamethrower, thunder_punch, air_slash, dragon_claw,
-    // Venusaur
-    grass,
-    poison,
-    80,
-    82,
-    83,
+    // Dragonite
+    dragon,
+    flying,
+    91,
+    134,
+    95,
     100,
     100,
     80,
-    // energy_ball, sludge_bomb, earthquake, petal_dance,
-    // Pikachu
-    electric,
-    none,
-    35,
-    55,
-    40,
-    50,
-    50,
-    90,
-    // thunderbolt, slam, surf, thunder,
+    // dragon_pulse, rock_slide, blizzard, thunder_punch
     // Gengar
     ghost,
     poison,
@@ -84,6 +74,26 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     100,
     100,
     // psychic_move, bug_buzz, flash_cannon, play_rough,
+    // Pikachu
+    electric,
+    none,
+    35,
+    55,
+    40,
+    50,
+    50,
+    90,
+    // thunderbolt, slam, surf, thunder,
+    // Venusaur
+    grass,
+    poison,
+    80,
+    82,
+    83,
+    100,
+    100,
+    80,
+    // energy_ball, sludge_bomb, earthquake, petal_dance,
     // Weezing
     poison,
     none,
@@ -94,16 +104,6 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     70,
     60,
     // sludge_bomb, shadow_ball, fire_blast, thunder
-    // Dragonite
-    dragon,
-    flying,
-    91,
-    134,
-    95,
-    100,
-    100,
-    80,
-    // dragon_pulse, rock_slide, blizzard, thunder_punch
   };
 
   assign pokemon_data = Pokemon[pokemon_addr];
