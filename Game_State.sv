@@ -49,9 +49,12 @@ module game_state(input logic Clk, input logic Reset,
   parameter [7:0] A = 8'h04;
   parameter [7:0] S = 8'h16;
   parameter [7:0] D = 8'h07;
-  parameter [7:0] ENTER = 8'd52;
+  parameter [7:0] ENTER = 8'h28;
 
   logic done_select;
+  logic done_select_in = 1'b0;
+  logic press;
+  logic press_in = 1'b0;
   logic [1:0][2:0] my_team; //choose 3 from 8, with repeats
   logic [1:0][2:0] my_team_in;
   logic [1:0] num_chosen;
@@ -79,13 +82,15 @@ module game_state(input logic Clk, input logic Reset,
       State <= Next_state;
   		cur_choice <= cur_choice_in;
       num_chosen <= num_chosen_in;
-      my_team = my_team_in;
+      my_team <= my_team_in;
+		done_select <= done_select_in;
+		press <= press_in;
 	  end
   end
 
   always_comb
   begin
-    EXPORT_DATA = cur_choice;
+    EXPORT_DATA = num_chosen;
     Next_state = State;
 	  is_background = 1'b1;
 	  poke_sprite_addr = 19'b0;
@@ -114,7 +119,7 @@ module game_state(input logic Clk, input logic Reset,
 //       else
          Next_state = End;
       End:
-        if(keycode)
+        if(keycode == W)
           Next_state = Start;
         else
           EXPORT_DATA = 4'hF;
@@ -122,20 +127,25 @@ module game_state(input logic Clk, input logic Reset,
 
 	  cur_choice_in = cur_choice;
     num_chosen_in = num_chosen;
-    my_team_in = my_team
+    my_team_in = my_team;
+	 done_select_in = done_select;
+	 press_in = press;
 
     case(State)
       Start:
       begin
+		if(frame_clk_rising_edge)
+    		begin
         if(num_chosen == 2'b11)begin
-          done_select = 1'b1;
+          done_select_in = 1'b1;
         end
-        if(keycode == ENTER)begin
+        if(keycode == ENTER && press == 1'b0)begin
           my_team_in[int'(num_chosen)] = cur_choice;
           num_chosen_in = num_chosen + 1'b1;
+			 press_in = 1'b1;
         end
-    		if(frame_clk_rising_edge)
-    		begin
+		  else if(keycode != ENTER)
+			press_in = 1'b0;
             if(keycode==W)begin
               if(cur_choice<=3'b011)begin
                 cur_choice_in = cur_choice + 3'b100;
@@ -221,7 +231,11 @@ module game_state(input logic Clk, input logic Reset,
       Select_Move: ;
       Player_1: ;
       Player_2: ;
-      End: ;
+      End:
+		begin
+			num_chosen_in = 2'b0;
+			done_select_in = 1'b0;
+		end
     endcase
 
   end
