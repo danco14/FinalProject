@@ -1,4 +1,5 @@
-module color_palette(input              is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
+module color_palette(input  is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
+                     input is_chooser,
                      input [4:0] palette_idx,
                      output logic [7:0] VGA_R, VGA_G, VGA_B);
 
@@ -10,7 +11,14 @@ module color_palette(input              is_background,            // Whether cur
    assign VGA_B = Blue;
    always_comb
    begin
-       if (is_background == 1'b1)
+       if (is_choose == 1'b1)
+       begin
+           // black box for choosing
+           Red = 8'h00;
+           Green = 8'h00;
+           Blue = 8'h00;
+       end
+       else if (is_background == 1'b1)
        begin
            // White background
            Red = 8'hff;

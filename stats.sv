@@ -1,23 +1,24 @@
 module stats(input pokemon_addr, input move_addr, output pokemon_data, output move_data);
-  parameter none = 0;
-  parameter water = 1;
-  parameter fire = 2;
-  parameter grass = 3;
-  parameter flying = 4;
+
+  parameter normal = 0;
+  parameter fighting = 1;
+  parameter flying = 2;
+  parameter poison = 3;
+  parameter ground = 4;
   parameter rock = 5;
-  parameter groun = 6;
-  parameter ice = 7;
-  parameter ghost = 8;
-  parameter steel = 9;
-  parameter fighting = 10;
-  parameter bug = 11;
+  parameter bug = 6;
+  parameter ghost = 7;
+  parameter steel = 8;
+  parameter fire = 9;
+  parameter water = 10;
+  parameter grass = 11;
   parameter electric = 12;
-  parameter fairy = 13;
-  parameter poison = 14;
-  parameter psychic = 15;
+  parameter psychic = 13;
+  parameter ice = 14;
+  parameter dragon = 15;
   parameter dark = 16;
-  parameter normal = 17;
-  parameter dragon = 18;
+  parameter fairy = 17;
+  parameter none = 18;
 
   parameter physical = 1;
   parameter special = 0;
@@ -26,11 +27,12 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     // Blastoise
     water,
     none,
-    79, // Attack
-    103, // Defense
-    135, // Sp. Atk
-    115, // Sp. Def
-    78, // Speed
+    79,  // HP
+    83,  // Attack
+    100, // Defense
+    85,  // Sp. Atk
+    105, // Sp. Def
+    78,  // Speed
     // hydro_pump, crunch, ice_beam, aura_sphere,
     // Charizard
     fire,
