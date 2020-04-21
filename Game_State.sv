@@ -1,9 +1,11 @@
 module game_state(input logic Clk, input logic Reset,
                   input logic [9:0] DrawX, input logic [9:0] DrawY,
                   input logic [7:0] keycode,
+						input frame_clk,
                   output logic [4:0] palette_idx,
                   output logic is_background,
-                  output logic is_chooser);
+                  output logic is_chooser,
+						output logic [3:0] EXPORT_DATA);
 
   enum logic [20:0] {Start, Roam, Select_Move, Player_1, Player_2, End} State, Next_state;
 
@@ -53,6 +55,13 @@ module game_state(input logic Clk, input logic Reset,
   logic [1:0][2:0] my_team; //choose 3 from 8, with repeats
   logic [1:0] num_chosen;
   logic [2:0] cur_choice;
+  logic [2:0] cur_choice_in = 3'b0;
+  
+  logic frame_clk_delayed, frame_clk_rising_edge;
+    always_ff @ (posedge Clk) begin
+        frame_clk_delayed <= frame_clk;
+        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
+    end
 
   always_ff @ (posedge Clk)
   begin
@@ -64,7 +73,10 @@ module game_state(input logic Clk, input logic Reset,
       cur_choice <= 3'b0;
 	end
     else
+	 begin
       State <= Next_state;
+		cur_choice <= cur_choice_in;
+	 end
   end
 
   always_comb
@@ -99,49 +111,55 @@ module game_state(input logic Clk, input logic Reset,
         if(keycode)
           Next_state = Start;
     endcase
+	 
+	 cur_choice_in = cur_choice;
 
     case(State)
       Start: begin
-        if(num_chosen == 2'b11)begin
-          done_select <= 1'b1;
-        end
-        if(keycode==ENTER)begin
-          my_team[num_chosen] = cur_choice;
-          num_chosen = num_chosen + 1'b1;
-        end
-        else if(keycode==W)begin
+//        if(num_chosen == 2'b11)begin
+//          done_select = 1'b1;
+//        end
+//        if(keycode==ENTER)begin
+//          my_team[num_chosen] = cur_choice;
+//          num_chosen = num_chosen + 1'b1;
+//        end
+		if(frame_clk_rising_edge)
+		begin
+        if(keycode==W)begin
           if(cur_choice<=3'b011)begin
-            cur_choice = cur_choice + 3'b100;
+            cur_choice_in = cur_choice + 3'b100;
           end
           else begin
-            cur_choice = cur_choice - 3'b100;
+            cur_choice_in = cur_choice - 3'b100;
           end
         end
         else if(keycode==A)begin
-          if(cur_choice==3'b000)begin
-            cur_choice = 3'b111;
+          if(cur_choice==3'b000 || cur_choice == 3'b100)begin
+            cur_choice_in = cur_choice + 3'b011;
           end
           else begin
-            cur_choice = cur_choice - 3'b001;
+            cur_choice_in = cur_choice - 3'b001;
           end
         end
         else if(keycode==S)begin
           if(cur_choice>=3'b100)begin
-            cur_choice = cur_choice - 3'b100;
+            cur_choice_in = cur_choice - 3'b100;
           end
           else begin
-            cur_choice < cur_choice + 3'b100;
+            cur_choice_in = cur_choice + 3'b100;
           end
         end
         else if(keycode==D)begin
-          if(cur_choice==3'b111)begin
-            cur_choice = 3'b000;
+          if(cur_choice==3'b111 || cur_choice == 3'b011)begin
+            cur_choice_in = cur_choice - 3'b011;
           end
           else begin
-            cur_choice = cur_choice + 3'b001;
-          end
+            cur_choice_in = cur_choice + 3'b001;
+			 end
         end
-        if (cur_choice<=2'd3)begin
+		 end
+		  
+        if (cur_choice<=3'b011)begin
 	if( ( (DrawX >= (box_x + int'(cur_choice)*7'd76)) && (DrawX < (box_width + box_x + int'(cur_choice)*7'd76)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||
 	    ( (DrawY>=box_y) && (DrawY<(box_y+box_height)) && ((DrawX == (box_x + int'(cur_choice)*7'd76)) || (DrawX == (box_width + box_x + int'(cur_choice)*7'd76))))
 	  )begin
@@ -194,6 +212,8 @@ module game_state(input logic Clk, input logic Reset,
       Player_2: ;
       End: ;
     endcase
+	 
+	 EXPORT_DATA = cur_choice;
   end
 
 endmodule
