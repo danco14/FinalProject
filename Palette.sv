@@ -11,7 +11,7 @@ module color_palette(input  is_background,            // Whether current pixel b
    assign VGA_B = Blue;
    always_comb
    begin
-       if (is_choose == 1'b1)
+       if (is_chooser == 1'b1)
        begin
            // black box for choosing
            Red = 8'h00;

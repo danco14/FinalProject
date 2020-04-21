@@ -3,8 +3,7 @@ module game_state(input logic Clk, input logic Reset,
                   input logic [7:0] keycode,
                   output logic [4:0] palette_idx,
                   output logic is_background,
-                  output logic is_chooser,
-                  output logic is_battle);
+                  output logic is_chooser);
 
   enum logic [20:0] {Start, Roam, Select_Move, Player_1, Player_2, End} State, Next_state;
 
@@ -58,10 +57,12 @@ module game_state(input logic Clk, input logic Reset,
   always_ff @ (posedge Clk)
   begin
     if(Reset)
+	 begin
       State <= Start;
       num_chosen <= 2'b0;
       done_select <= 1'b0;
       cur_choice <= 3'b0;
+	end
     else
       State <= Next_state;
       if(State==Start)begin
@@ -114,7 +115,6 @@ module game_state(input logic Clk, input logic Reset,
   always_comb
   begin
     Next_state = State;
-    is_battle = 1'b1;
 	 is_background = 1'b1;
 	 poke_sprite_addr = 19'b0;
    is_chooser = 1'b0;
@@ -126,19 +126,19 @@ module game_state(input logic Clk, input logic Reset,
         //if()
           Next_state = Select_Move;
       Select_Move:
-        if()
-          Next_state = Player_1;
-        else
+//        if()
+//          Next_state = Player_1;
+//        else
           Next_state = Player_2;
       Player_1:
-        if()
-          Next_state = End;
-        else
+//        if()
+//          Next_state = End;
+//        else
           Next_state = Player_2;
       Player_2:
-       if()
-          Next_state = Roam;
-       else
+//       if()
+//          Next_state = Roam;
+//       else
          Next_state = Player_1;
       End:
         if(keycode)
@@ -195,7 +195,7 @@ module game_state(input logic Clk, input logic Reset,
         end
       end
       Roam: ;
-      Select_Move: is_battle = 1'b1;
+      Select_Move: ;
       Player_1: ;
       Player_2: ;
       End: ;

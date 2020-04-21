@@ -147,7 +147,7 @@ module pokemon( input               CLOCK_50,
 		// 								  .VGA_B(VGA_B)
 	 // );
 
-   battle battle(.Clk(Clk), .Reset(Reset_h));
+//   battle battle(.Clk(Clk), .Reset(Reset_h));
 
     // Display keycode on hex display
     HexDriver hex_inst_0 (keycode[3:0], HEX0);
