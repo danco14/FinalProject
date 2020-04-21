@@ -107,7 +107,7 @@ module pokemon( input               CLOCK_50,
 	 logic is_ball;
    logic [4:0] palette_idx;
 logic is_background;
-   game_state game(.Clk(Clk), .Reset(Reset_h), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode), .palette_idx(.palette_idx),.is_background(is_background));
+   game_state game(.Clk(Clk), .Reset(Reset_h), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode), .palette_idx(palette_idx), .is_background(is_background));
 
     // Use PLL to generate the 25MHZ VGA_CLK.
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
@@ -122,10 +122,10 @@ logic is_background;
 														 .DrawX(DrawX),
 														 .DrawY(DrawY)
 	 );
-   color_palette palette(.is_background(is_background)
+   color_palette palette(.is_background(is_background),
                     .palette_idx(palette_idx),
-   								  .DrawX(DrawX),
-   								  .DrawY(DrawY),
+//   								  .DrawX(DrawX),
+//   								  .DrawY(DrawY),
    								  .VGA_R(VGA_R),
    								  .VGA_G(VGA_G),
    								  .VGA_B(VGA_B));

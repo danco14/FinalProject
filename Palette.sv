@@ -110,6 +110,12 @@ case(palette_idx)
               Green = 8'h3a;
               Blue = 8'h73;
             end
+				default:
+				begin
+					Red = 8'hff;
+					Green = 8'hff;
+					Blue = 8'hff;
+				end
           endcase
        end
    end

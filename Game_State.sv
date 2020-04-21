@@ -1,7 +1,7 @@
 module game_state(input logic Clk, input logic Reset,
                   input logic [9:0] DrawX, input logic [9:0] DrawY,
                   input logic [7:0] keycode,
-                  output logic [4:0] palette_idx
+                  output logic [4:0] palette_idx,
                   output logic is_background);
 
   enum logic [20:0] {Start, Roam, Player_1, Player_2, End} State, Next_state;
@@ -38,7 +38,7 @@ module game_state(input logic Clk, input logic Reset,
 parameter [7:0] total_width = 8'd224;
 
   logic done_select;
-logic is_background;
+//logic is_background_t;
 
   always_ff @ (posedge Clk)
   begin
@@ -51,6 +51,9 @@ logic is_background;
   always_comb
   begin
     Next_state = State;
+	 is_background = 1'b1;
+	 poke_sprite_addr = 19'b0;
+    done_select = 1'b0; //TEMPORARY
 
     unique case(State)
       Start:
@@ -58,26 +61,24 @@ logic is_background;
         if(keycode && done_select && 1'b0) // Press any key to continue after selecting team
           Next_state = Roam;
       Roam:
-        if()
+        //if()
           Next_state = Player_1;
       Player_1:
-        if()
+        //if()
           Next_state = Player_2;
-        else
-          Next_state = End;
+//        else
+//          Next_state = End;
       Player_2:
-        if()
+//        if()
           Next_state = Player_1;
-        else
-          Next_state = Roam;
+//        else
+//          Next_state = Roam;
       End:
         if(keycode)
-          Next_state = Start
+          Next_state = Start;
     endcase
 
     case(State)
-      is_background = 1'b1;
-      done_select = 1'b0; //TEMPORARY
       Start: begin
 if(DrawX >= poke0_x && DrawX < (poke0_x + width) && DrawY >= poke0_y && DrawY < (poke0_y + height))begin
 poke_sprite_addr =(width) + (DrawX - poke0_x) + (total_width* (DrawY - poke0_y));
@@ -112,10 +113,10 @@ poke_sprite_addr =(width) + (DrawX - poke0_x) + (total_width* (DrawY - poke0_y))
           is_background = 1'b0;
         end
       end
-      Roam:
-      Player_1:
-      Player_2:
-      End:
+      Roam: ;
+      Player_1: ;
+      Player_2: ;
+      End: ;
     endcase
   end
 
