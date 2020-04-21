@@ -65,51 +65,6 @@ module game_state(input logic Clk, input logic Reset,
 	end
     else
       State <= Next_state;
-      if(State==Start)begin
-        if(keycode==ENTER)begin
-          my_team[num_chosen] <= cur_choice;
-          num_chosen <= num_chosen + 1'b1;
-          if(num_chosen == 2'b11)begin
-            done_select <= 1'b1;
-          end
-        end
-        else if(keycode==W)begin
-          if(cur_choice<=3'b011)begin
-            cur_choice <= cur_choice + 3'b100;
-          end
-          else begin
-            cur_choice <= cur_choice - 3'b100;
-          end
-        end
-        else if(keycode==A)begin
-          if(cur_choice==3'b000)begin
-            cur_choice <= 3'b111;
-          end
-          else begin
-            cur_choice <= cur_choice - 3'b001;
-          end
-        end
-        else if(keycode==S)begin
-          if(cur_choice>=3'b100)begin
-            cur_choice <= cur_choice - 3'b100;
-          end
-          else begin
-            cur_choice <= cur_choice + 3'b100;
-          end
-        end
-        else if(keycode==D)begin
-          if(cur_choice==3'b111)begin
-            cur_choice <= 3'b000;
-          end
-          else begin
-            cur_choice <= cur_choice + 3'b001;
-          end
-        end
-        else begin
-          num_chosen <= num_chosen;
-          cur_choice <= cur_choice;
-        end
-      end
   end
 
   always_comb
@@ -147,6 +102,45 @@ module game_state(input logic Clk, input logic Reset,
 
     case(State)
       Start: begin
+        if(num_chosen == 2'b11)begin
+          done_select <= 1'b1;
+        end
+        if(keycode==ENTER)begin
+          my_team[num_chosen] = cur_choice;
+          num_chosen = num_chosen + 1'b1;
+        end
+        else if(keycode==W)begin
+          if(cur_choice<=3'b011)begin
+            cur_choice = cur_choice + 3'b100;
+          end
+          else begin
+            cur_choice = cur_choice - 3'b100;
+          end
+        end
+        else if(keycode==A)begin
+          if(cur_choice==3'b000)begin
+            cur_choice = 3'b111;
+          end
+          else begin
+            cur_choice = cur_choice - 3'b001;
+          end
+        end
+        else if(keycode==S)begin
+          if(cur_choice>=3'b100)begin
+            cur_choice = cur_choice - 3'b100;
+          end
+          else begin
+            cur_choice < cur_choice + 3'b100;
+          end
+        end
+        else if(keycode==D)begin
+          if(cur_choice==3'b111)begin
+            cur_choice = 3'b000;
+          end
+          else begin
+            cur_choice = cur_choice + 3'b001;
+          end
+        end
         if (cur_choice<=2'd3)begin
 	if( ( (DrawX >= (box_x + int'(cur_choice)*7'd76)) && (DrawX < (box_width + box_x + int'(cur_choice)*7'd76)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||
 	    ( (DrawY>=box_y) && (DrawY<(box_y+box_height)) && ((DrawX == (box_x + int'(cur_choice)*7'd76)) || (DrawX == (box_width + box_x + int'(cur_choice)*7'd76))))
