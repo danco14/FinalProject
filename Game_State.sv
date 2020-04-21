@@ -148,19 +148,19 @@ module game_state(input logic Clk, input logic Reset,
     case(State)
       Start: begin
         if (cur_choice<=2'd3)begin
-          if( ( (DrawX >= (box_x + int'(cur_choice)*box_width)) && (DrawX < (box_width + box_x + int'(cur_choice)*box_width)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||
-              ( (DrawY>=box_y) && (DrawY<(box_y+box_height)) && ((DrawX == (box_x + int'(cur_choice)*box_width)) || (DrawX == (box_width + box_x + int'(cur_choice)*box_width))))
-            )begin
-              is_chooser = 1'b1;
-          end
-        end
-        else begin
-          if( ( (DrawX >= (box_x + (int'(cur_choice)-3'd4)*box_width)) && (DrawX < (box_width + box_x + (int'(cur_choice)-3'd4)*box_width)) && (DrawY == (box_y+7'd76) || (DrawY == (7'd76 + box_y + box_height))))||
-              ( (DrawY>=(box_y+7'd76)) && (DrawY<(box_y+box_height+7'd76)) && ((DrawX == (box_x + (int'(cur_choice)-3'd4)*box_width)) || (DrawX == (box_width + box_x + (int'(cur_choice)-3'd4)*box_width))))
-            )begin
-              is_chooser = 1'b1;
-          end
-        end
+	if( ( (DrawX >= (box_x + int'(cur_choice)*7'd76)) && (DrawX < (box_width + box_x + int'(cur_choice)*7'd76)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||
+	    ( (DrawY>=box_y) && (DrawY<(box_y+box_height)) && ((DrawX == (box_x + int'(cur_choice)*7'd76)) || (DrawX == (box_width + box_x + int'(cur_choice)*7'd76))))
+	  )begin
+	    is_chooser = 1'b1;
+	end
+	end
+	else begin
+	if( ( (DrawX >= (box_x + (int'(cur_choice)-3'd4)*7'd76)) && (DrawX < (box_width + box_x + (int'(cur_choice)-3'd4)*7'd76)) && (DrawY == (box_y+7'd76) || (DrawY == (7'd76 + box_y + box_height))))||
+	    ( (DrawY>=(box_y+7'd76)) && (DrawY<(box_y+box_height+7'd76)) && ((DrawX == (box_x + (int'(cur_choice)-3'd4)*7'd76)) || (DrawX == (box_width + box_x + (int'(cur_choice)-3'd4)*7'd76))))
+	  )begin
+	    is_chooser = 1'b1;
+	end
+	end
         if(DrawX >= poke0_x && DrawX < (poke0_x + width) && DrawY >= poke0_y && DrawY < (poke0_y + height))begin
         poke_sprite_addr =(width) + (DrawX - poke0_x) + (total_width* (DrawY - poke0_y));
           is_background = 1'b0;
