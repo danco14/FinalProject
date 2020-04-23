@@ -5,9 +5,10 @@ module game_state(input logic Clk, input logic Reset,
                   output logic [4:0] palette_idx,
                   output logic is_background,
                   output logic is_chooser,
+                  // output logic is_battle,
                   output logic [3:0] EXPORT_DATA);
 
-  enum logic [20:0] {Start, Roam, Select_Move, Player_1, Player_2, End} State, Next_state;
+  enum logic [20:0] {Start, Roam, Battle, End} State, Next_state;
 
   logic [18:0] poke_sprite_addr;
   pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(palette_idx),.read_address(poke_sprite_addr));
@@ -102,21 +103,12 @@ module game_state(input logic Clk, input logic Reset,
           Next_state = Roam;
       Roam:
         //if()
-          Next_state = Select_Move;
-      Select_Move:
-//        if()
-//          Next_state = Player_1;
-//        else
-          Next_state = Player_1;
-      Player_1:
-//        if()
-//          Next_state = End;
-//        else
-          Next_state = Player_2;
-      Player_2:
-//       if()
-//          Next_state = Roam;
-//       else
+          Next_state = Battle;
+      Battle:
+      // is_battle = 1'b1;
+      // if(win)
+      // Next_state = Roam;
+      // else
          Next_state = End;
       End:
         if(keycode == W)
@@ -228,9 +220,7 @@ module game_state(input logic Clk, input logic Reset,
         end
       end
       Roam: ;
-      Select_Move: ;
-      Player_1: ;
-      Player_2: ;
+      Battle: ;
       End:
 		begin
 			num_chosen_in = 2'b0;
