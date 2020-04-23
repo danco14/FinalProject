@@ -1,4 +1,6 @@
-module text();
+module pokemon_names(input [9:0] DrawX, DrawY,
+                     input [2:0] poke_id,
+                     output [7:0] text_hex);
 
   //hex codes of the pokemon names
   parameter [7:0] blastoise [0:8] = {8'h42, 8'h4c, 8'h41, 8'h53, 8'h54, 8'h4f, 8'h49, 8'h53, 8'h45};

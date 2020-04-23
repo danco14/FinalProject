@@ -132,7 +132,7 @@ module game_state(input logic Clk, input logic Reset,
           done_select_in = 1'b1;
         end
         if(keycode == ENTER && press == 1'b0)begin
-          my_team_in[int'(num_chosen)] = cur_choice;
+          my_team_in[num_chosen] = cur_choice;
           num_chosen_in = num_chosen + 1'b1;
 			 press_in = 1'b1;
         end
