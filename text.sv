@@ -197,21 +197,21 @@ module hp_text(input logic [9:0] DrawX, DrawY,
   always_comb begin
   if(DrawY>=start_y && DrawY < (start_y+height))begin
     if(DrawX>=start_x && DrawX<start_x+width)begin
-      is_usedtext=1'b1;
+      is_hptext=1'b1;
       bit_num = DrawX - start_x;
-      used_hex = 8'h48;
+      hp_hex = 8'h48;
     end
     else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-      is_usedtext=1'b1;
+      is_hptext=1'b1;
       bit_num = DrawX - (start_x+width);
-      used_hex = 8'h50;
+      hp_hex = 8'h50;
     end
     else begin
-      is_usedtext=1'b0;
+      is_hptext=1'b0;
     end
   end
   else begin
-    is_usedtext = 1'b0;
+    is_hptext = 1'b0;
   end
 end
 endmodule
@@ -242,10 +242,16 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
     else begin
       second_hp[0] = 8'h20;
     end
+	 first_hp[1] = ((curHP % 100) / 10) + 8'h30;
+    second_hp[1] = ((maxHP % 100) / 10)+ 8'h30;
     first_hp[2] = (curHP % 10) + 8'h30;
     second_hp[2] = (maxHP % 10) + 8'h30;
-    first_hp[1] = ((curHP - first_hp[2]) / 10)+ 8'h30;
-    second_hp[1] = ((maxHP - second_hp[2]) / 10)+ 8'h30;
+	 if(first_hp[0]==8'h20 && first_hp[1]==8'h30)begin
+		first_hp[1] = 8'h20;
+	 end
+	 else begin
+		first_hp[1] = ((curHP % 100) / 10) + 8'h30;
+	 end
     if(DrawY>=start_y && DrawY < (start_y+height))begin
       if(DrawX>=start_x && DrawX<start_x+width)begin
         hp2_hex = first_hp[0];
@@ -284,6 +290,8 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
       end
       else begin
         is_hp2text=1'b0;
+		  hp2_hex = 8'h30;
+		  bit_num = 3'b0;
       end
     end
     else begin
