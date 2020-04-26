@@ -1,5 +1,9 @@
 module color_palette(input  is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
                      input is_chooser,
+                     input is_start,
+                     input [9:0] DrawX,
+                     input [9:0] DrawY,
+                     input [2:0] cur_choice_id,
                      input [4:0] palette_idx,
                      output logic [7:0] VGA_R, VGA_G, VGA_B);
 
@@ -9,14 +13,32 @@ module color_palette(input  is_background,            // Whether current pixel b
    assign VGA_R = Red;
    assign VGA_G = Green;
    assign VGA_B = Blue;
+
+   logic is_sname;
+   logic [2:0] bit_num;
+   logic [7:0] sname_hex;
+   logic [10:0] font_addr;
+   logic [7:0] font_data;
+   poke_names pname(.DrawX(DrawX), .DrawY(DrawY), .start_x(160), .start_y(210),
+                    .is_sname(is_sname), .poke_id(cur_choice_id), .bit_num(bit_num), .sname_hex(sname_hex));
+   font_rom f_rom(.addr(font_addr),.data(font_data));
    always_comb
    begin
-       if (is_chooser == 1'b1)
+       if (is_start && is_chooser == 1'b1)
        begin
            // black box for choosing
            Red = 8'h00;
            Green = 8'h00;
            Blue = 8'h00;
+       end
+       else if (is_start && is_sname == 1'b1)
+       begin
+         font_addr = (DrawY - start_y) + 16*sname_hex;
+         if(font_data[bit_num]==1'b1) begin
+           Red = 8'h00;
+           Green = 8'h00;
+           Blue = 8'h00;
+         end
        end
        else if (is_background == 1'b1)
        begin
@@ -118,12 +140,12 @@ case(palette_idx)
               Green = 8'h3a;
               Blue = 8'h73;
             end
-				default:
-				begin
-					Red = 8'hff;
-					Green = 8'hff;
-					Blue = 8'hff;
-				end
+default:
+begin
+Red = 8'hff;
+Green = 8'hff;
+Blue = 8'hff;
+end
           endcase
        end
    end

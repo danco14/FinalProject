@@ -103,52 +103,66 @@ module pokemon( input               CLOCK_50,
                              .otg_hpi_reset_export(hpi_reset)
     );
 
-	 logic [9:0] DrawX, DrawY;
-	 logic is_ball;
+   logic [9:0] DrawX, DrawY;
+   logic is_ball;
    logic [4:0] palette_idx;
    logic is_background;
    logic is_chooser;
-	logic [3:0] choice;
-   game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode), .palette_idx(palette_idx), .is_background(is_background), .is_chooser(is_chooser), .EXPORT_DATA(choice));
+   logic is_start;
+   logic is_battle;
+   logic [3:0] choice;
+   logic [2:0] cur_choice_id;
+   game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode),
+                   .palette_idx(palette_idx), .is_background(is_background), .is_chooser(is_chooser),
+                   .is_battle(is_battle), .is_start(is_start), .cur_choice(cur_choice_id), .EXPORT_DATA(choice));
 
     // Use PLL to generate the 25MHZ VGA_CLK.
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
 
     VGA_controller vga_controller_instance(.Clk(Clk),
-														 .Reset(Reset_h),
-														 .VGA_HS(VGA_HS),
-														 .VGA_VS(VGA_VS),
-														 .VGA_CLK(VGA_CLK),
-														 .VGA_BLANK_N(VGA_BLANK_N),
-														 .VGA_SYNC_N(VGA_SYNC_N),
-														 .DrawX(DrawX),
-														 .DrawY(DrawY)
-	 );
+.Reset(Reset_h),
+.VGA_HS(VGA_HS),
+.VGA_VS(VGA_VS),
+.VGA_CLK(VGA_CLK),
+.VGA_BLANK_N(VGA_BLANK_N),
+.VGA_SYNC_N(VGA_SYNC_N),
+.DrawX(DrawX),
+.DrawY(DrawY)
+);
+
    color_palette palette(
                     .is_chooser(is_chooser),
                     .is_background(is_background),
+                    .is_start(is_start),
                     .palette_idx(palette_idx),
-   								  .VGA_R(VGA_R),
-   								  .VGA_G(VGA_G),
-   								  .VGA_B(VGA_B));
+                    .DrawX(DrawX),
+                    .DrawY(DrawY),
+                    .cur_choice_id(cur_choice_id),
+     .VGA_R(VGA_R),
+     .VGA_G(VGA_G),
+     .VGA_B(VGA_B));
    //  ball ball_instance(.Clk(Clk),
-		// 					  .Reset(Reset_h),
-		// 					  .frame_clk(VGA_VS),
-		// 					  .keycode(keycode),
-		// 					  .DrawX(DrawX),
-		// 					  .DrawY(DrawY),
-		// 					  .is_ball(is_ball)
-	 // );
+//  .Reset(Reset_h),
+//  .frame_clk(VGA_VS),
+//  .keycode(keycode),
+//  .DrawX(DrawX),
+//  .DrawY(DrawY),
+//  .is_ball(is_ball)
+// );
    //
    //  color_mapper color_instance(.is_ball(is_ball),
-		// 								  .DrawX(DrawX),
-		// 								  .DrawY(DrawY),
-		// 								  .VGA_R(VGA_R),
-		// 								  .VGA_G(VGA_G),
-		// 								  .VGA_B(VGA_B)
-	 // );
+//  .DrawX(DrawX),
+//  .DrawY(DrawY),
+//  .VGA_R(VGA_R),
+//  .VGA_G(VGA_G),
+//  .VGA_B(VGA_B)
+// );
 
-//   battle battle(.Clk(Clk), .Reset(Reset_h));
+   stats data();
+
+   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
+
+   calculation calc();
 
     // Display keycode on hex display
     HexDriver hex_inst_0 (choice, HEX0);
