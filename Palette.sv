@@ -19,11 +19,12 @@ module color_palette(input  is_background,            // Whether current pixel b
    logic [7:0] sname_hex;
    logic [10:0] font_addr;
    logic [7:0] font_data;
-   poke_names pname(.DrawX(DrawX), .DrawY(DrawY), .start_x(160), .start_y(210),
+   poke_names pname(.DrawX(DrawX), .DrawY(DrawY), .start_x(160), .start_y(260),
                     .is_sname(is_sname), .poke_id(cur_choice_id), .bit_num(bit_num), .sname_hex(sname_hex));
    font_rom f_rom(.addr(font_addr),.data(font_data));
    always_comb
    begin
+	font_addr = 11'b0;
        if (is_start && is_chooser == 1'b1)
        begin
            // black box for choosing
@@ -33,12 +34,17 @@ module color_palette(input  is_background,            // Whether current pixel b
        end
        else if (is_start && is_sname == 1'b1)
        begin
-         font_addr = (DrawY - start_y) + 16*sname_hex;
+         font_addr = (DrawY - 260) + 16*sname_hex;
          if(font_data[bit_num]==1'b1) begin
            Red = 8'h00;
            Green = 8'h00;
            Blue = 8'h00;
          end
+			else begin
+				Red = 8'hff;
+           Green = 8'hff;
+           Blue = 8'hff;
+			end
        end
        else if (is_background == 1'b1)
        begin

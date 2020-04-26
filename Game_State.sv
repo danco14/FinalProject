@@ -131,8 +131,8 @@ module game_state(input logic Clk, input logic Reset,
 
     case(State)
       Start:
-      is_start = 1'b1;
       begin
+			is_start = 1'b1;
 		    if(frame_clk_rising_edge)
     		begin
           if(num_chosen == 2'b11)

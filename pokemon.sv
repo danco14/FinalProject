@@ -158,11 +158,11 @@ module pokemon( input               CLOCK_50,
 //  .VGA_B(VGA_B)
 // );
 
-   stats data();
+//   stats data();
 
-   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
+//   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
 
-   calculation calc();
+//   calculation calc();
 
     // Display keycode on hex display
     HexDriver hex_inst_0 (choice, HEX0);
