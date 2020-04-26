@@ -10,7 +10,8 @@ module game_state(input logic Clk, input logic Reset,
                   output logic is_start,
                   output logic [2:0] cur_choice,
                   // output logic [1:0] direction,
-                  output logic [3:0] EXPORT_DATA);
+                  output logic [7:0] EXPORT_DATA
+						);
 
   enum logic [20:0] {Start, Roam, Battle, End} State, Next_state;
 
@@ -58,20 +59,12 @@ module game_state(input logic Clk, input logic Reset,
 
   logic done_select;
   logic done_select_in = 1'b0;
-  logic press;
-  logic press_in = 1'b0;
   logic [1:0][2:0] my_team; //choose 3 from 8, with repeats
   logic [1:0][2:0] my_team_in;
   logic [1:0] num_chosen;
   logic [1:0] num_chosen_in = 2'b0;
   // logic [2:0] cur_choice;
   logic [2:0] cur_choice_in = 3'b0;
-
-  logic frame_clk_delayed, frame_clk_rising_edge;
-  always_ff @ (posedge Clk) begin
-    frame_clk_delayed <= frame_clk;
-    frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
-  end
 
   always_ff @ (posedge Clk)
   begin
@@ -89,13 +82,12 @@ module game_state(input logic Clk, input logic Reset,
       num_chosen <= num_chosen_in;
       my_team <= my_team_in;
       done_select <= done_select_in;
-      press <= press_in;
     end
   end
 
   always_comb
   begin
-    EXPORT_DATA = num_chosen;
+    EXPORT_DATA = keycode;
     Next_state = State;
 
     is_background = 1'b1;
@@ -107,7 +99,6 @@ module game_state(input logic Clk, input logic Reset,
     num_chosen_in = num_chosen;
     my_team_in = my_team;
     done_select_in = done_select;
-    press_in = press;
 
     unique case(State)
       Start:
@@ -133,17 +124,12 @@ module game_state(input logic Clk, input logic Reset,
       Start:
       begin
 			is_start = 1'b1;
-		    if(frame_clk_rising_edge)
-    		begin
           if(num_chosen == 2'b11)
             done_select_in = 1'b1;
-        if(keycode == ENTER && press == 1'b0)begin
+        if(keycode == ENTER)begin
           my_team_in[num_chosen] = cur_choice;
           num_chosen_in = num_chosen + 1'b1;
-          press_in = 1'b1;
         end
-        else if(keycode != ENTER)
-          press_in = 1'b0;
           if(keycode == W)
           begin
             if(cur_choice <= 3'b011)
@@ -172,7 +158,6 @@ module game_state(input logic Clk, input logic Reset,
             else
               cur_choice_in = cur_choice + 3'b001;
           end
-        end
 
         if (cur_choice<=3'b011)begin
         if( ( (DrawX >= (box_x + int'(cur_choice)*7'd76)) && (DrawX < (box_width + box_x + int'(cur_choice)*7'd76)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||

@@ -110,12 +110,15 @@ module pokemon( input               CLOCK_50,
    logic is_chooser;
    logic is_start;
    logic is_battle;
-   logic [3:0] choice;
+   logic [7:0] EXPORT_DATA;
    logic [2:0] cur_choice_id;
+	logic [7:0] key;
+	
+	key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key)); 
    
-   game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode),
+   game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(key),
                    .palette_idx(palette_idx), .is_background(is_background), .is_chooser(is_chooser),
-                   .is_battle(is_battle), .is_start(is_start), .cur_choice(cur_choice_id), .EXPORT_DATA(choice));
+                   .is_battle(is_battle), .is_start(is_start), .cur_choice(cur_choice_id), .EXPORT_DATA(EXPORT_DATA));
 
     // Use PLL to generate the 25MHZ VGA_CLK.
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
@@ -164,7 +167,7 @@ module pokemon( input               CLOCK_50,
 //   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (choice, HEX0);
-    HexDriver hex_inst_1 (keycode[7:4], HEX1);
+    HexDriver hex_inst_0 (key[3:0], HEX0);
+    HexDriver hex_inst_1 (key[7:4], HEX1);
 
 endmodule
