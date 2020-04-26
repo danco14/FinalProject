@@ -112,6 +112,7 @@ module pokemon( input               CLOCK_50,
    logic is_battle;
    logic [3:0] choice;
    logic [2:0] cur_choice_id;
+   
    game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(keycode),
                    .palette_idx(palette_idx), .is_background(is_background), .is_chooser(is_chooser),
                    .is_battle(is_battle), .is_start(is_start), .cur_choice(cur_choice_id), .EXPORT_DATA(choice));
@@ -161,8 +162,6 @@ module pokemon( input               CLOCK_50,
 //   stats data();
 
 //   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
-
-//   calculation calc();
 
     // Display keycode on hex display
     HexDriver hex_inst_0 (choice, HEX0);
