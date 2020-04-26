@@ -27,7 +27,7 @@ module poke_names(input logic [9:0] DrawX, DrawY,
 
   parameter width = 8;
   parameter height = 16;
-  logic [2:0] letter_num;
+
   always_comb begin
     if(DrawY>= start_y && DrawY < (start_y + height))begin
         if(DrawX>=start_x && DrawX < (start_x + width))begin
@@ -89,4 +89,207 @@ module poke_names(input logic [9:0] DrawX, DrawY,
   end
   end
 
+endmodule
+
+module enemy_text(input logic [9:0] DrawX, DrawY,
+                  input logic [9:0] start_x, input logic [9:0] start_y,
+                  output logic [2:0] bit_num,
+                  output logic [7:0] enemy_hex,
+                  output logic is_enemytext);
+  // 'E' 'N' 'E' 'M' 'Y' ' ' = 6 chars
+  parameter width = 8;
+  parameter height = 16;
+  always_comb begin
+  if(DrawY>=start_y && DrawY < (start_y+height))begin
+    if(DrawX>=start_x && DrawX<start_x+width)begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - start_x;
+      enemy_hex = 8'h45;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - (start_x+width);
+      enemy_hex = 8'h4e;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - (start_x+(width*2));
+      enemy_hex = 8'h45;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - (start_x+(width*3));
+      enemy_hex = 8'h4d;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - (start_x+(width*4));
+      enemy_hex = 8'h59;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
+      is_enemytext=1'b1;
+      bit_num = DrawX - (start_x+(width*5));
+      enemy_hex = 8'h20;
+    end
+    else begin
+      is_enemytext=1'b0;
+    end
+  end
+  else begin
+    is_enemytext = 1'b0;
+  end
+  end
+endmodule
+
+module used_text(input logic [9:0] DrawX, DrawY,
+                  input logic [9:0] start_x, input logic [9:0] start_y,
+                  output logic [2:0] bit_num,
+                  output logic [7:0] used_hex,
+                  output logic is_usedtext);
+  // 'U' 'S' 'E' 'D' '  = 5 chars
+  parameter width = 8;
+  parameter height = 16;
+  always_comb begin
+  if(DrawY>=start_y && DrawY < (start_y+height))begin
+    if(DrawX>=start_x && DrawX<start_x+width)begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - start_x;
+      used_hex = 8'h55;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - (start_x+width);
+      used_hex = 8'h53;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - (start_x+(width*2));
+      used_hex = 8'h45;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - (start_x+(width*3));
+      used_hex = 8'h44;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - (start_x+(width*4));
+      used_hex = 8'h20;
+    end
+    else begin
+      is_usedtext=1'b0;
+    end
+  end
+  else begin
+    is_usedtext = 1'b0;
+  end
+end
+endmodule
+
+module hp_text(input logic [9:0] DrawX, DrawY,
+                  input logic [9:0] start_x, input logic [9:0] start_y,
+                  output logic [2:0] bit_num,
+                  output logic [7:0] hp_hex,
+                  output logic is_hptext);
+  // 'H' 'P' = 2 chars
+  parameter width = 8;
+  parameter height = 16;
+  always_comb begin
+  if(DrawY>=start_y && DrawY < (start_y+height))begin
+    if(DrawX>=start_x && DrawX<start_x+width)begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - start_x;
+      used_hex = 8'h48;
+    end
+    else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+      is_usedtext=1'b1;
+      bit_num = DrawX - (start_x+width);
+      used_hex = 8'h50;
+    end
+    else begin
+      is_usedtext=1'b0;
+    end
+  end
+  else begin
+    is_usedtext = 1'b0;
+  end
+end
+endmodule
+
+//show hp numbers: 37/50 , 100/100 etc.
+module hp_text2(input logic [9:0] DrawX, DrawY,
+                  input logic [9:0] start_x, input logic [9:0] start_y,
+                  input logic [6:0] maxHP, input logic [6:0] curHP,
+                  output logic [2:0] bit_num,
+                  output logic [7:0] hp2_hex,
+                  output logic is_hp2text);
+  //max hp is currently 100 hp, => _ _ _ / _ _ _ = 7 characters
+  //ascii 0 = 0x30
+  parameter width = 8;
+  parameter height = 16;
+  logic [7:0] first_hp [0:2];
+  logic [7:0] second_hp [0:2];
+  always_comb begin
+    if(curHP>=100)begin
+      first_hp[0] = 8'h31;
+    end
+    else begin
+      first_hp[0] = 8'h20;
+    end
+    if(maxHP>=100)begin
+      second_hp[0] = 8'h31;
+    end
+    else begin
+      second_hp[0] = 8'h20;
+    end
+    first_hp[2] = (curHP % 10) + 8'h30;
+    second_hp[2] = (maxHP % 10) + 8'h30;
+    first_hp[1] = ((curHP - first_hp[2]) / 10)+ 8'h30;
+    second_hp[1] = ((maxHP - second_hp[2]) / 10)+ 8'h30;
+    if(DrawY>=start_y && DrawY < (start_y+height))begin
+      if(DrawX>=start_x && DrawX<start_x+width)begin
+        hp2_hex = first_hp[0];
+        bit_num = DrawX - start_x;
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+        hp2_hex = first_hp[1];
+        bit_num = DrawX - (start_x+width);
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+        hp2_hex = first_hp[2];
+        bit_num = DrawX - (start_x+(width*2));
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+        hp2_hex = 8'h2f; // front slash /
+        bit_num = DrawX - (start_x+(width*3));
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+        hp2_hex = second_hp[0];
+        bit_num = DrawX - (start_x+(width*4));
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
+        hp2_hex = second_hp[1];
+        bit_num = DrawX - (start_x+(width*5));
+        is_hp2text=1'b1;
+      end
+      else if(DrawX>=start_x && DrawX<start_x+(7*width))begin
+        hp2_hex = second_hp[2];
+        bit_num = DrawX - (start_x+(width*6));
+        is_hp2text=1'b1;
+      end
+      else begin
+        is_hp2text=1'b0;
+      end
+    end
+    else begin
+      hp2_hex = 8'h30;
+      bit_num = 3'b0;
+      is_hp2text = 1'b0;
+    end
+  end
 endmodule
