@@ -133,13 +133,12 @@ module game_state(input logic Clk, input logic Reset,
       Start:
       is_start = 1'b1;
       begin
-       if(frame_clk_rising_edge)
-        begin
+		    if(frame_clk_rising_edge)
+    		begin
           if(num_chosen == 2'b11)
             done_select_in = 1'b1;
-        if(keycode == ENTER && press == 1'b0)
-        begin
-          my_team_in[int'(num_chosen)] = cur_choice;
+        if(keycode == ENTER && press == 1'b0)begin
+          my_team_in[num_chosen] = cur_choice;
           num_chosen_in = num_chosen + 1'b1;
           press_in = 1'b1;
         end
@@ -173,7 +172,7 @@ module game_state(input logic Clk, input logic Reset,
             else
               cur_choice_in = cur_choice + 3'b001;
           end
-    end
+        end
 
         if (cur_choice<=3'b011)begin
         if( ( (DrawX >= (box_x + int'(cur_choice)*7'd76)) && (DrawX < (box_width + box_x + int'(cur_choice)*7'd76)) && (DrawY == box_y || (DrawY == (box_y + box_height))))||
