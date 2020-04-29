@@ -106,68 +106,93 @@ module pokemon( input               CLOCK_50,
    logic [9:0] DrawX, DrawY;
    logic is_ball;
    logic [4:0] palette_idx;
-   logic is_background;
+   logic is_sprite;
    logic is_chooser;
    logic is_start;
    logic is_battle;
    logic [7:0] EXPORT_DATA;
    logic [2:0] cur_choice_id;
-	logic [7:0] key;
-	
-	key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key)); 
-   
-   game_state game(.Clk(Clk), .Reset(Reset_h), .frame_clk(VGA_VS), .DrawX(DrawX), .DrawY(DrawY), .keycode(key),
-                   .palette_idx(palette_idx), .is_background(is_background), .is_chooser(is_chooser),
-                   .is_battle(is_battle), .is_start(is_start), .cur_choice(cur_choice_id), .EXPORT_DATA(EXPORT_DATA));
+   logic [1:0][2:0] team;
+   logic result;
+   logic end_battle;
+	 logic [7:0] key;
+
+   logic [1:0] my_cur;
+   logic [2:0] enemy_cur_id;
+
+	 key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key));
+
+   game_state game(.Clk(Clk),
+                   .Reset(Reset_h),
+                   .DrawX(DrawX),
+                   .DrawY(DrawY),
+                   .keycode(key),
+                   .result(result),
+                   .end_battle(end_battle)
+                   .palette_idx(palette_idx),
+                   .is_sprite(is_sprite),
+                   .is_chooser(is_chooser),
+                   .is_battle(is_battle),
+                   .is_start(is_start),
+                   .cur_choice(cur_choice_id),
+                   .my_team(team),
+                   .my_cur(my_cur),
+                   .enemy_cur_id(enemy_cur_id),
+                   .EXPORT_DATA(EXPORT_DATA)
+                   );
 
     // Use PLL to generate the 25MHZ VGA_CLK.
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
 
     VGA_controller vga_controller_instance(.Clk(Clk),
-.Reset(Reset_h),
-.VGA_HS(VGA_HS),
-.VGA_VS(VGA_VS),
-.VGA_CLK(VGA_CLK),
-.VGA_BLANK_N(VGA_BLANK_N),
-.VGA_SYNC_N(VGA_SYNC_N),
-.DrawX(DrawX),
-.DrawY(DrawY)
-);
+                                           .Reset(Reset_h),
+                                           .VGA_HS(VGA_HS),
+                                           .VGA_VS(VGA_VS),
+                                           .VGA_CLK(VGA_CLK),
+                                           .VGA_BLANK_N(VGA_BLANK_N),
+                                           .VGA_SYNC_N(VGA_SYNC_N),
+                                           .DrawX(DrawX),
+                                           .DrawY(DrawY)
+                                           );
 
    color_palette palette(
                     .is_chooser(is_chooser),
-                    .is_background(is_background),
+                    .is_sprite(is_sprite),
                     .is_start(is_start),
                     .palette_idx(palette_idx),
                     .DrawX(DrawX),
                     .DrawY(DrawY),
                     .cur_choice_id(cur_choice_id),
-     .VGA_R(VGA_R),
-     .VGA_G(VGA_G),
-     .VGA_B(VGA_B));
-   //  ball ball_instance(.Clk(Clk),
-//  .Reset(Reset_h),
-//  .frame_clk(VGA_VS),
-//  .keycode(keycode),
-//  .DrawX(DrawX),
-//  .DrawY(DrawY),
-//  .is_ball(is_ball)
-// );
-   //
-   //  color_mapper color_instance(.is_ball(is_ball),
-//  .DrawX(DrawX),
-//  .DrawY(DrawY),
-//  .VGA_R(VGA_R),
-//  .VGA_G(VGA_G),
-//  .VGA_B(VGA_B)
-// );
+                    .VGA_R(VGA_R),
+                    .VGA_G(VGA_G),
+                    .VGA_B(VGA_B));
 
-//   stats data();
 
-//   battle battle(.Clk(Clk), .Reset(Reset_h), .is_battle(is_battle));
+  // logic [7:0] my_hp;
+  // logic [7:0] enemy_hp;
+  // logic [3:0][7:0] moves;
+  // logic [7:0] my_maxhp [3];
+  // logic [7:0] enemy_maxhp [3];
+  // logic [1:0][2:0] enemy_team;
+
+  battle battle(.Clk(Clk),
+                .Reset(Reset_h),
+                .is_battle(is_battle),
+                .keycode(key),
+                .team(team),
+                .result(result),
+                .end_battle(end_battle),
+                .my_cur(my_cur),
+                .enemy_cur_id(enemy_cur_id)
+                );
+
+  // Test random number generator
+  logic [7:0] num;
+
+  random rand(.Clk(Clk), .Reset(Reset), .num(num));
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (key[3:0], HEX0);
-    HexDriver hex_inst_1 (key[7:4], HEX1);
+    HexDriver hex_inst_0 (num[3:0], HEX0);
+    HexDriver hex_inst_1 (num[7:4], HEX1);
 
 endmodule

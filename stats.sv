@@ -1,4 +1,12 @@
-module stats(input pokemon_addr, input move_addr, output pokemon_data, output move_data);
+module stats(input logic [2:0] pokemon_addr1,
+             input logic [2:0] pokemon_addr2,
+             input logic [2:0] move_addr1,
+             input logic [2:0] move_addr2,
+             output logic [11:0][7:0] pokemon_data1,
+             output logic [11:0][7:0] pokemon_data2,
+             output logic [4:0][7:0] move_data1,
+             output logic [4:0][7:0] move_data2
+             );
 
   parameter normal = 0;
   parameter fighting = 1;
@@ -23,9 +31,9 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
   parameter physical = 1;
   parameter special = 0;
 
-  parameter [][] Pokemon = {
+  parameter [7:0][11:0][7:0] Pokemon = {
     // Blastoise
-    water,
+    {water,
     none,
     79,  // HP
     83,  // Attack
@@ -33,9 +41,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     85,  // Sp. Atk
     105, // Sp. Def
     78,  // Speed
+    0, 1, 2, 3}, // Move addresses
     // hydro_pump, crunch, ice_beam, aura_sphere,
     // Charizard
-    fire,
+    {fire,
     flying,
     78,
     84,
@@ -43,9 +52,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     109,
     85,
     100,
+    4, 5, 6, 7},
     // flamethrower, thunder_punch, air_slash, dragon_claw,
     // Dragonite
-    dragon,
+    {dragon,
     flying,
     91,
     134,
@@ -53,9 +63,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     100,
     100,
     80,
+    24, 23, 25, 5},
     // dragon_pulse, rock_slide, blizzard, thunder_punch
     // Gengar
-    ghost,
+    {ghost,
     poison,
     60,
     65,
@@ -63,9 +74,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     130,
     75,
     110,
+    17, 16, 9, 12},
     // shadow_ball, dark_pulse, sludge_bomb, thunderbolt,
     // Mew
-    psychic,
+    {psychic,
     none,
     100,
     100,
@@ -73,9 +85,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     100,
     100,
     100,
+    18, 21, 20, 19},
     // psychic_move, bug_buzz, flash_cannon, play_rough,
     // Pikachu
-    electric,
+    {electric,
     none,
     35,
     55,
@@ -83,9 +96,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     50,
     50,
     90,
+    12, 13, 14, 15},
     // thunderbolt, slam, surf, thunder,
     // Venusaur
-    grass,
+    {grass,
     poison,
     80,
     82,
@@ -93,9 +107,10 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     100,
     100,
     80,
+    8, 9, 10, 11},
     // energy_ball, sludge_bomb, earthquake, petal_dance,
     // Weezing
-    poison,
+    {poison,
     none,
     65,
     90,
@@ -103,170 +118,179 @@ module stats(input pokemon_addr, input move_addr, output pokemon_data, output mo
     85,
     70,
     60,
+    9, 17, 22, 15}
     // sludge_bomb, shadow_ball, fire_blast, thunder
   };
 
-  assign pokemon_data = Pokemon[pokemon_addr];
+  assign pokemon_data1 = Pokemon[pokemon_addr1];
+  assign pokemon_data2 = Pokemon[pokemon_addr2];
 
-  parameter [][] Move = {
+  parameter [25:0][4:0][7:0] Move = {
+    // Struggle
+    // {none,
+    // physical,
+    // 50,
+    // 110,
+    // 100},
     // Hydro pump
-    water,
+    {water,
     special,
     110, // Power
-    0.8, // Accuracy
-    5, // PP
+    80, // Accuracy
+    5}, // PP
     // Ice beam
-    ice,
+    {ice,
     special,
     90,
-    1,
-    10,
+    100,
+    10},
     // Crunch
     dark,
     physical,
     80,
-    1,
+    100,
     15,
     // Aura sphere
-    fighting,
+    {fighting,
     special,
     80,
-    1.1,
-    20,
+    110,
+    20},
     // Flamethrower
-    fire,
+    {fire,
     special,
     90,
-    1,
-    15,
+    100,
+    15},
     // Thunder punch
-    electric,
+    {electric,
     physical,
     75,
-    1,
-    15,
+    100,
+    15},
     // Air slash
-    flying,
+    {flying,
     special,
     75,
-    0.95,
-    15,
+    95,
+    15},
     // Dragon claw
-    dragon,
+    {dragon,
     physical,
     80,
-    1,
-    15,
+    100,
+    15},
     // Energy ball
-    grass,
+    {grass,
     physical,
     90,
-    1,
-    10,
+    100,
+    10},
     // Sludge bomb
-    poison,
+    {poison,
     special,
     90,
-    1,
-    10,
+    100,
+    10},
     // Earthquake
-    ground,
+    {ground,
     physical,
     100,
-    1,
-    10,
+    100,
+    10},
     // Petal dance
-    grass,
+    {grass,
     special,
     120,
-    1,
-    10,
+    100,
+    10},
     // Thunderbolt
-    electric,
+    {electric,
     special,
     90,
-    1,
-    15,
+    100,
+    15},
     // Slam
-    normal,
+    {normal,
     physical,
     80,
-    0.75,
-    20,
+    75,
+    20},
     // Surf
-    water,
+    {water,
     special,
     90,
-    1,
-    15,
+    100,
+    15},
     // Thunder
-    electric,
+    {electric,
     special,
     110,
-    0.7,
-    10,
+    70,
+    10},
     // Dark pulse
-    dark,
+    {dark,
     special,
     80,
-    1,
-    15,
+    100,
+    15},
     // Shadow ball
-    ghost,
+    {ghost,
     special,
     80,
-    1,
-    15,
+    100,
+    15},
     // Psychic
-    psychic,
+    {psychic,
     special,
     90,
-    1,
-    10,
+    100,
+    10},
     // Play rough
-    fairy,
+    {fairy,
     physical,
     90,
-    0.9,
-    10,
+    90,
+    10},
     // Flash cannon
-    steel,
+    {steel,
     special,
     80,
-    1,
-    10,
+    100,
+    10},
     // Bug buzz
-    bug,
+    {bug,
     special,
     90,
-    1,
-    10,
+    100,
+    10},
     // Fire Blast
-    fire,
+    {fire,
     special,
     110,
-    0.85,
-    5,
+    85,
+    5},
     // Rock slide
-    rock,
+    {rock,
     physical,
     75,
-    0.9,
-    10,
+    90,
+    10},
     // Dragon pulse
-    dragon,
+    {dragon,
     special,
     85,
     1,
-    10,
+    10},
     // Blizzard
-    ice,
+    {ice,
     special,
     110,
-    0.7,
-    5
+    70,
+    5}
   };
 
-  assign move_data = Move[move_addr];
+  assign move_data1 = Move[move_addr1];
+  assign move_data2 = Move[move_addr2];
 
 endmodule

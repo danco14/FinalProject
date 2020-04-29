@@ -2,8 +2,9 @@ module poke_names(input logic [9:0] DrawX, DrawY,
                   input logic [9:0] start_x, input logic [9:0] start_y,
                   input logic [2:0] poke_id,
                   output logic [2:0] bit_num,
-                  output logic [7:0] sname_hex,
-                  output logic is_sname);
+                  output logic [7:0] pname_hex,
+                  output logic is_pname,
+                  output logic [9:0] y_diff);
 
   //hex codes of the pokemon names
 //  parameter bit blastoise = {8'h42, 8'h4c, 8'h41, 8'h53, 8'h54, 8'h4f, 8'h49, 8'h53, 8'h45};
@@ -27,65 +28,184 @@ module poke_names(input logic [9:0] DrawX, DrawY,
 
   parameter width = 8;
   parameter height = 16;
-
+  assign y_diff = (DrawY - start_y);
   always_comb begin
     if(DrawY>= start_y && DrawY < (start_y + height))begin
         if(DrawX>=start_x && DrawX < (start_x + width))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - start_x;
-          sname_hex = pokemon_names[poke_id][0];
+          pname_hex = pokemon_names[poke_id][0];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(1)));
-          sname_hex = pokemon_names[poke_id][1];
+          pname_hex = pokemon_names[poke_id][1];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(2)));
-          sname_hex = pokemon_names[poke_id][2];
+          pname_hex = pokemon_names[poke_id][2];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(3)));
-          sname_hex = pokemon_names[poke_id][3];
+          pname_hex = pokemon_names[poke_id][3];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(4)));
-          sname_hex = pokemon_names[poke_id][4];
+          pname_hex = pokemon_names[poke_id][4];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(5)));
-          sname_hex = pokemon_names[poke_id][5];
+          pname_hex = pokemon_names[poke_id][5];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(6)));
-          sname_hex = pokemon_names[poke_id][6];
+          pname_hex = pokemon_names[poke_id][6];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(7)));
-          sname_hex = pokemon_names[poke_id][7];
+          pname_hex = pokemon_names[poke_id][7];
         end
         else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
-          is_sname = 1'b1;
+          is_pname = 1'b1;
           bit_num = DrawX - (start_x + (width*(8)));
-          sname_hex = pokemon_names[poke_id][8];
+          pname_hex = pokemon_names[poke_id][8];
         end
    else begin
-      is_sname = 1'b0;
+      is_pname = 1'b0;
       bit_num = 3'b0;
-      sname_hex = 8'h20;
+      pname_hex = 8'h20;
    end
 
     end
   else begin
-      is_sname = 1'b0;
+      is_pname = 1'b0;
       bit_num = 3'b0;
-      sname_hex = 8'h20;
+      pname_hex = 8'h20;
+  end
+  end
+
+endmodule
+
+module moves_names(input logic [9:0] DrawX, DrawY,
+                  input logic [9:0] start_x, input logic [9:0] start_y,
+                  input logic [4:0] move_id,
+                  output logic [2:0] bit_num,
+                  output logic [7:0] move_hex,
+                  output logic is_movename,
+                  output logic [9:0] y_diff);
+
+  //hex codes of the move names
+  parameter bit [0:11][7:0] move_names [0:25] ='{'{8'h48, 8'h59, 8'h44, 8'h52, 8'h4f, 8'h20, 8'h50, 8'h55, 8'h4d, 8'h50, 8'h20, 8'h20},
+  '{8'h49, 8'h43, 8'h45, 8'h20, 8'h42, 8'h45, 8'h41, 8'h4d, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h43, 8'h52, 8'h55, 8'h4e, 8'h43, 8'h48, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h41, 8'h55, 8'h52, 8'h41, 8'h20, 8'h53, 8'h50, 8'h48, 8'h45, 8'h52, 8'h45, 8'h20},
+  '{8'h46, 8'h4c, 8'h41, 8'h4d, 8'h45, 8'h54, 8'h48, 8'h52, 8'h4f, 8'h57, 8'h45, 8'h52},
+  '{8'h54, 8'h48, 8'h55, 8'h4e, 8'h44, 8'h45, 8'h52, 8'h50, 8'h55, 8'h4e, 8'h43, 8'h48},
+  '{8'h41, 8'h49, 8'h52, 8'h20, 8'h53, 8'h4c, 8'h41, 8'h53, 8'h48, 8'h20, 8'h20, 8'h20},
+  '{8'h44, 8'h52, 8'h41, 8'h47, 8'h4f, 8'h4e, 8'h20, 8'h43, 8'h4c, 8'h41, 8'h57, 8'h20},
+  '{8'h45, 8'h4e, 8'h45, 8'h52, 8'h47, 8'h59, 8'h20, 8'h42, 8'h41, 8'h4c, 8'h4c, 8'h20},
+  '{8'h53, 8'h4c, 8'h55, 8'h44, 8'h47, 8'h45, 8'h20, 8'h42, 8'h4f, 8'h4d, 8'h42, 8'h20},
+  '{8'h45, 8'h41, 8'h52, 8'h54, 8'h48, 8'h51, 8'h55, 8'h41, 8'h4b, 8'h45, 8'h20, 8'h20},
+  '{8'h50, 8'h45, 8'h54, 8'h41, 8'h4c, 8'h20, 8'h44, 8'h41, 8'h4e, 8'h43, 8'h45, 8'h20},
+  '{8'h54, 8'h48, 8'h55, 8'h4e, 8'h44, 8'h45, 8'h52, 8'h42, 8'h4f, 8'h4c, 8'h54, 8'h20},
+  '{8'h53, 8'h4c, 8'h41, 8'h4d, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h53, 8'h55, 8'h52, 8'h46, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h54, 8'h48, 8'h55, 8'h4e, 8'h44, 8'h45, 8'h52, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h44, 8'h41, 8'h52, 8'h4b, 8'h20, 8'h50, 8'h55, 8'h4c, 8'h53, 8'h45, 8'h20, 8'h20},
+  '{8'h53, 8'h48, 8'h41, 8'h44, 8'h4f, 8'h57, 8'h20, 8'h42, 8'h41, 8'h4c, 8'h4c, 8'h20},
+  '{8'h50, 8'h53, 8'h59, 8'h43, 8'h48, 8'h49, 8'h43, 8'h20, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h50, 8'h4c, 8'h41, 8'h59, 8'h20, 8'h52, 8'h4f, 8'h55, 8'h47, 8'h48, 8'h20, 8'h20},
+  '{8'h46, 8'h4c, 8'h41, 8'h53, 8'h48, 8'h20, 8'h43, 8'h41, 8'h4e, 8'h4e, 8'h4f, 8'h4e},
+  '{8'h42, 8'h55, 8'h47, 8'h20, 8'h42, 8'h55, 8'h5a, 8'h5a, 8'h20, 8'h20, 8'h20, 8'h20},
+  '{8'h46, 8'h49, 8'h52, 8'h45, 8'h20, 8'h42, 8'h4c, 8'h41, 8'h53, 8'h54, 8'h20, 8'h20},
+  '{8'h52, 8'h4f, 8'h43, 8'h4b, 8'h20, 8'h53, 8'h4c, 8'h49, 8'h44, 8'h45, 8'h20, 8'h20},
+  '{8'h44, 8'h52, 8'h41, 8'h47, 8'h4f, 8'h4e, 8'h20, 8'h50, 8'h55, 8'h4c, 8'h53, 8'h45},
+  '{8'h42, 8'h4c, 8'h49, 8'h5a, 8'h5a, 8'h41, 8'h52, 8'h44, 8'h20, 8'h20, 8'h20, 8'h20}};
+
+  parameter width = 8;
+  parameter height = 16;
+
+  assign y_diff = DrawY - start_y;
+
+  always_comb begin
+    if(DrawY>= start_y && DrawY < (start_y + height))begin
+        if(DrawX>=start_x && DrawX < (start_x + width))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - start_x;
+          move_hex = move_names[move_id][0];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(1)));
+          move_hex = move_names[move_id][1];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(2)));
+          move_hex = move_names[move_id][2];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(3)));
+          move_hex = move_names[move_id][3];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(4)));
+          move_hex = move_names[move_id][4];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(5)));
+          move_hex = move_names[move_id][5];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(6)));
+          move_hex = move_names[move_id][6];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(7)));
+          move_hex = move_names[move_id][7];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(8)));
+          move_hex = move_names[move_id][8];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(10)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(9)));
+          move_hex = move_names[move_id][9];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(11)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(10)));
+          move_hex = move_names[move_id][10];
+        end
+        else if(DrawX>=start_x && DrawX < start_x + (width*(12)))begin
+          is_movename = 1'b1;
+          bit_num = DrawX - (start_x + (width*(11)));
+          move_hex = move_names[move_id][11];
+        end
+   else begin
+      is_movename = 1'b0;
+      bit_num = 3'b0;
+      move_hex = 8'h20;
+   end
+
+    end
+  else begin
+      is_pname = 1'b0;
+      bit_num = 3'b0;
+      pname_hex = 8'h20;
   end
   end
 
@@ -95,10 +215,14 @@ module enemy_text(input logic [9:0] DrawX, DrawY,
                   input logic [9:0] start_x, input logic [9:0] start_y,
                   output logic [2:0] bit_num,
                   output logic [7:0] enemy_hex,
-                  output logic is_enemytext);
+                  output logic is_enemytext,
+                  output logic [9:0] y_diff);
   // 'E' 'N' 'E' 'M' 'Y' ' ' = 6 chars
   parameter width = 8;
   parameter height = 16;
+
+  assign y_diff = DrawY - start_y;
+
   always_comb begin
   if(DrawY>=start_y && DrawY < (start_y+height))begin
     if(DrawX>=start_x && DrawX<start_x+width)begin
@@ -132,10 +256,14 @@ module enemy_text(input logic [9:0] DrawX, DrawY,
       enemy_hex = 8'h20;
     end
     else begin
+      bit_num = 3'b0;
+      enemy_hex = 8'h20;
       is_enemytext=1'b0;
     end
   end
   else begin
+    bit_num = 3'b0;
+    enemy_hex = 8'h20;
     is_enemytext = 1'b0;
   end
   end
@@ -145,10 +273,14 @@ module used_text(input logic [9:0] DrawX, DrawY,
                   input logic [9:0] start_x, input logic [9:0] start_y,
                   output logic [2:0] bit_num,
                   output logic [7:0] used_hex,
-                  output logic is_usedtext);
+                  output logic is_usedtext,
+                  output logic [9:0] y_diff);
   // 'U' 'S' 'E' 'D' '  = 5 chars
   parameter width = 8;
   parameter height = 16;
+
+  assign y_diff = DrawY - start_y;
+
   always_comb begin
   if(DrawY>=start_y && DrawY < (start_y+height))begin
     if(DrawX>=start_x && DrawX<start_x+width)begin
@@ -178,22 +310,31 @@ module used_text(input logic [9:0] DrawX, DrawY,
     end
     else begin
       is_usedtext=1'b0;
+      bit_num = 3'b0;
+      used_hex = 8'h20;
     end
   end
   else begin
     is_usedtext = 1'b0;
+    bit_num = 3'b0;
+    used_hex = 8'h20;
   end
 end
 endmodule
+
 
 module hp_text(input logic [9:0] DrawX, DrawY,
                   input logic [9:0] start_x, input logic [9:0] start_y,
                   output logic [2:0] bit_num,
                   output logic [7:0] hp_hex,
-                  output logic is_hptext);
+                  output logic is_hptex,
+                  output logic [9:0] y_diff);
   // 'H' 'P' = 2 chars
   parameter width = 8;
   parameter height = 16;
+
+  assign y_diff = DrawY - start_y;
+
   always_comb begin
   if(DrawY>=start_y && DrawY < (start_y+height))begin
     if(DrawX>=start_x && DrawX<start_x+width)begin
@@ -208,10 +349,14 @@ module hp_text(input logic [9:0] DrawX, DrawY,
     end
     else begin
       is_hptext=1'b0;
+      bit_num = 3'b0;
+      hp_hex = 8'h20;
     end
   end
   else begin
     is_hptext = 1'b0;
+    bit_num = 3'b0;
+    hp_hex = 8'h20;
   end
 end
 endmodule
@@ -222,13 +367,18 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
                   input logic [6:0] maxHP, input logic [6:0] curHP,
                   output logic [2:0] bit_num,
                   output logic [7:0] hp2_hex,
-                  output logic is_hp2text);
+                  output logic is_hp2text,
+                  output logic [9:0] y_diff);
   //max hp is currently 100 hp, => _ _ _ / _ _ _ = 7 characters
   //ascii 0 = 0x30
   parameter width = 8;
   parameter height = 16;
+
+  assign y_diff = DrawY - start_y;
+
   logic [7:0] first_hp [0:2];
   logic [7:0] second_hp [0:2];
+  
   always_comb begin
     if(curHP>=100)begin
       first_hp[0] = 8'h31;
