@@ -3,7 +3,7 @@ module battle(input logic Clk,
               input logic is_battle,
               input logic [9:0] DrawX, input logic [9:0] DrawY,
               input logic [7:0] keycode,
-              input logic [1:0][2:0] team,
+              input logic [2:0][2:0] team,
               output logic result,
               output logic end_battle,
               output logic [1:0] my_cur,
@@ -33,6 +33,7 @@ module battle(input logic Clk,
   // Registers to hold pokemon health status
   logic [7:0] player_hp[3];
   logic [7:0] opponent_hp[3];
+  logic [7:0] player_hp_in[3], opponent_hp_in[3];
   logic [7:0] my_maxhp [3];
   logic [7:0] enemy_maxhp [3];
 
@@ -159,7 +160,8 @@ module battle(input logic Clk,
                    .player_move(player_move_data),
                    .enemy_move(enemy_move_data),
                    .is_player(is_player),
-                   .damage(damage)
+                   .damage(damage),
+						 .EXPORT(EXPORT_DATA)
                    );
 
   // AI for enemy player
@@ -179,6 +181,8 @@ module battle(input logic Clk,
       move_index <= move_index_in;
       cur_mon <= cur_mon_in;
       opp_mon <= opp_mon_in;
+		player_hp <= player_hp_in;
+		opponent_hp <= opponent_hp_in;
   end
 
   always_comb
@@ -194,10 +198,15 @@ module battle(input logic Clk,
     opp_mon_in = opp_mon;
     player_addr = team[cur_mon];
     enemy_addr = enemy_team[opp_mon];
+	 player_hp_in = player_hp;
+	 opponent_hp_in = opponent_hp;
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_data[9];
+//	 EXPORT_DATA = player_move;
+	 enemy_team[2'b0] = 0; // Change when random gen is implemented
+        enemy_team[2'b01] = 1;
+        enemy_team[2'b10] = 2;
 
     unique case(State)
       Wait:
@@ -260,18 +269,10 @@ module battle(input logic Clk,
 
       Battle_Start:
       begin
-        enemy_team[2'b0] = 0; // Change when random gen is implemented
-        enemy_team[2'b01] = 1;
-        enemy_team[2'b10] = 2;
-        for(int i = 0; i < 2; i++)
-        begin
-          player_addr = team[i];
-          enemy_addr = enemy_team[i];
-          player_hp[i] = player_data[9];
-          opponent_hp[i] = enemy_data[9];
-          my_maxhp[i] = player_data[9]; //store max hp for displaying hp status text
-          enemy_maxhp[i] = player_data[9];
-        end
+		  player_hp_in[0] = player_data[9];
+        opponent_hp_in[0] = enemy_data[9];
+		  enemy_maxhp[0] = player_data[9];
+		  my_maxhp[0] = player_data[9];
       end
 
       End_Turn:
@@ -321,15 +322,16 @@ module battle(input logic Clk,
 
       Player:
       begin
+//		EXPORT_DATA = 8'hFF;
         is_player = 1'b1;
         if(player_hp[cur_mon] > 8'b0)
-          opponent_hp[opp_mon] = opponent_hp[opp_mon] - damage;
+          opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
       end
 
       Enemy:
       begin
         if(opponent_hp[opp_mon] > 8'b0)
-          player_hp[cur_mon] = player_hp[cur_mon] - damage;
+          player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
       end
 
       Win:
