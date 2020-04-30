@@ -87,10 +87,10 @@ module battle(input logic Clk,
 
   logic [1:0][4:0] cur_user_moves;
   always_comb begin
-    cur_user_moves[0]=player_data[0];
-    cur_user_moves[1]=player_data[1];
-    cur_user_moves[2]=player_data[2];
-    cur_user_moves[3]=player_data[3];
+    cur_user_moves[3]=player_data[0];
+    cur_user_moves[2]=player_data[1];
+    cur_user_moves[1]=player_data[2];
+    cur_user_moves[0]=player_data[3];
   end
   logic [2:0] move_bit_num;
   logic [7:0] move_hex;
@@ -99,7 +99,7 @@ module battle(input logic Clk,
   move_select move_menu(.DrawX(DrawX), .DrawY(DrawY),
                .start_x(200), .start_y(370),
                .user_moves(cur_user_moves),
-               .hovered_move(3-move_index),
+               .hovered_move(move_index),
                .bit_num(move_bit_num),
                .move_hex(move_hex),
                .y_diff(y_diff_move),
