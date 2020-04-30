@@ -124,7 +124,7 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
  //black hp bar border
  always_comb begin
  if( ((DrawX>=border_x)&&(DrawX<(border_x+border_width))&&(DrawY==border_y || DrawY==(border_y+border_height-1)) )
-     || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height)))) begin
+     || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height-1)))) begin
        hp_r = 8'h00;
        hp_g = 8'h00;
        hp_b = 8'h00;
@@ -138,7 +138,7 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
      hp_g = 8'hff;
      hp_b = 8'h74;
    end
-   if(fill_width*5>width)begin //50% to 20% health
+   else if(fill_width*5>width)begin //50% to 20% health
      hp_r = 8'h41;   //orange-yellow
      hp_g = 8'hcc;
      hp_b = 8'h00;
@@ -205,7 +205,7 @@ module battle_info(input logic [9:0] DrawX, input logic [9:0] DrawY,
               .is_hpbar(is_battleinfo_bar));
  //Just the word: HP
  hp_text HP_HP(.DrawX(DrawX), .DrawY(DrawY),
-               .start_x(start_x+3), .start_y(start_y + 22),
+               .start_x(start_x+3), .start_y(start_y + 18),
                .bit_num(hp_bitnum),
                .hp_hex(hp_hex),
                .is_hptext(is_hptext),

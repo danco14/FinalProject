@@ -87,7 +87,7 @@ module battle(input logic Clk,
   //hp bar, move selector and battle text modules go here eventually...
   battle_info user_batinfo(.DrawX(DrawX), .DrawY(DrawY),
                .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
-               .start_x(400), .start_y(280),
+               .start_x(380), .start_y(300),
                .poke_id(player_addr),
                .is_user_info(1'b1),
                .bit_num(bit_num_user),
@@ -118,7 +118,7 @@ module battle(input logic Clk,
       info_hex = info_hex_user;
       is_battleinfo_font = 1'b1;
     end
-    if(is_battleinfo_font_enemy)begin
+    else if(is_battleinfo_font_enemy)begin
       bit_num_batinfo = bit_num_enemy;
       y_diff_batinfo = y_diff_enemy;
       info_hex = info_hex_enemy;
