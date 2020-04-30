@@ -100,7 +100,7 @@ module enemy_sprites (input logic [9:0] DrawX, input logic [9:0] DrawY,
 endmodule
 
 module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
-             input logic [6:0] maxHP, input logic [6:0] curHP,
+             input logic [7:0] maxHP, input logic [7:0] curHP,
              input logic [9:0] start_x, input logic [9:0] start_y,
              output logic [7:0] hp_r,
              output logic [7:0] hp_g,
@@ -173,7 +173,7 @@ endmodule
 
 //top level module of hp bar, hp indicator and pokemon name
 module battle_info(input logic [9:0] DrawX, input logic [9:0] DrawY,
-             input logic [6:0] maxHP, input logic [6:0] curHP,
+             input logic [7:0] maxHP, input logic [7:0] curHP,
              input logic [9:0] start_x, input logic [9:0] start_y, //indicates the start of pokemon name
              input logic [2:0] poke_id,
              input logic is_user_info, //only show user hp (curHP/maxHP), not enemy hp

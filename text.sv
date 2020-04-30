@@ -364,7 +364,7 @@ endmodule
 //show hp numbers: 37/50 , 100/100 etc.
 module hp_text2(input logic [9:0] DrawX, DrawY,
                  input logic [9:0] start_x, input logic [9:0] start_y,
-                 input logic [6:0] maxHP, input logic [6:0] curHP,
+                 input logic [7:0] maxHP, input logic [7:0] curHP,
                  output logic [2:0] bit_num,
                  output logic [7:0] hp2_hex,
                  output logic is_hp2text,
