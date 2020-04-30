@@ -3,8 +3,8 @@ module calculation(input logic [11:0][7:0] player_mon,
                    input logic [4:0][7:0] player_move,
                    input logic [4:0][7:0] enemy_move,
                    input logic is_player,
-                   output logic [7:0] damage,
-						 output logic [7:0] EXPORT
+                   output logic [7:0] damage
+//						 output logic [7:0] EXPORT
                    );
 
   parameter [0:18][0:18][3:0] type_chart = '{
@@ -57,7 +57,7 @@ module calculation(input logic [11:0][7:0] player_mon,
       else
         damage = ((22 * enemy_move[2] * (enemy_mon[6] / player_mon[5])) / 50 + 2) * modifier;
     end
-	 EXPORT = modifier;
+//	 EXPORT = modifier;
   end
 
 endmodule
