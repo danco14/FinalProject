@@ -203,9 +203,9 @@ module moves_names(input logic [9:0] DrawX, DrawY,
 
    end
  else begin
-     is_pname = 1'b0;
-     bit_num = 3'b0;
-     pname_hex = 8'h20;
+   is_movename = 1'b0;
+   bit_num = 3'b0;
+   move_hex = 8'h20;
  end
  end
 
