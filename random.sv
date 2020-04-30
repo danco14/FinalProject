@@ -6,7 +6,7 @@ module random(input logic Clk,
   // XORShift algorithm taken from https://en.wikipedia.org/wiki/Xorshift
   parameter [31:0] state = 32'hECEBCAFE;
 
-  logic [31:0] shift;
+  logic [31:0] shift = 32'hECEBCAFE;
   logic [31:0] shift_in = 32'hECEBCAFE;
   // logic [31:0] nl = 32'DEADBEEF;
   logic [31:0] a, b;

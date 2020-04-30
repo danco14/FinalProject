@@ -280,7 +280,7 @@ module stats(input logic [2:0] pokemon_addr1,
     '{dragon,
     special,
     8'd85,
-    8'd1,
+    8'd100,
     8'd10},
     // Blizzard
     '{ice,

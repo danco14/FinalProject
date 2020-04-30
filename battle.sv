@@ -19,7 +19,7 @@ module battle(input logic Clk,
               output logic is_battleinfo_bar
               );
 
-  enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, Player_text, CPU_Move, Enemy, Enemy_text, Win, Lose} Next_state, State;
+  enum logic [20:0] {Wait, Battle_Start, Choose, End_Turn, Select_Move, Player, Player_text, CPU_Move, Enemy, Enemy_text, Win, Lose} Next_state, State;
 
   // Keycodes
   parameter [7:0] W = 8'h1A;
@@ -231,9 +231,9 @@ module battle(input logic Clk,
   // AI CPU();
 
   // Generate random numbers
-  // logic [7:0] num;
-  //
-  // random rand(.Clk(Clk), .Reset(Reset), .num());
+  logic [7:0] num;
+
+  random r(.Clk(Clk), .Reset(Reset), .num(num));
 
   always_ff @ (posedge Clk)
   begin
@@ -273,10 +273,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-//	 EXPORT_DATA = opponent_hp[opp_mon];
-	 enemy_team[2'b0] = 3; // Change when random gen is implemented
-        enemy_team[2'b01] = 1;
-        enemy_team[2'b10] = 2;
+	 EXPORT_DATA = player_move_data[1];
 
     unique case(State)
       Wait:
@@ -284,7 +281,10 @@ module battle(input logic Clk,
           Next_state = Battle_Start;
 
       Battle_Start:
-        Next_state = Select_Move;
+        Next_state = Choose;
+		  
+		Choose:
+		  Next_state = Select_Move;
 
       End_Turn:
         Next_state = Select_Move;
@@ -341,10 +341,12 @@ module battle(input logic Clk,
 
 
     case(State)
-      Wait: ;
+      Wait:
+		  enemy_team[0] = num % 8;
 
       Battle_Start:
       begin
+		  enemy_team[1] = num % 8;
 		  cur_mon_in = 2'b0;
 		  opp_mon_in = 2'b0;
 		  player_hp_in[0] = player_data[9];
@@ -352,6 +354,9 @@ module battle(input logic Clk,
 		  enemy_maxhp_in[0] = enemy_data[9];
 		  my_maxhp_in[0] = player_data[9];
       end
+		
+		Choose:
+			enemy_team[2] = num % 8;
 
       End_Turn:
       begin
@@ -405,20 +410,26 @@ module battle(input logic Clk,
       Player:
       begin
         is_player = 1'b1;
-		  if(opponent_hp[opp_mon] - damage > enemy_maxhp[opp_mon])
-			 opponent_hp_in[opp_mon] = 8'b0;
-		  else
-			 opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
+		  if((num % 100) + 1 <= player_move_data[1])
+		  begin
+			  if(opponent_hp[opp_mon] - damage > enemy_maxhp[opp_mon])
+				 opponent_hp_in[opp_mon] = 8'b0;
+			  else
+				 opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
+			end
       end
 
 		Player_text: ;
 
       Enemy:
       begin
-		  if(player_hp[cur_mon] - damage > my_maxhp[cur_mon])
-			 player_hp_in[cur_mon] = 8'b0;
-		  else
-			 player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
+			if((num % 100) + 1 <= enemy_move_data[1])
+			begin
+			  if(player_hp[cur_mon] - damage > my_maxhp[cur_mon])
+				 player_hp_in[cur_mon] = 8'b0;
+			  else
+				 player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
+			end
       end
 
 		Enemy_text: ;
