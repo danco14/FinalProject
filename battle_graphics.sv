@@ -247,7 +247,7 @@ endmodule
 
 module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
              input logic [9:0] start_x, input logic [9:0] start_y, //start of move 0 text
-             input logic [1:0][4:0] user_moves, //4 moves of the 26 available
+             input logic [3:0][4:0] user_moves, //4 moves of the 26 available
              input logic [1:0] hovered_move, //0-3
              output logic [2:0] bit_num,
              output logic [7:0] move_hex,
@@ -337,7 +337,7 @@ module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
      bit_num = DrawX - pointer_x;
      move_hex = 8'h3e;
      y_diff = DrawY - pointer_y;
-     is_moversel = 1'b1;
+     is_movesel = 1'b1;
    end
    else if(is_move0name) begin
      bit_num = move0_bitnum;
@@ -365,7 +365,7 @@ module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
    end
    else begin
      bit_num = 3'b0;
-     useratk_hex = 8'h20;
+     move_hex = 8'h20;
      y_diff = 10'b0;
      is_movesel=1'b0;
    end
