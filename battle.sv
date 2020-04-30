@@ -6,10 +6,11 @@ module battle(input logic Clk,
               output logic result,
               output logic end_battle,
               output logic [1:0] my_cur,
-              output logic [2:0] enemy_cur_id
+              output logic [2:0] enemy_cur_id,
+				  output logic [7:0] EXPORT_DATA
               );
 
-  enum [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, CPU_Move, Enemy, Win, Lose} Next_state, State;
+  enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, CPU_Move, Enemy, Win, Lose} Next_state, State;
 
   // Keycodes
   parameter [7:0] W = 8'h1A;
@@ -18,7 +19,7 @@ module battle(input logic Clk,
   parameter [7:0] D = 8'h07;
   parameter [7:0] ENTER = 8'h28;
 
-  logic [1:0][2:0] enemy_team;
+  logic [2:0][2:0] enemy_team;
 
   // Registers to hold pokemon health status
   logic [7:0] player_hp[3];
@@ -81,7 +82,7 @@ module battle(input logic Clk,
   always_ff @ (posedge Clk)
   begin
     if(Reset)
-      State <= Battle_Start;
+      State <= Wait;
     else
       State <= Next_state;
       move_index <= move_index_in;
@@ -95,6 +96,7 @@ module battle(input logic Clk,
 
     end_battle = 1'b0;
     is_player = 1'b0;
+	 result = 1'b0;
     // my_hp = player_hp[cur_mon];
     // enemy_hp = opponent_hp[opp_mon];
     cur_mon_in = cur_mon;
@@ -104,6 +106,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[8 + move_index];
     enemy_move = 2'b0; // change when AI is added
+	 EXPORT_DATA = player_data[3];
 
     unique case(State)
       Wait:
@@ -166,12 +169,12 @@ module battle(input logic Clk,
 
       Battle_Start:
       begin
-        enemy_team[0] = 0; // Change when random gen is implemented
-        enemy_team[1] = 1;
-        enemy_team[2] = 2;
-        for(int i = 0; i < 3; i++)
+        enemy_team[2'b0] = 0; // Change when random gen is implemented
+        enemy_team[2'b01] = 1;
+        enemy_team[2'b10] = 2;
+        for(int i = 0; i < 2; i++)
         begin
-          player_addr = team[i]
+          player_addr = team[i];
           enemy_addr = enemy_team[i];
           player_hp[i] = player_data[2];
           opponent_hp[i] = enemy_data[2];
@@ -195,7 +198,6 @@ module battle(input logic Clk,
       Select_Move:
       begin
         case(keycode)
-        begin
           W:
           begin
             if(move_index != 2'b00 && move_index != 2'b01)

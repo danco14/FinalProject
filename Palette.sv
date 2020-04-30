@@ -1,6 +1,7 @@
 module color_palette(input  is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
                      input is_chooser,
                      input is_start,
+							input is_sprite,
                      input [9:0] DrawX,
                      input [9:0] DrawY,
                      input [2:0] cur_choice_id,
@@ -153,7 +154,7 @@ module color_palette(input  is_background,            // Whether current pixel b
        begin
         Red = 8'hff;
         Green = 8'hff;
-        Blue = 8'hff
+        Blue = 8'hff;
        end
    end
 endmodule

@@ -112,7 +112,7 @@ module pokemon( input               CLOCK_50,
    logic is_battle;
    logic [7:0] EXPORT_DATA;
    logic [2:0] cur_choice_id;
-   logic [1:0][2:0] team;
+   logic [2:0][2:0] team;
    logic result;
    logic end_battle;
 	 logic [7:0] key;
@@ -128,7 +128,7 @@ module pokemon( input               CLOCK_50,
                    .DrawY(DrawY),
                    .keycode(key),
                    .result(result),
-                   .end_battle(end_battle)
+                   .end_battle(end_battle),
                    .palette_idx(palette_idx),
                    .is_sprite(is_sprite),
                    .is_chooser(is_chooser),
@@ -183,16 +183,15 @@ module pokemon( input               CLOCK_50,
                 .result(result),
                 .end_battle(end_battle),
                 .my_cur(my_cur),
-                .enemy_cur_id(enemy_cur_id)
+                .enemy_cur_id(enemy_cur_id),
+					 .EXPORT_DATA(test)
                 );
 
   // Test random number generator
-  logic [7:0] num;
-
-  random rand(.Clk(Clk), .Reset(Reset), .num(num));
+  logic [7:0] test;
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (num[3:0], HEX0);
-    HexDriver hex_inst_1 (num[7:4], HEX1);
+    HexDriver hex_inst_0 (test[3:0], HEX0);
+    HexDriver hex_inst_1 (test[7:4], HEX1);
 
 endmodule

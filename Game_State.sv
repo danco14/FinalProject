@@ -11,7 +11,7 @@ module game_state(input logic Clk, input logic Reset,
                   output logic is_battle,
                   output logic is_start,
                   output logic [2:0] cur_choice,
-                  output logic [1:0][2:0] my_team,
+                  output logic [2:0][2:0] my_team,
                   // output logic [1:0] direction,
                   output logic [7:0] EXPORT_DATA
 						      );
@@ -60,8 +60,7 @@ module game_state(input logic Clk, input logic Reset,
 
   logic done_select;
   logic done_select_in = 1'b0;
-  // logic [1:0][2:0] my_team; //choose 3 from 8, with repeats
-  logic [1:0][2:0] my_team_in;
+  logic [2:0][2:0] my_team_in;
   logic [1:0] num_chosen;
   logic [1:0] num_chosen_in = 2'b0;
   logic [2:0] cur_choice_in = 3'b0;
@@ -73,14 +72,14 @@ module game_state(input logic Clk, input logic Reset,
 
   pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(palette_idx),.read_address(poke_sprite_addr));
 
-  my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-                 .poke_id(my_team[my_cur]),
-                 .sprite_addr(psprite_myteam),
-                 .is_myteam(is_myteam));
-  enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-              .poke_id(enemy_cur_id),
-              .sprite_addr(psprite_enemy),
-              .is_enemyteam(is_enemyteam));
+//  my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+//                 .poke_id(my_team[my_cur]),
+//                 .sprite_addr(psprite_myteam),
+//                 .is_myteam(is_myteam));
+//  enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+//              .poke_id(enemy_cur_id),
+//              .sprite_addr(psprite_enemy),
+//              .is_enemyteam(is_enemyteam));
 
   always_ff @ (posedge Clk)
   begin
@@ -108,6 +107,7 @@ module game_state(input logic Clk, input logic Reset,
 
     is_sprite = 1'b0;
     poke_sprite_addr = psprite_startscreen;
+	 psprite_startscreen = 19'b0;
     is_chooser = 1'b0;
     is_battle = 1'b0;
     is_start = 1'b0;
@@ -234,16 +234,18 @@ module game_state(input logic Clk, input logic Reset,
         //   direction == 2'b10;
         // else if(keycode == D)
         //   direction == 2'b11;
-      Battle: ;
+      Battle:
+		begin
         is_battle = 1'b1;
-        if(is_enemyteam)begin
-          poke_sprite_addr = psprite_enemy;
-          is_sprite = 1'b1;
-        end
-        else if(is_myteam)begin
-          poke_sprite_addr = psprite_myteam;
-          is_sprite = 1'b1;
-        end
+//        if(is_enemyteam)begin
+//          poke_sprite_addr = psprite_enemy;
+//          is_sprite = 1'b1;
+//        end
+//        else if(is_myteam)begin
+//          poke_sprite_addr = psprite_myteam;
+//          is_sprite = 1'b1;
+//        end
+		end
       End:
       begin
         num_chosen_in = 2'b0;
