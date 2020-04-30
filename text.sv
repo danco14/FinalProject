@@ -210,118 +210,118 @@ module moves_names(input logic [9:0] DrawX, DrawY,
  end
 
 endmodule
-//
-// module enemy_text(input logic [9:0] DrawX, DrawY,
-//                  input logic [9:0] start_x, input logic [9:0] start_y,
-//                  output logic [2:0] bit_num,
-//                  output logic [7:0] enemy_hex,
-//                  output logic is_enemytext,
-//                  output logic [9:0] y_diff);
-//  // 'E' 'N' 'E' 'M' 'Y' ' ' = 6 chars
-//  parameter width = 8;
-//  parameter height = 16;
-//
-//  assign y_diff = DrawY - start_y;
-//
-//  always_comb begin
-//  if(DrawY>=start_y && DrawY < (start_y+height))begin
-//    if(DrawX>=start_x && DrawX<start_x+width)begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - start_x;
-//      enemy_hex = 8'h45;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - (start_x+width);
-//      enemy_hex = 8'h4e;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - (start_x+(width*2));
-//      enemy_hex = 8'h45;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - (start_x+(width*3));
-//      enemy_hex = 8'h4d;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - (start_x+(width*4));
-//      enemy_hex = 8'h59;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
-//      is_enemytext=1'b1;
-//      bit_num = DrawX - (start_x+(width*5));
-//      enemy_hex = 8'h20;
-//    end
-//    else begin
-//      bit_num = 3'b0;
-//      enemy_hex = 8'h20;
-//      is_enemytext=1'b0;
-//    end
-//  end
-//  else begin
-//    bit_num = 3'b0;
-//    enemy_hex = 8'h20;
-//    is_enemytext = 1'b0;
-//  end
-//  end
-// endmodule
-//
-//module used_text(input logic [9:0] DrawX, DrawY,
-//                  input logic [9:0] start_x, input logic [9:0] start_y,
-//                  output logic [2:0] bit_num,
-//                  output logic [7:0] used_hex,
-//                  output logic is_usedtext,
-//                  output logic [9:0] y_diff);
-//  // 'U' 'S' 'E' 'D' '  = 5 chars
-//  parameter width = 8;
-//  parameter height = 16;
-//
-//  assign y_diff = DrawY - start_y;
-//
-//  always_comb begin
-//  if(DrawY>=start_y && DrawY < (start_y+height))begin
-//    if(DrawX>=start_x && DrawX<start_x+width)begin
-//      is_usedtext=1'b1;
-//      bit_num = DrawX - start_x;
-//      used_hex = 8'h55;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-//      is_usedtext=1'b1;
-//      bit_num = DrawX - (start_x+width);
-//      used_hex = 8'h53;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-//      is_usedtext=1'b1;
-//      bit_num = DrawX - (start_x+(width*2));
-//      used_hex = 8'h45;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-//      is_usedtext=1'b1;
-//      bit_num = DrawX - (start_x+(width*3));
-//      used_hex = 8'h44;
-//    end
-//    else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-//      is_usedtext=1'b1;
-//      bit_num = DrawX - (start_x+(width*4));
-//      used_hex = 8'h20;
-//    end
-//    else begin
-//      is_usedtext=1'b0;
-//      bit_num = 3'b0;
-//      used_hex = 8'h20;
-//    end
-//  end
-//  else begin
-//    is_usedtext = 1'b0;
-//    bit_num = 3'b0;
-//    used_hex = 8'h20;
-//  end
-//end
-//endmodule
-//
+
+module enemy_text(input logic [9:0] DrawX, DrawY,
+                 input logic [9:0] start_x, input logic [9:0] start_y,
+                 output logic [2:0] bit_num,
+                 output logic [7:0] enemy_hex,
+                 output logic is_enemytext,
+                 output logic [9:0] y_diff);
+ // 'E' 'N' 'E' 'M' 'Y' ' ' = 6 chars
+ parameter width = 8;
+ parameter height = 16;
+
+ assign y_diff = DrawY - start_y;
+
+ always_comb begin
+ if(DrawY>=start_y && DrawY < (start_y+height))begin
+   if(DrawX>=start_x && DrawX<start_x+width)begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - start_x;
+     enemy_hex = 8'h45;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - (start_x+width);
+     enemy_hex = 8'h4e;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - (start_x+(width*2));
+     enemy_hex = 8'h45;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - (start_x+(width*3));
+     enemy_hex = 8'h4d;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - (start_x+(width*4));
+     enemy_hex = 8'h59;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
+     is_enemytext=1'b1;
+     bit_num = DrawX - (start_x+(width*5));
+     enemy_hex = 8'h20;
+   end
+   else begin
+     bit_num = 3'b0;
+     enemy_hex = 8'h20;
+     is_enemytext=1'b0;
+   end
+ end
+ else begin
+   bit_num = 3'b0;
+   enemy_hex = 8'h20;
+   is_enemytext = 1'b0;
+ end
+ end
+endmodule
+
+module used_text(input logic [9:0] DrawX, DrawY,
+                 input logic [9:0] start_x, input logic [9:0] start_y,
+                 output logic [2:0] bit_num,
+                 output logic [7:0] used_hex,
+                 output logic is_usedtext,
+                 output logic [9:0] y_diff);
+ // 'U' 'S' 'E' 'D' ' ' = 5 chars
+ parameter width = 8;
+ parameter height = 16;
+
+ assign y_diff = DrawY - start_y;
+
+ always_comb begin
+ if(DrawY>=start_y && DrawY < (start_y+height))begin
+   if(DrawX>=start_x && DrawX<start_x+width)begin
+     is_usedtext=1'b1;
+     bit_num = DrawX - start_x;
+     used_hex = 8'h55;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+     is_usedtext=1'b1;
+     bit_num = DrawX - (start_x+width);
+     used_hex = 8'h53;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+     is_usedtext=1'b1;
+     bit_num = DrawX - (start_x+(width*2));
+     used_hex = 8'h45;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+     is_usedtext=1'b1;
+     bit_num = DrawX - (start_x+(width*3));
+     used_hex = 8'h44;
+   end
+   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+     is_usedtext=1'b1;
+     bit_num = DrawX - (start_x+(width*4));
+     used_hex = 8'h20;
+   end
+   else begin
+     is_usedtext=1'b0;
+     bit_num = 3'b0;
+     used_hex = 8'h20;
+   end
+ end
+ else begin
+   is_usedtext = 1'b0;
+   bit_num = 3'b0;
+   used_hex = 8'h20;
+ end
+end
+endmodule
+
 
 module hp_text(input logic [9:0] DrawX, DrawY,
                  input logic [9:0] start_x, input logic [9:0] start_y,
@@ -369,7 +369,7 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
                  output logic [7:0] hp2_hex,
                  output logic is_hp2text,
                  output logic [9:0] y_diff);
- //max hp is currently 100 hp, => _ _ _ / _ _ _ = 7 characters
+ //max hp is currently <200 hp, => _ _ _ / _ _ _ = 7 characters
  //ascii 0 = 0x30
  parameter width = 8;
  parameter height = 16;

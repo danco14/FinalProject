@@ -379,142 +379,142 @@ module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
 
 endmodule
 
-//module user_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
-//              input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
-//              input logic [4:0] move_id, //current move id
-//              input logic [2:0] poke_id, //current pokemon id
-//              output logic [2:0] bit_num,
-//              output logic [7:0] useratk_hex,
-//              output logic [9:0] y_diff,
-//              output logic is_useratk);
-//  logic [7:0] pname_hex;
-//  logic [2:0] pname_bitnum;
-//  logic is_pname;
-//  logic [9:0] name_ydiff;
-//
-//  logic [7:0] used_hex;
-//  logic [2:0] used_bitnum;
-//  logic is_usedtext;
-//  logic [9:0] used_ydiff;
-//
-//  logic [7:0] move_hex;
-//  logic [2:0] move_bitnum;
-//  logic is_movename;
-//  logic [9:0] move_ydiff;
-//
-//  poke_names pn_atk(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y),.poke_id(poke_id),
-//                 .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
-//  used_text uwu(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
-//                 .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
-//  moves_names user_move(.DrawX(DrawX), .DrawY(DrawY),
-//                   .start_x(start_x+40), .start_y(start_y+20),
-//                   .move_id(move_id),
-//                   .bit_num(move_bitnum),
-//                   .move_hex(move_hex),
-//                   .is_movename(is_movename),
-//                   .y_diff(move_ydiff));
-//  always_comb begin
-//    if(is_pname) begin
-//      bit_num = pname_bitnum;
-//      useratk_hex = pname_hex;
-//      y_diff = name_ydiff;
-//      is_useratk=1'b1;
-//    end
-//    else if(is_usedtext) begin
-//      bit_num = used_bitnum;
-//      useratk_hex = used_hex;
-//      y_diff = used_ydiff;
-//      is_useratk=1'b1;
-//    end
-//    else if(is_movename) begin
-//      bit_num = move_bitnum;
-//      useratk_hex = move_hex;
-//      y_diff = move_ydiff;
-//      is_useratk=1'b1;
-//    end
-//    else begin
-//      bit_num = 3'b0;
-//      useratk_hex = 8'h20;
-//      y_diff = 10'b0;
-//      is_useratk=1'b0;
-//    end
-//  end
-//endmodule;
-//
-//module enemy_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
-//              input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
-//              input logic [4:0] move_id, //current move id
-//              input logic [2:0] poke_id, //current pokemon id
-//              output logic [2:0] bit_num,
-//              output logic [7:0] enemyatk_hex,
-//              output logic [9:0] y_diff,
-//              output logic is_enemyatk);
-//  logic [7:0] enemy_hex;
-//  logic [2:0] enemy_bitnum;
-//  logic is_enemytext;
-//  logic [9:0] enemy_ydiff;
-//
-//  logic [7:0] pname_hex;
-//  logic [2:0] pname_bitnum;
-//  logic is_pname;
-//  logic [9:0] name_ydiff;
-//
-//  logic [7:0] used_hex;
-//  logic [2:0] used_bitnum;
-//  logic is_usedtext;
-//  logic [9:0] used_ydiff;
-//
-//  logic [7:0] move_hex;
-//  logic [2:0] move_bitnum;
-//  logic is_movename;
-//  logic [9:0] move_ydiff;
-//  enemy_text entext(.DrawX(DrawX), .DrawY(DrawY),
-//                    .start_x(start_x), .start_y(start_y),
-//                    .bit_num(enemy_bitnum),
-//                    .enemy_hex(enemy_hex),
-//                    .is_enemytext(is_enemytext),
-//                    .y_diff(enemy_ydiff));
-//  poke_names pn_atk_enem(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x+48),.start_y(start_y),.poke_id(poke_id),
-//                 .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
-//  used_text owo(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
-//                 .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
-//  moves_names enememe_move(.DrawX(DrawX), .DrawY(DrawY),
-//                   .start_x(start_x+40), .start_y(start_y+20),
-//                   .move_id(move_id),
-//                   .bit_num(move_bitnum),
-//                   .move_hex(move_hex),
-//                   .is_movename(is_movename),
-//                   .y_diff(move_ydiff));
-//  always_comb begin
-//    if(is_enemytext) begin
-//      bit_num = enemy_bitnum;
-//      enemyatk_hex = enemy_hex;
-//      y_diff = enemy_ydiff;
-//      is_enemyatk=1'b1;
-//    end
-//    else if(is_pname) begin
-//      bit_num = pname_bitnum;
-//      enemyatk_hex = pname_hex;
-//      y_diff = name_ydiff;
-//      is_enemyatk=1'b1;
-//    end
-//    else if(is_usedtext) begin
-//      bit_num = used_bitnum;
-//      enemyatk_hex = used_hex;
-//      y_diff = used_ydiff;
-//      is_enemyatk=1'b1;
-//    end
-//    else if(is_movename) begin
-//      bit_num = move_bitnum;
-//      enemyatk_hex = move_hex;
-//      y_diff = move_ydiff;
-//      is_enemyatk=1'b1;
-//    end
-//    else begin
-//      bit_num = 3'b0;
-//      enemyatk_hex = 8'h20;
-//      y_diff = 10'b0;
-//      is_enemyatk=1'b0;
-//    end
-//  end
-//endmodule;
+module user_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
+             input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
+             input logic [4:0] move_id, //current move id
+             input logic [2:0] poke_id, //current pokemon id
+             output logic [2:0] bit_num,
+             output logic [7:0] useratk_hex,
+             output logic [9:0] y_diff,
+             output logic is_useratk);
+ logic [7:0] pname_hex;
+ logic [2:0] pname_bitnum;
+ logic is_pname;
+ logic [9:0] name_ydiff;
+
+ logic [7:0] used_hex;
+ logic [2:0] used_bitnum;
+ logic is_usedtext;
+ logic [9:0] used_ydiff;
+
+ logic [7:0] move_hex;
+ logic [2:0] move_bitnum;
+ logic is_movename;
+ logic [9:0] move_ydiff;
+
+ poke_names pn_atk(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y),.poke_id(poke_id),
+                .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
+ used_text uwu(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
+                .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
+  moves_names move_useratk(.DrawX(DrawX), .DrawY(DrawY),
+                   .start_x(start_x+40), .start_y(start_y+20),
+                   .move_id(move_id),
+                   .bit_num(move_bitnum),
+                   .move_hex(move_hex),
+                   .is_movename(is_movename),
+                   .y_diff(move_ydiff));
+ always_comb begin
+   if(is_pname) begin
+     bit_num = pname_bitnum;
+     useratk_hex = pname_hex;
+     y_diff = name_ydiff;
+     is_useratk=1'b1;
+   end
+   else if(is_usedtext) begin
+     bit_num = used_bitnum;
+     useratk_hex = used_hex;
+     y_diff = used_ydiff;
+     is_useratk=1'b1;
+   end
+   else if(is_movename) begin
+     bit_num = move_bitnum;
+     useratk_hex = move_hex;
+     y_diff = move_ydiff;
+     is_useratk=1'b1;
+   end
+   else begin
+     bit_num = 3'b0;
+     useratk_hex = 8'h20;
+     y_diff = 10'b0;
+     is_useratk=1'b0;
+   end
+ end
+endmodule;
+
+module enemy_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
+             input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
+             input logic [4:0] move_id, //current move id
+             input logic [2:0] poke_id, //current pokemon id
+             output logic [2:0] bit_num,
+             output logic [7:0] enemyatk_hex,
+             output logic [9:0] y_diff,
+             output logic is_enemyatk);
+ logic [7:0] enemy_hex;
+ logic [2:0] enemy_bitnum;
+ logic is_enemytext;
+ logic [9:0] enemy_ydiff;
+
+ logic [7:0] pname_hex;
+ logic [2:0] pname_bitnum;
+ logic is_pname;
+ logic [9:0] name_ydiff;
+
+ logic [7:0] used_hex;
+ logic [2:0] used_bitnum;
+ logic is_usedtext;
+ logic [9:0] used_ydiff;
+
+ logic [7:0] move_hex;
+ logic [2:0] move_bitnum;
+ logic is_movename;
+ logic [9:0] move_ydiff;
+ enemy_text entext(.DrawX(DrawX), .DrawY(DrawY),
+                   .start_x(start_x), .start_y(start_y),
+                   .bit_num(enemy_bitnum),
+                   .enemy_hex(enemy_hex),
+                   .is_enemytext(is_enemytext),
+                   .y_diff(enemy_ydiff));
+ poke_names pn_atk_enem(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x+48),.start_y(start_y),.poke_id(poke_id),
+                .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
+ used_text owo(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
+                .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
+ moves_names enememe_move(.DrawX(DrawX), .DrawY(DrawY),
+                  .start_x(start_x+40), .start_y(start_y+20),
+                  .move_id(move_id),
+                  .bit_num(move_bitnum),
+                  .move_hex(move_hex),
+                  .is_movename(is_movename),
+                  .y_diff(move_ydiff));
+ always_comb begin
+   if(is_enemytext) begin
+     bit_num = enemy_bitnum;
+     enemyatk_hex = enemy_hex;
+     y_diff = enemy_ydiff;
+     is_enemyatk=1'b1;
+   end
+   else if(is_pname) begin
+     bit_num = pname_bitnum;
+     enemyatk_hex = pname_hex;
+     y_diff = name_ydiff;
+     is_enemyatk=1'b1;
+   end
+   else if(is_usedtext) begin
+     bit_num = used_bitnum;
+     enemyatk_hex = used_hex;
+     y_diff = used_ydiff;
+     is_enemyatk=1'b1;
+   end
+   else if(is_movename) begin
+     bit_num = move_bitnum;
+     enemyatk_hex = move_hex;
+     y_diff = move_ydiff;
+     is_enemyatk=1'b1;
+   end
+   else begin
+     bit_num = 3'b0;
+     enemyatk_hex = 8'h20;
+     y_diff = 10'b0;
+     is_enemyatk=1'b0;
+   end
+ end
+endmodule;

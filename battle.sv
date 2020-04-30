@@ -132,6 +132,31 @@ module battle(input logic Clk,
                 .hp_g(hp_g_enemy),
                 .hp_b(hp_b_enemy),
                 .is_battleinfo_bar(is_battleinfo_bar_enemy));
+
+  logic [2:0] uatk_bnum;
+  logic [7:0] useratk_hex;
+  logic [9:0] uatk_ydiff;
+  logic is_useratk;
+  user_attack uatk(.DrawX(DrawX), .DrawY(DrawY),
+               .start_x(180), .start_y(370),
+               .move_id(player_move),
+               .poke_id(player_addr),
+               .bit_num(uatk_bnum),
+               .useratk_hex(useratk_hex),
+               .y_diff(uatk_ydiff),
+               .is_useratk(is_useratk));
+ logic [2:0] en_bnum;
+ logic [7:0] enemyatk_hex;
+ logic [9:0] en_ydiff;
+ logic is_enemyatk;
+ enemy_attack enatk(.DrawX(DrawX), .DrawY(DrawY),
+              .start_x(180), .start_y(370),
+              .move_id(enemy_move),
+              .poke_id(enemy_addr),
+              .bit_num(en_bnum),
+              .enemyatk_hex(enemyatk_hex),
+              .y_diff(en_ydiff),
+              .is_enemyatk(is_enemyatk));
   always_comb begin
     if(is_battleinfo_font_user)begin
       bit_num_batinfo = bit_num_user;
@@ -145,10 +170,22 @@ module battle(input logic Clk,
       info_hex = info_hex_enemy;
       is_battleinfo_font = 1'b1;
     end
-    else if(is_movesel)begin
+    else if(is_movesel && State==Select_Move)begin
       bit_num_batinfo = move_bit_num;
       y_diff_batinfo = y_diff_move;
       info_hex = move_hex;
+      is_battleinfo_font = 1'b1;
+    end
+    else if(is_useratk && State==Player)begin
+      bit_num_batinfo = uatk_bnum;
+      y_diff_batinfo = uatk_ydiff;
+      info_hex = useratk_hex;
+      is_battleinfo_font = 1'b1;
+    end
+    else if(is_enemyatk && State==Enemy)begin
+      bit_num_batinfo = en_bnum;
+      y_diff_batinfo = en_ydiff;
+      info_hex = enemyatk_hex;
       is_battleinfo_font = 1'b1;
     end
     else begin
