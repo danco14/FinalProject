@@ -34,27 +34,27 @@ module calculation(input logic [11:0][7:0] player_mon,
   begin
     if(is_player)
     begin
-      if(player_move[0] == player_mon[1] || player_move[0] == player_mon[1])
-        modifier = (type_chart[player_move[0]][enemy_mon[0]] / 4) * (type_chart[player_move[0]][enemy_mon[1]] / 4) * (3/2);
+      if(player_move[4] == player_mon[11] || player_move[4] == player_mon[10])
+        modifier = (type_chart[player_move[4]][enemy_mon[11]] / 4) * (type_chart[player_move[4]][enemy_mon[10]] / 4) * (3/2);
       else
-        modifier = (type_chart[player_move[0]][enemy_mon[0]] / 4) * (type_chart[player_move[0]][enemy_mon[1]] / 4);
+        modifier = (type_chart[player_move[4]][enemy_mon[11]] / 4) * (type_chart[player_move[4]][enemy_mon[10]] / 4);
 
-      if(player_move[1])
-        damage = ((22 * player_move[2] * player_mon[3] / enemy_mon[4]) / 50 + 2) * modifier;
+      if(player_move[3])
+        damage = ((22 * player_move[2] * player_mon[8] / enemy_mon[7]) / 50 + 2) * modifier;
       else
-        damage = ((22 * player_move[2] * player_mon[5] / enemy_mon[6]) / 50 + 2) * modifier;
+        damage = ((22 * player_move[2] * player_mon[6] / enemy_mon[5]) / 50 + 2) * modifier;
 	 end
     else
     begin
-      if(enemy_move[0] == enemy_mon[1] || enemy_move[0] == enemy_mon[1])
-        modifier = (type_chart[enemy_move[0]][player_mon[0]] / 4) * (type_chart[enemy_move[0]][player_mon[1]] / 4) * (3/2);
+      if(enemy_move[4] == enemy_mon[11] || enemy_move[4] == enemy_mon[10])
+        modifier = (type_chart[enemy_move[4]][player_mon[0]] / 4) * (type_chart[enemy_move[4]][player_mon[1]] / 4) * (3/2);
       else
-        modifier = (type_chart[enemy_move[0]][player_mon[0]] / 4) * (type_chart[enemy_move[0]][player_mon[1]] / 4);
+        modifier = (type_chart[enemy_move[4]][player_mon[0]] / 4) * (type_chart[enemy_move[4]][player_mon[1]] / 4);
 
-      if(enemy_move[1])
-        damage = ((22 * enemy_move[2] * enemy_mon[3] / player_mon[4]) / 50 + 2) * modifier;
+      if(enemy_move[3])
+        damage = ((22 * enemy_move[2] * enemy_mon[8] / player_mon[7]) / 50 + 2) * modifier;
       else
-        damage = ((22 * enemy_move[2] * enemy_mon[5] / player_mon[6]) / 50 + 2) * modifier;
+        damage = ((22 * enemy_move[2] * enemy_mon[6] / player_mon[5]) / 50 + 2) * modifier;
     end
   end
 

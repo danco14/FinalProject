@@ -104,9 +104,9 @@ module battle(input logic Clk,
     player_addr = team[cur_mon];
     enemy_addr = enemy_team[opp_mon];
     move_index_in = move_index;
-    player_move = player_data[8 + move_index];
+    player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_data[0];
+	 EXPORT_DATA = player_data[9];
 
     unique case(State)
       Wait:
@@ -125,7 +125,7 @@ module battle(input logic Clk,
 
       CPU_Move:
       begin
-        if(player_data[7] > enemy_data[7])
+        if(player_data[4] > enemy_data[4])
           Next_state = Player;
         else
           Next_state = Enemy;
@@ -139,7 +139,7 @@ module battle(input logic Clk,
           for(int i = 0; i < 3; i++)
             if(player_hp[i] > 7'b0)
               Next_state = Enemy;
-          if(player_data[7] <= enemy_data[7])
+          if(player_data[4] <= enemy_data[4])
             Next_state = End_Turn;
         end
       end
@@ -152,7 +152,7 @@ module battle(input logic Clk,
           for(int i = 0; i < 3; i++)
             if(opponent_hp[i] > 7'b0)
               Next_state = Player;
-          if(player_data[7] > enemy_data[7])
+          if(player_data[4] > enemy_data[4])
             Next_state = End_Turn;
         end
       end
@@ -176,10 +176,10 @@ module battle(input logic Clk,
         begin
           player_addr = team[i];
           enemy_addr = enemy_team[i];
-          player_hp[i] = player_data[2];
-          opponent_hp[i] = enemy_data[2];
-          my_maxhp[i] = player_data[2]; //store max hp for displaying hp status text
-          enemy_maxhp[i] = player_data[2];
+          player_hp[i] = player_data[9];
+          opponent_hp[i] = enemy_data[9];
+          my_maxhp[i] = player_data[9]; //store max hp for displaying hp status text
+          enemy_maxhp[i] = player_data[9];
         end
       end
 
