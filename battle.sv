@@ -16,7 +16,7 @@ module battle(input logic Clk,
               output logic [7:0] hp_r,
               output logic [7:0] hp_g,
               output logic [7:0] hp_b,
-              output logic is_battleinfo_bar;
+              output logic is_battleinfo_bar
               );
 
   enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, CPU_Move, Enemy, Win, Lose} Next_state, State;
@@ -66,22 +66,22 @@ module battle(input logic Clk,
              .move_data2(enemy_move_data)
              );
 
-  logic [2:0] bit_num_user,
-  logic [7:0] info_hex_user,
-  logic [9:0] y_diff_user,
-  logic is_battleinfo_font_user,
-  logic [7:0] hp_r_user,
-  logic [7:0] hp_g_user,
-  logic [7:0] hp_b_user,
+  logic [2:0] bit_num_user;
+  logic [7:0] info_hex_user;
+  logic [9:0] y_diff_user;
+  logic is_battleinfo_font_user;
+  logic [7:0] hp_r_user;
+  logic [7:0] hp_g_user;
+  logic [7:0] hp_b_user;
   logic is_battleinfo_bar_user;
 
-  logic [2:0] bit_num_enemy,
-  logic [7:0] info_hex_enemy,
-  logic [9:0] y_diff_enemy,
-  logic is_battleinfo_font_enemy,
-  logic [7:0] hp_r_enemy,
-  logic [7:0] hp_g_enemy,
-  logic [7:0] hp_b_enemy,
+  logic [2:0] bit_num_enemy;
+  logic [7:0] info_hex_enemy;
+  logic [9:0] y_diff_enemy;
+  logic is_battleinfo_font_enemy;
+  logic [7:0] hp_r_enemy;
+  logic [7:0] hp_g_enemy;
+  logic [7:0] hp_b_enemy;
   logic is_battleinfo_bar_enemy;
 
   //hp bar, move selector and battle text modules go here eventually...
@@ -271,7 +271,7 @@ module battle(input logic Clk,
       end
 
       Select_Move:
-      begin
+		begin
         case(keycode)
           W:
           begin

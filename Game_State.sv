@@ -68,6 +68,8 @@ module game_state(input logic Clk, input logic Reset,
   logic [18:0] poke_sprite_addr;
   logic [18:0] psprite_myteam;
   logic [18:0] psprite_enemy;
+  
+  logic is_myteam, is_enemyteam;
 
   pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(palette_idx),.read_address(poke_sprite_addr));
 

@@ -120,13 +120,13 @@ module pokemon( input               CLOCK_50,
    logic [1:0] my_cur;
    logic [2:0] enemy_cur_id;
 
-   logic [2:0] bit_num_batinfo,
-   logic [7:0] info_hex,
-   logic [9:0] y_diff_batinfo,
-   logic is_battleinfo_font,
-   logic [7:0] hp_r,
-   logic [7:0] hp_g,
-   logic [7:0] hp_b,
+   logic [2:0] bit_num_batinfo;
+   logic [7:0] info_hex;
+   logic [9:0] y_diff_batinfo;
+   logic is_battleinfo_font;
+   logic [7:0] hp_r;
+   logic [7:0] hp_g;
+   logic [7:0] hp_b;
    logic is_battleinfo_bar;
 
 	 key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key));

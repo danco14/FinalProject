@@ -14,7 +14,7 @@ module color_palette(        // Whether current pixel belongs to background (com
                      input logic [7:0] hp_r,
                      input logic [7:0] hp_g,
                      input logic [7:0] hp_b,
-                     input logic is_battleinfo_bar;
+                     input logic is_battleinfo_bar,
                      output logic [7:0] VGA_R, VGA_G, VGA_B);
 
    logic [7:0] Red, Green, Blue;

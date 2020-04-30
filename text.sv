@@ -327,7 +327,7 @@ module hp_text(input logic [9:0] DrawX, DrawY,
                  input logic [9:0] start_x, input logic [9:0] start_y,
                  output logic [2:0] bit_num,
                  output logic [7:0] hp_hex,
-                 output logic is_hptex,
+                 output logic is_hptext,
                  output logic [9:0] y_diff);
  // 'H' 'P' = 2 chars
  parameter width = 8;
