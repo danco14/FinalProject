@@ -37,7 +37,7 @@ module color_palette(input  is_background,            // Whether current pixel b
        end
        else if (is_start && is_pname == 1'b1)
        begin
-         font_addr = (DrawY - ydiff_start) + 16*pname_hex;
+         font_addr = (ydiff_start) + 16*pname_hex;
          if(font_data[7-bit_num]==1'b1) begin
            Red = 8'h00;
            Green = 8'h00;
