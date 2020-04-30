@@ -119,10 +119,15 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
  logic [5:0] border_height;
  assign border_height = height + 2;
  logic [15:0] fill_width;
- assign fill_width = ((width*curHP)/maxHP);
 
  //black hp bar border
  always_comb begin
+ if(curHP==maxHP)begin
+   fill_width = 6'd50;
+ end
+ else begin
+   fill_width = ((width*curHP)/maxHP);
+ end
  if( ((DrawX>=border_x)&&(DrawX<(border_x+border_width))&&(DrawY==border_y || DrawY==(border_y+border_height-1)) )
      || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height-1)))) begin
        hp_r = 8'h00;

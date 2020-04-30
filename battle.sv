@@ -85,12 +85,12 @@ module battle(input logic Clk,
   logic [7:0] hp_b_enemy;
   logic is_battleinfo_bar_enemy;
 
-  logic [3:0][4:0] cur_user_moves;
+  logic [1:0][4:0] cur_user_moves;
   always_comb begin
-    cur_user_moves[3]=player_data[0];
-    cur_user_moves[2]=player_data[1];
-    cur_user_moves[1]=player_data[2];
-    cur_user_moves[0]=player_data[3];
+    cur_user_moves[0]=player_data[0];
+    cur_user_moves[1]=player_data[1];
+    cur_user_moves[2]=player_data[2];
+    cur_user_moves[3]=player_data[3];
   end
   logic [2:0] move_bit_num;
   logic [7:0] move_hex;
@@ -186,8 +186,8 @@ module battle(input logic Clk,
                    .player_move(player_move_data),
                    .enemy_move(enemy_move_data),
                    .is_player(is_player),
-                   .damage(damage)
-//						 .EXPORT(EXPORT_DATA)
+                   .damage(damage),
+						 .EXPORT(EXPORT_DATA)
                    );
 
   // AI for enemy player
@@ -229,7 +229,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_move_data[4];
+//	 EXPORT_DATA = player_move;
 	 enemy_team[2'b0] = 0; // Change when random gen is implemented
         enemy_team[2'b01] = 1;
         enemy_team[2'b10] = 2;
