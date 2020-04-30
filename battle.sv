@@ -87,9 +87,9 @@ module battle(input logic Clk,
   //hp bar, move selector and battle text modules go here eventually...
   battle_info user_batinfo(.DrawX(DrawX), .DrawY(DrawY),
                .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
-               .start_x(240), .start_y(140),
+               .start_x(400), .start_y(280),
                .poke_id(player_addr),
-               .is_user_info(1),
+               .is_user_info(1'b1),
                .bit_num(bit_num_user),
                .info_hex(info_hex_user),
                .y_diff(y_diff_user),
@@ -100,9 +100,9 @@ module battle(input logic Clk,
                .is_battleinfo_bar(is_battleinfo_bar_user));
    battle_info enemy_batinfo(.DrawX(DrawX), .DrawY(DrawY),
                 .maxHP(enemy_maxhp[opp_mon]), .curHP(opponent_hp[opp_mon]),
-                .start_x(90), .start_y(280),
+                .start_x(280), .start_y(150),
                 .poke_id(enemy_addr),
-                .is_user_info(0),
+                .is_user_info(1'b0),
                 .bit_num(bit_num_enemy),
                 .info_hex(info_hex_enemy),
                 .y_diff(y_diff_enemy),
@@ -116,21 +116,37 @@ module battle(input logic Clk,
       bit_num_batinfo = bit_num_user;
       y_diff_batinfo = y_diff_user;
       info_hex = info_hex_user;
+      is_battleinfo_font = 1'b1;
     end
-    else begin
+    if(is_battleinfo_font_enemy)begin
       bit_num_batinfo = bit_num_enemy;
       y_diff_batinfo = y_diff_enemy;
       info_hex = info_hex_enemy;
+      is_battleinfo_font = 1'b1;
+    end
+    else begin
+      bit_num_batinfo = 3'b0;
+      y_diff_batinfo = 10'd0;
+      info_hex = 8'h20;
+      is_battleinfo_font = 1'b0;
     end
     if(is_battleinfo_bar_user)begin
       hp_r = hp_r_user;
       hp_g = hp_g_user;
       hp_b = hp_b_user;
+      is_battleinfo_bar = 1'b1;
     end
-    else begin
+    else if(is_battleinfo_bar_enemy) begin
       hp_r = hp_r_enemy;
       hp_g = hp_g_enemy;
       hp_b = hp_b_enemy;
+      is_battleinfo_bar = 1'b1;
+    end
+    else begin
+      hp_r = 8'hff;
+      hp_g = 8'hff;
+      hp_b = 8'hff;
+      is_battleinfo_bar = 1'b0;
     end
   end
 
