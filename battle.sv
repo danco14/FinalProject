@@ -85,6 +85,26 @@ module battle(input logic Clk,
   logic [7:0] hp_b_enemy;
   logic is_battleinfo_bar_enemy;
 
+  logic [1:0][4:0] cur_user_moves;
+  always_comb begin
+    cur_user_moves[0]=player_data[0];
+    cur_user_moves[1]=player_data[1];
+    cur_user_moves[2]=player_data[2];
+    cur_user_moves[3]=player_data[3];
+  end
+  logic [2:0] move_bit_num;
+  logic [7:0] move_hex;
+  logic [9:0] y_diff_move;
+  logic is_movesel;
+  move_select move_menu(.DrawX(DrawX), .DrawY(DrawY),
+               .start_x(200), .start_y(370),
+               .user_moves(cur_user_moves),
+               .hovered_move(3-move_index),
+               .bit_num(move_bit_num),
+               .move_hex(move_hex),
+               .y_diff(y_diff_move),
+               .is_movesel(is_movesel));
+
   //hp bar, move selector and battle text modules go here eventually...
   battle_info user_batinfo(.DrawX(DrawX), .DrawY(DrawY),
                .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
@@ -123,6 +143,12 @@ module battle(input logic Clk,
       bit_num_batinfo = bit_num_enemy;
       y_diff_batinfo = y_diff_enemy;
       info_hex = info_hex_enemy;
+      is_battleinfo_font = 1'b1;
+    end
+    else if(is_movesel)begin
+      bit_num_batinfo = move_bit_num;
+      y_diff_batinfo = y_diff_enemy;
+      info_hex = y_diff_move;
       is_battleinfo_font = 1'b1;
     end
     else begin

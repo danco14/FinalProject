@@ -245,112 +245,135 @@ module battle_info(input logic [9:0] DrawX, input logic [9:0] DrawY,
  end
 endmodule
 
-//module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
-//              input logic [9:0] start_x, input logic [9:0] start_y, //start of move 0 text
-//              input logic [1:0][4:0] user_moves, //4 moves of the 26 available
-//              input logic [1:0] hovered_move, //0-3
-//              output logic [2:0] bit_num,
-//              output logic [7:0] move_hex,
-//              output logic [9:0] y_diff,
-//              output logic is_movename, //text
-//              output logic is_movebox); //box for selecting moves
-//  logic [9:0] box_x;
-//  assign box_x = start_x-5; //start of box 0
-//  logic [9:0] box_y;
-//  assign box_y = start_y-5;
-//  parameter [6:0] box_width = 7'd106; // 2(5) + 12(8)
-//  parameter [6:0] box_height = 7'd26; // 2(5) + 16
-//  parameter [6:0] box_xdiff = ;
-//  parameter [6:0] box_ydiff = ;
-//
-//  logic [7:0] move0_hex;
-//  logic [2:0] move0_bitnum;
-//  logic is_move0name;
-//  logic [9:0] move0_ydiff;
-//
-//  logic [7:0] move1_hex;
-//  logic [2:0] move1_bitnum;
-//  logic is_move1name;
-//  logic [9:0] move1_ydiff;
-//
-//  logic [7:0] move2_hex;
-//  logic [2:0] move2_bitnum;
-//  logic is_move2name;
-//  logic [9:0] move2_ydiff;
-//
-//  logic [7:0] move3_hex;
-//  logic [2:0] move3_bitnum;
-//  logic is_move3name;
-//  logic [9:0] move3_ydiff;
-//
-//  moves_names move_sel0(.DrawX(DrawX), .DrawY(DrawY),
-//                   .start_x(start_x), .start_y(start_y),
-//                   .move_id(user_moves[0]),
-//                   .bit_num(move0_bitnum),
-//                   .move_hex(move0_hex),
-//                   .is_movename(is_move0name),
-//                   .y_diff(move0_ydiff));
-//  moves_names move_sel1(.DrawX(DrawX), .DrawY(DrawY),
-//                  .start_x(start_x+150), .start_y(start_y),
-//                  .move_id(user_moves[1]),
-//                  .bit_num(move1_bitnum),
-//                  .move_hex(move1_hex),
-//                  .is_movename(is_move1name),
-//                  .y_diff(move1_ydiff));
-//  moves_names move_sel2(.DrawX(DrawX), .DrawY(DrawY),
-//                   .start_x(start_x), .start_y(start_y+40),
-//                   .move_id(user_moves[2]),
-//                   .bit_num(move2_bitnum),
-//                   .move_hex(move2_hex),
-//                   .is_movename(is_move2name),
-//                   .y_diff(move2_ydiff));
-//  moves_names move_sel3(.DrawX(DrawX), .DrawY(DrawY),
-//                  .start_x(start_x+150), .start_y(start_y+40),
-//                  .move_id(user_moves[3]),
-//                  .bit_num(move3_bitnum),
-//                  .move_hex(move3_hex),
-//                  .is_movename(is_move3name),
-//                  .y_diff(move3_ydiff));
-//  always_comb begin
-//
-//    is_movebox = 1'b0; //TEMPORARY
-//
-//    if(is_move0name) begin
-//      bit_num = move0_bitnum;
-//      move_hex = move0_hex;
-//      y_diff = move0_ydiff;
-//      is_movename=1'b1;
-//    end
-//    else if(is_move1name) begin
-//      bit_num = move1_bitnum;
-//      move_hex = move1_hex;
-//      y_diff = move1_ydiff;
-//      is_movename=1'b1;
-//    end
-//    else if(is_move2name) begin
-//      bit_num = move2_bitnum;
-//      move_hex = move2_hex;
-//      y_diff = move2_ydiff;
-//      is_movename=1'b1;
-//    end
-//    else if(is_move3name) begin
-//      bit_num = move3_bitnum;
-//      move_hex = move3_hex;
-//      y_diff = move3_ydiff;
-//      is_movename=1'b1;
-//    end
-//    else begin
-//      bit_num = 3'b0;
-//      useratk_hex = 8'h20;
-//      y_diff = 10'b0;
-//      is_movename=1'b0;
-//    end
-//
-//
-//  end
-//
-//endmodule
-//
+module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
+             input logic [9:0] start_x, input logic [9:0] start_y, //start of move 0 text
+             input logic [1:0][4:0] user_moves, //4 moves of the 26 available
+             input logic [1:0] hovered_move, //0-3
+             output logic [2:0] bit_num,
+             output logic [7:0] move_hex,
+             output logic [9:0] y_diff,
+             output logic is_movesel); //text
+             // output logic is_movebox); //box for selecting moves
+ // logic [9:0] box_x;
+ // assign box_x = start_x-5; //start of box 0
+ // logic [9:0] box_y;
+ // assign box_y = start_y-5;
+ // parameter [6:0] box_width = 7'd106; // 2(5) + 12(8)
+ // parameter [6:0] box_height = 7'd26; // 2(5) + 16
+ // parameter [6:0] box_xdiff = ;
+ // parameter [6:0] box_ydiff = ;
+
+ logic [7:0] move0_hex;
+ logic [2:0] move0_bitnum;
+ logic is_move0name;
+ logic [9:0] move0_ydiff;
+
+ logic [7:0] move1_hex;
+ logic [2:0] move1_bitnum;
+ logic is_move1name;
+ logic [9:0] move1_ydiff;
+
+ logic [7:0] move2_hex;
+ logic [2:0] move2_bitnum;
+ logic is_move2name;
+ logic [9:0] move2_ydiff;
+
+ logic [7:0] move3_hex;
+ logic [2:0] move3_bitnum;
+ logic is_move3name;
+ logic [9:0] move3_ydiff;
+
+ logic [9:0] pointer_x;
+ logic [9:0] pointer_y;
+
+ moves_names move_sel0(.DrawX(DrawX), .DrawY(DrawY),
+                  .start_x(start_x), .start_y(start_y),
+                  .move_id(user_moves[0]),
+                  .bit_num(move0_bitnum),
+                  .move_hex(move0_hex),
+                  .is_movename(is_move0name),
+                  .y_diff(move0_ydiff));
+ moves_names move_sel1(.DrawX(DrawX), .DrawY(DrawY),
+                 .start_x(start_x+150), .start_y(start_y),
+                 .move_id(user_moves[1]),
+                 .bit_num(move1_bitnum),
+                 .move_hex(move1_hex),
+                 .is_movename(is_move1name),
+                 .y_diff(move1_ydiff));
+ moves_names move_sel2(.DrawX(DrawX), .DrawY(DrawY),
+                  .start_x(start_x), .start_y(start_y+40),
+                  .move_id(user_moves[2]),
+                  .bit_num(move2_bitnum),
+                  .move_hex(move2_hex),
+                  .is_movename(is_move2name),
+                  .y_diff(move2_ydiff));
+ moves_names move_sel3(.DrawX(DrawX), .DrawY(DrawY),
+                 .start_x(start_x+150), .start_y(start_y+40),
+                 .move_id(user_moves[3]),
+                 .bit_num(move3_bitnum),
+                 .move_hex(move3_hex),
+                 .is_movename(is_move3name),
+                 .y_diff(move3_ydiff));
+ always_comb begin
+   case(hovered_move)
+     2'b00: begin
+      pointer_x = start_x - 9;
+      pointer_y = start_y;
+     end
+     2'b01: begin
+      pointer_x = start_x + 150 - 9;
+      pointer_y = start_y;
+     end
+     2'b10: begin
+      pointer_x = start_x - 9;
+      pointer_y = start_y + 40;
+     end
+     default: begin
+       pointer_x = start_x + 150 - 9;
+       pointer_y = start_y + 40;
+     end
+   endcase
+   if(DrawX>=pointer_x && DrawX < pointer_x + 8 && DrawY>=pointer_y && DrawY<pointer_y+16)begin
+     bit_num = DrawX - pointer_x;
+     move_hex = 8'h3e;
+     y_diff = DrawY - pointer_y;
+     is_moversel = 1'b1;
+   end
+   else if(is_move0name) begin
+     bit_num = move0_bitnum;
+     move_hex = move0_hex;
+     y_diff = move0_ydiff;
+     is_movesel=1'b1;
+   end
+   else if(is_move1name) begin
+     bit_num = move1_bitnum;
+     move_hex = move1_hex;
+     y_diff = move1_ydiff;
+     is_movesel=1'b1;
+   end
+   else if(is_move2name) begin
+     bit_num = move2_bitnum;
+     move_hex = move2_hex;
+     y_diff = move2_ydiff;
+     is_movesel=1'b1;
+   end
+   else if(is_move3name) begin
+     bit_num = move3_bitnum;
+     move_hex = move3_hex;
+     y_diff = move3_ydiff;
+     is_movesel=1'b1;
+   end
+   else begin
+     bit_num = 3'b0;
+     useratk_hex = 8'h20;
+     y_diff = 10'b0;
+     is_movesel=1'b0;
+   end
+
+ end
+
+endmodule
+
 //module user_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
 //              input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
 //              input logic [4:0] move_id, //current move id
