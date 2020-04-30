@@ -66,20 +66,19 @@ module game_state(input logic Clk, input logic Reset,
   logic [2:0] cur_choice_in = 3'b0;
 
   logic [18:0] poke_sprite_addr;
-  logic [18:0] psprite_startscreen;
   logic [18:0] psprite_myteam;
   logic [18:0] psprite_enemy;
 
   pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(palette_idx),.read_address(poke_sprite_addr));
 
-//  my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-//                 .poke_id(my_team[my_cur]),
-//                 .sprite_addr(psprite_myteam),
-//                 .is_myteam(is_myteam));
-//  enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-//              .poke_id(enemy_cur_id),
-//              .sprite_addr(psprite_enemy),
-//              .is_enemyteam(is_enemyteam));
+ my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+                .poke_id(my_team[my_cur]),
+                .sprite_addr(psprite_myteam),
+                .is_myteam(is_myteam));
+ enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+             .poke_id(enemy_cur_id),
+             .sprite_addr(psprite_enemy),
+             .is_enemyteam(is_enemyteam));
 
   always_ff @ (posedge Clk)
   begin
@@ -106,8 +105,7 @@ module game_state(input logic Clk, input logic Reset,
     Next_state = State;
 
     is_sprite = 1'b0;
-    poke_sprite_addr = psprite_startscreen;
-	 psprite_startscreen = 19'b0;
+    poke_sprite_addr = 19'b0;
     is_chooser = 1'b0;
     is_battle = 1'b0;
     is_start = 1'b0;
@@ -192,35 +190,35 @@ module game_state(input logic Clk, input logic Reset,
          end
         end
         if(DrawX >= poke0_x && DrawX < (poke0_x + width) && DrawY >= poke0_y && DrawY < (poke0_y + height))begin
-          psprite_startscreen =(width) + (DrawX - poke0_x) + (total_width* (DrawY - poke0_y));
+          poke_sprite_addr =(width) + (DrawX - poke0_x) + (total_width* (DrawY - poke0_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke1_x && DrawX < (poke1_x + width) && DrawY >= poke1_y && DrawY < (poke1_y + height))begin
-          psprite_startscreen = (3*width) + (DrawX - poke1_x) + (total_width* (DrawY - poke1_y));
+          poke_sprite_addr = (3*width) + (DrawX - poke1_x) + (total_width* (DrawY - poke1_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke2_x && DrawX < (poke2_x + width) && DrawY >= poke2_y && DrawY < (poke2_y + height))begin
-          psprite_startscreen = (width) + (DrawX - poke2_x) + (total_width*height) + (total_width* (DrawY - poke2_y));
+          poke_sprite_addr = (width) + (DrawX - poke2_x) + (total_width*height) + (total_width* (DrawY - poke2_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke3_x && DrawX < (poke3_x + width) && DrawY >= poke3_y && DrawY < (poke3_y + height))begin
-          psprite_startscreen = (3*width) + (DrawX - poke3_x) + (total_width*height) + (total_width* (DrawY - poke3_y));
+          poke_sprite_addr = (3*width) + (DrawX - poke3_x) + (total_width*height) + (total_width* (DrawY - poke3_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke4_x && DrawX < (poke4_x + width) && DrawY >= poke4_y && DrawY < (poke4_y + height))begin
-          psprite_startscreen = (width) + (DrawX - poke4_x) + (total_width*height*2) + (total_width* (DrawY - poke4_y));
+          poke_sprite_addr = (width) + (DrawX - poke4_x) + (total_width*height*2) + (total_width* (DrawY - poke4_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke5_x && DrawX < (poke5_x + width) && DrawY >= poke5_y && DrawY < (poke5_y + height))begin
-          psprite_startscreen = (3*width) + (DrawX - poke5_x) + (total_width*height*2) + (total_width* (DrawY - poke5_y));
+          poke_sprite_addr = (3*width) + (DrawX - poke5_x) + (total_width*height*2) + (total_width* (DrawY - poke5_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke6_x && DrawX < (poke6_x + width) && DrawY >= poke6_y && DrawY < (poke6_y + height))begin
-          psprite_startscreen = (width) + (DrawX - poke6_x) + (total_width*height*3) + (total_width* (DrawY - poke6_y));
+          poke_sprite_addr = (width) + (DrawX - poke6_x) + (total_width*height*3) + (total_width* (DrawY - poke6_y));
           is_sprite = 1'b1;
         end
         else if(DrawX >= poke7_x && DrawX < (poke7_x + width) && DrawY >= poke7_y && DrawY < (poke7_y + height))begin
-          psprite_startscreen = (3*width) + (DrawX - poke7_x) + (total_width*height*3) + (total_width* (DrawY - poke7_y));
+          poke_sprite_addr = (3*width) + (DrawX - poke7_x) + (total_width*height*3) + (total_width* (DrawY - poke7_y));
           is_sprite = 1'b1;
         end
       end
@@ -236,15 +234,15 @@ module game_state(input logic Clk, input logic Reset,
         //   direction == 2'b11;
       Battle:
 		begin
-        is_battle = 1'b1;
-//        if(is_enemyteam)begin
-//          poke_sprite_addr = psprite_enemy;
-//          is_sprite = 1'b1;
-//        end
-//        else if(is_myteam)begin
-//          poke_sprite_addr = psprite_myteam;
-//          is_sprite = 1'b1;
-//        end
+       is_battle = 1'b1;
+       if(is_enemyteam)begin
+         poke_sprite_addr = psprite_enemy;
+         is_sprite = 1'b1;
+       end
+       else if(is_myteam)begin
+         poke_sprite_addr = psprite_myteam;
+         is_sprite = 1'b1;
+       end
 		end
       End:
       begin

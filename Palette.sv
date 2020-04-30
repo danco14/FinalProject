@@ -1,7 +1,8 @@
 module color_palette(input  is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
                      input is_chooser,
                      input is_start,
-							input is_sprite,
+							       input is_sprite,
+                     input is_battle,
                      input [9:0] DrawX,
                      input [9:0] DrawY,
                      input [2:0] cur_choice_id,
@@ -49,7 +50,7 @@ module color_palette(input  is_background,            // Whether current pixel b
            Blue = 8'hff;
 			end
        end
-       else if (is_sprite == 1'b1)
+       else if (is_sprite == 1'b1 && (is_start || is_battle))
        begin
          case(palette_idx)
             5'd1: begin
