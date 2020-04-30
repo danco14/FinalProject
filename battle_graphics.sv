@@ -404,7 +404,7 @@ module user_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
 
  poke_names pn_atk(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y),.poke_id(poke_id),
                 .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
- used_text uwu(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
+ used_text uwu(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y+20),
                 .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
   moves_names move_useratk(.DrawX(DrawX), .DrawY(DrawY),
                    .start_x(start_x+40), .start_y(start_y+20),
@@ -476,7 +476,7 @@ module enemy_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
                    .y_diff(enemy_ydiff));
  poke_names pn_atk_enem(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x+48),.start_y(start_y),.poke_id(poke_id),
                 .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
- used_text owo(.DrawX(DrawX),.DrawY(Drawy),.start_x(start_x),.start_y(start_y+20).
+ used_text owo(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y+20),
                 .bit_num(used_bitnum),.used_hex(used_hex),.is_usedtext(is_usedtext),.y_diff(used_ydiff));
  moves_names enememe_move(.DrawX(DrawX), .DrawY(DrawY),
                   .start_x(start_x+40), .start_y(start_y+20),
