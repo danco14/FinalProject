@@ -33,7 +33,7 @@ module battle(input logic Clk,
   // Registers to hold pokemon health status
   logic [7:0] player_hp[3];
   logic [7:0] opponent_hp[3];
-  logic [7:0] player_hp_in[3], opponent_hp_in[3];
+  logic [7:0] player_hp_in[3], opponent_hp_in[3], my_maxhp_in[3], enemy_maxhp_in[3];
   logic [7:0] my_maxhp [3];
   logic [7:0] enemy_maxhp [3];
 
@@ -240,7 +240,9 @@ module battle(input logic Clk,
     if(Reset)
 	 begin
       State <= Wait;
-		move_index <= 0;
+		move_index <= 5'b0;
+		cur_mon <= 2'b0;
+		opp_mon <= 2'b0;
 	 end
     else
       State <= Next_state;
@@ -249,6 +251,8 @@ module battle(input logic Clk,
       opp_mon <= opp_mon_in;
 		player_hp <= player_hp_in;
 		opponent_hp <= opponent_hp_in;
+		my_maxhp <= my_maxhp_in;
+		enemy_maxhp <= enemy_maxhp_in;
   end
 
   always_comb
@@ -258,18 +262,18 @@ module battle(input logic Clk,
     end_battle = 1'b0;
     is_player = 1'b0;
 	 result = 1'b0;
-    // my_hp = player_hp[cur_mon];
-    // enemy_hp = opponent_hp[opp_mon];
     cur_mon_in = cur_mon;
     opp_mon_in = opp_mon;
     player_addr = team[cur_mon];
     enemy_addr = enemy_team[opp_mon];
 	 player_hp_in = player_hp;
 	 opponent_hp_in = opponent_hp;
+	 my_maxhp_in = my_maxhp;
+	 enemy_maxhp_in = enemy_maxhp;
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_hp[cur_mon];
+//	 EXPORT_DATA = opponent_hp[opp_mon];
 	 enemy_team[2'b0] = 3; // Change when random gen is implemented
         enemy_team[2'b01] = 1;
         enemy_team[2'b10] = 2;
@@ -304,12 +308,12 @@ module battle(input logic Clk,
 		begin
         if(keycode == ENTER)
         begin
-          Next_state = Lose;
-          for(int i = 0; i < 3; i++)
-            if(player_hp[i] > 7'b0)
-              Next_state = Enemy;
-          if(player_data[4] <= enemy_data[4])
-            Next_state = End_Turn;
+		    if(opponent_hp[opp_mon] == 8'b0 && opp_mon == 2)
+				Next_state = Win;
+			 else if(opponent_hp[opp_mon] == 8'b0 || player_data[4] <= enemy_data[4])
+				Next_state = End_Turn;
+          else
+            Next_state = Enemy;
         end
       end
 
@@ -320,12 +324,12 @@ module battle(input logic Clk,
 		begin
         if(keycode == ENTER)
         begin
-          Next_state = Win;
-          for(int i = 0; i < 3; i++)
-            if(opponent_hp[i] > 7'b0)
-              Next_state = Player;
-          if(player_data[4] > enemy_data[4])
-            Next_state = End_Turn;
+			 if(player_hp[cur_mon] == 8'b0 && cur_mon == 2)
+				Next_state = Lose;
+			 else if(player_hp[cur_mon] == 8'b0 || player_data[4] > enemy_data[4])
+				Next_state = End_Turn;
+          else
+				Next_state = Player;
         end
       end
 
@@ -341,21 +345,29 @@ module battle(input logic Clk,
 
       Battle_Start:
       begin
+		  cur_mon_in = 2'b0;
+		  opp_mon_in = 2'b0;
 		  player_hp_in[0] = player_data[9];
         opponent_hp_in[0] = enemy_data[9];
-		  enemy_maxhp[0] = player_data[9];
-		  my_maxhp[0] = player_data[9];
+		  enemy_maxhp_in[0] = enemy_data[9];
+		  my_maxhp_in[0] = player_data[9];
       end
 
       End_Turn:
       begin
-        if(player_hp[cur_mon] <= 8'b0)
+        if(player_hp[cur_mon] == 8'b0)
         begin
-          cur_mon_in += 2'b01;
+          cur_mon_in = cur_mon + 2'b01;
+			 player_addr = team[cur_mon_in];
+			 player_hp_in[cur_mon_in] = player_data[9];
+			 my_maxhp_in[cur_mon_in] = player_data[9];
         end
-        if(opponent_hp[opp_mon] <= 8'b0)
+        if(opponent_hp[opp_mon] == 8'b0)
         begin
-          opp_mon_in += 2'b01;
+          opp_mon_in = opp_mon + 2'b01;
+			 enemy_addr = enemy_team[opp_mon_in];
+			 opponent_hp_in[opp_mon_in] = enemy_data[9];
+			 enemy_maxhp_in[opp_mon_in] = enemy_data[9];
         end
       end
 
@@ -383,8 +395,6 @@ module battle(input logic Clk,
               move_index_in = move_index + 2'b01;
           end
         endcase
-        // for(int i = 0; i < 4; i++)
-        //   moves[i] = player_data[8 + i];
       end
 
       CPU_Move:
@@ -394,18 +404,21 @@ module battle(input logic Clk,
 
       Player:
       begin
-//		EXPORT_DATA = 8'hFF;
         is_player = 1'b1;
-        if(player_hp[cur_mon] > 8'b0)
-          opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
+		  if(opponent_hp[opp_mon] - damage > enemy_maxhp[opp_mon])
+			 opponent_hp_in[opp_mon] = 8'b0;
+		  else
+			 opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
       end
 
 		Player_text: ;
 
       Enemy:
       begin
-        if(opponent_hp[opp_mon] > 8'b0)
-          player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
+		  if(player_hp[cur_mon] - damage > my_maxhp[cur_mon])
+			 player_hp_in[cur_mon] = 8'b0;
+		  else
+			 player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
       end
 
 		Enemy_text: ;
