@@ -166,7 +166,15 @@ module pokemon( input               CLOCK_50,
                     .cur_choice_id(cur_choice_id),
                     .VGA_R(VGA_R),
                     .VGA_G(VGA_G),
-                    .VGA_B(VGA_B));
+                    .VGA_B(VGA_B),
+                    .bit_num_batinfo(bit_num_batinfo),
+                    .info_hex(info_hex),
+                    .y_diff_batinfo(y_diff_batinfo),
+                    .is_battleinfo_font(is_battleinfo_font),
+                    .hp_r(hp_r),
+                    .hp_g(hp_g),
+                    .hp_b(hp_b),
+                    .is_battleinfo_bar(is_battleinfo_bar));
 
 
   // logic [7:0] my_hp;
@@ -175,8 +183,17 @@ module pokemon( input               CLOCK_50,
   // logic [7:0] my_maxhp [3];
   // logic [7:0] enemy_maxhp [3];
   // logic [1:0][2:0] enemy_team;
-
+  logic [2:0] bit_num_batinfo,
+  logic [7:0] info_hex,
+  logic [9:0] y_diff_batinfo,
+  logic is_battleinfo_font,
+  logic [7:0] hp_r,
+  logic [7:0] hp_g,
+  logic [7:0] hp_b,
+  logic is_battleinfo_bar;
   battle battle(.Clk(Clk),
+                .DrawX(DrawX),
+                .DrawY(DrawY),
                 .Reset(Reset_h),
                 .is_battle(is_battle),
                 .keycode(key),
@@ -185,8 +202,16 @@ module pokemon( input               CLOCK_50,
                 .end_battle(end_battle),
                 .my_cur(my_cur),
                 .enemy_cur_id(enemy_cur_id),
-					 .EXPORT_DATA(test)
-                );
+					      .EXPORT_DATA(test),
+                .bit_num_batinfo(bit_num_batinfo),
+                .info_hex(info_hex),
+                .y_diff_batinfo(y_diff_batinfo),
+                .is_battleinfo_font(is_battleinfo_font),
+                .hp_r(hp_r),
+                .hp_g(hp_g),
+                .hp_b(hp_b),
+                .is_battleinfo_bar(is_battleinfo_bar)
+              );
 
   // Test random number generator
   logic [7:0] test;

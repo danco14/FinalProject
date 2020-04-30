@@ -1,4 +1,4 @@
-module color_palette(input  is_background,            // Whether current pixel belongs to background (computed in game_state.sv)
+module color_palette(        // Whether current pixel belongs to background (computed in game_state.sv)
                      input is_chooser,
                      input is_start,
 							       input is_sprite,
@@ -7,6 +7,14 @@ module color_palette(input  is_background,            // Whether current pixel b
                      input [9:0] DrawY,
                      input [2:0] cur_choice_id,
                      input [4:0] palette_idx,
+                     input logic [2:0] bit_num_batinfo,
+                     input logic [7:0] info_hex,
+                     input logic [9:0] y_diff_batinfo,
+                     input logic is_battleinfo_font,
+                     input logic [7:0] hp_r,
+                     input logic [7:0] hp_g,
+                     input logic [7:0] hp_b,
+                     input logic is_battleinfo_bar;
                      output logic [7:0] VGA_R, VGA_G, VGA_B);
 
    logic [7:0] Red, Green, Blue;
@@ -44,11 +52,29 @@ module color_palette(input  is_background,            // Whether current pixel b
            Green = 8'h00;
            Blue = 8'h00;
          end
-			else begin
-				Red = 8'hff;
-           Green = 8'hff;
-           Blue = 8'hff;
-			end
+  			else begin
+  				Red = 8'hff;
+          Green = 8'hff;
+          Blue = 8'hff;
+  			end
+       end
+       else if(is_battleinfo_bar && is_battle)begin
+         font_addr = (y_diff_batinfo) + 16*info_hex;
+         if(font_data[7-bit_num_batinfo]==1'b1) begin
+           Red = 8'h00;
+           Green = 8'h00;
+           Blue = 8'h00;
+         end
+  			 else begin
+  				Red = 8'hff;
+          Green = 8'hff;
+          Blue = 8'hff;
+  			end
+       end
+       else if(is_battleinfo_bar && is_battle)begin
+         Red = hp_r;
+         Green = hp_g;
+         Blue = hp_b;
        end
        else if (is_sprite == 1'b1 && (is_start || is_battle))
        begin

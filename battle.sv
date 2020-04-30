@@ -1,13 +1,22 @@
 module battle(input logic Clk,
               input logic Reset,
               input logic is_battle,
+              input logic [9:0] DrawX, input logic [9:0] DrawY,
               input logic [7:0] keycode,
               input logic [1:0][2:0] team,
               output logic result,
               output logic end_battle,
               output logic [1:0] my_cur,
               output logic [2:0] enemy_cur_id,
-				  output logic [7:0] EXPORT_DATA
+				      output logic [7:0] EXPORT_DATA,
+              output logic [2:0] bit_num_batinfo,
+              output logic [7:0] info_hex,
+              output logic [9:0] y_diff_batinfo,
+              output logic is_battleinfo_font,
+              output logic [7:0] hp_r,
+              output logic [7:0] hp_g,
+              output logic [7:0] hp_b,
+              output logic is_battleinfo_bar;
               );
 
   enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, CPU_Move, Enemy, Win, Lose} Next_state, State;
@@ -57,7 +66,73 @@ module battle(input logic Clk,
              .move_data2(enemy_move_data)
              );
 
+  logic [2:0] bit_num_user,
+  logic [7:0] info_hex_user,
+  logic [9:0] y_diff_user,
+  logic is_battleinfo_font_user,
+  logic [7:0] hp_r_user,
+  logic [7:0] hp_g_user,
+  logic [7:0] hp_b_user,
+  logic is_battleinfo_bar_user;
+
+  logic [2:0] bit_num_enemy,
+  logic [7:0] info_hex_enemy,
+  logic [9:0] y_diff_enemy,
+  logic is_battleinfo_font_enemy,
+  logic [7:0] hp_r_enemy,
+  logic [7:0] hp_g_enemy,
+  logic [7:0] hp_b_enemy,
+  logic is_battleinfo_bar_enemy;
+
   //hp bar, move selector and battle text modules go here eventually...
+  battle_info user_batinfo(.DrawX(DrawX), .DrawY(DrawY),
+               .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
+               .start_x(240), .start_y(140),
+               .poke_id(player_addr),
+               .is_user_info(1),
+               .bit_num(bit_num_user),
+               .info_hex(info_hex_user),
+               .y_diff(y_diff_user),
+               .is_battleinfo_font(is_battleinfo_font_user),
+               .hp_r(hp_r_user),
+               .hp_g(hp_g_user),
+               .hp_b(hp_b_user),
+               .is_battleinfo_bar(is_battleinfo_bar_user));
+   battle_info enemy_batinfo(.DrawX(DrawX), .DrawY(DrawY),
+                .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
+                .start_x(90), .start_y(280),
+                .poke_id(enemy_addr),
+                .is_user_info(0),
+                .bit_num(bit_num_enemy),
+                .info_hex(info_hex_enemy),
+                .y_diff(y_diff_enemy),
+                .is_battleinfo_font(is_battleinfo_font_enemy),
+                .hp_r(hp_r_enemy),
+                .hp_g(hp_g_enemy),
+                .hp_b(hp_b_enemy),
+                .is_battleinfo_bar(is_battleinfo_bar_enemy));
+  always_comb begin
+    if(is_battleinfo_font_user)begin
+      bit_num_batinfo = bit_num_user;
+      y_diff_batinfo = y_diff_user;
+      info_hex = info_hex_user;
+    end
+    else begin
+      bit_num_batinfo = bit_num_enemy;
+      y_diff_batinfo = y_diff_enemy;
+      info_hex = info_hex_enemy;
+    end
+    if(is_battleinfo_bar_user)begin
+      hp_r = hp_r_user;
+      hp_g = hp_g_user;
+      hp_b = hp_b_user;
+    end
+    else begin
+      hp_r = hp_r_enemy;
+      hp_g = hp_g_enemy;
+      hp_b = hp_b_enemy;
+    end
+  end
 
   logic [7:0] damage;
   logic is_player;

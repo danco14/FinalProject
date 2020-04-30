@@ -99,152 +99,152 @@ module enemy_sprites (input logic [9:0] DrawX, input logic [9:0] DrawY,
  end
 endmodule
 
-//module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
-//              input logic [6:0] maxHP, input logic [6:0] curHP,
-//              input logic [9:0] start_x, input logic [9:0] start_y,
-//              output logic [7:0] hp_r,
-//              output logic [7:0] hp_g,
-//              output logic [7:0] hp_b,
-//              output logic is_hpbar);
-//
-//  parameter [5:0] width = 6'd50;
-//  parameter [5:0] height = 6'd5;
-//
-//  logic [9:0] border_x;
-//  assign border_x = start_x - 1;
-//  logic [9:0] border_y;
-//  assign border_y = start_y - 1;
-//  logic [5:0] border_width;
-//  assign border_width = width + 2;
-//  logic [5:0] border_height;
-//  assign border_height = height + 2;
-//  logic [15:0] fill_width;
-//  assign fill_width = ((width*curHP)/maxHP);
-//
-//  //black hp bar border
-//  always_comb begin
-//  if( ((DrawX>=border_x)&&(DrawX<(border_x+border_width))&&(DrawY==border_y || DrawY==(border_y+border_height-1)) )
-//      || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height)))) begin
-//        hp_r = 8'h00;
-//        hp_g = 8'h00;
-//        hp_b = 8'h00;
-//        is_hpbar = 1'b1;
-//      end
-//  //filled hp
-//  else if(DrawX>=start_x && DrawX<(start_x+fill_width) && DrawY>=start_y && DrawY<(start_y+height))begin
-//    is_hpbar = 1'b1;
-//    if(fill_width*2>width)begin //100% to 50% health
-//      hp_r = 8'h41;   //green
-//      hp_g = 8'hff;
-//      hp_b = 8'h74;
-//    end
-//    if(fill_width*5>width)begin //50% to 20% health
-//      hp_r = 8'h41;   //orange-yellow
-//      hp_g = 8'hcc;
-//      hp_b = 8'h00;
-//    end
-//    else begin //20% to 0% health
-//      hp_r = 8'hff;   //red
-//      hp_g = 8'h33;
-//      hp_b = 8'h00;
-//    end
-//  end
-//  //unfilled hp
-//  else if(DrawX>=(start_x+fill_width) && DrawX<(start_x+width) && DrawY>=start_y && DrawY<(start_y+height))begin
-//    hp_r = 8'hff;
-//    hp_g = 8'hff;
-//    hp_b = 8'hff;
-//    is_hpbar = 1'b1;
-//  end
-//  else begin
-//    hp_r = 8'hff;
-//    hp_g = 8'hff;
-//    hp_b = 8'hff;
-//    is_hpbar = 1'b0;
-//  end
-//end
-//endmodule
-//
-//
-////top level module of hp bar, hp indicator and pokemon name
-//module battle_info(input logic [9:0] DrawX, input logic [9:0] DrawY,
-//              input logic [6:0] maxHP, input logic [6:0] curHP,
-//              input logic [9:0] start_x, input logic [9:0] start_y, //indicates the start of pokemon name
-//              input logic [2:0] poke_id,
-//              input logic is_user_info, //only show user hp (curHP/maxHP), not enemy hp
-//              output logic [2:0] bit_num,
-//              output logic [7:0] info_hex,
-//              output logic [9:0] y_diff,
-//              output logic is_battleinfo_font,
-//              output logic [7:0] hp_r,
-//              output logic [7:0] hp_g,
-//              output logic [7:0] hp_b,
-//              output logic is_battleinfo_bar);
-//  logic [7:0] pname_hex;
-//  logic [2:0] pname_bitnum;
-//  logic is_pname;
-//  logic [9:0] name_ydiff;
-//
-//  logic [7:0] hp_hex;
-//  logic [2:0] hp_bitnum;
-//  logic is_hptext;
-//  logic [9:0] hp_ydiff;
-//
-//  logic [7:0] hp2_hex;
-//  logic [2:0] hp2_bitnum;
-//  logic is_hp2text;
-//  logic [9:0] hp2_ydiff;
-//
-//  poke_names pnb(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y),.poke_id(poke_id),
-//                 .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
-//  //HP bar
-//  hp_bar bar_bar_jinks(.DrawX(DrawX), .DrawY(DrawY),
-//               .start_x(start_x+30), .start_y(start_y + 20),
-//               .maxHP(maxHP), .curHP(curHP),
-//               .hp_r(hp_r), .hp_g(hp_g), .hp_b(hp_b),
-//               .is_hpbar(is_battleinfo_bar));
-//  //Just the word: HP
-//  hp_text HP_HP(.DrawX(DrawX), .DrawY(DrawY),
-//                .start_x(start_x+3), .start_y(start_y + 22),
-//                .bit_num(hp_bitnum),
-//                .hp_hex(hp_hex),
-//                .is_hptext(is_hptext),
-//                .y_diff(hp_ydiff));
-//  hp_text2 HP2_HP2(.DrawX(DrawX), .DrawY(DrawY),
-//                  .start_x(start_x+7), .start_y(start_y+40),
-//                  .maxHP(maxHP),.curHP(curHP),
-//                  .bit_num(hp2_bitnum),
-//                  .hp2_hex(hp2_hex),
-//                  .is_hp2text(is_hp2text),
-//                  .y_diff(hp2_ydiff));
-//  always_comb begin
-//    if(is_pname)begin
-//      info_hex = pname_hex;
-//      y_diff = name_ydiff;
-//      bit_num = pname_bitnum;
-//      is_battleinfo_font = 1'b1;
-//    end
-//    else if(is_hptext) begin
-//      info_hex = hp_hex;
-//      y_diff = hp_ydiff;
-//      bit_num = hp_bitnum;
-//      is_battleinfo_font = 1'b1;
-//    end
-//    else if(is_hp2text && is_user_info)begin
-//      info_hex = hp2_hex;
-//      y_diff = hp2_ydiff;
-//      bit_num = hp2_bitnum;
-//      is_battleinfo_font = 1'b1;
-//    end
-//    else begin
-//      info_hex = 8'h20;
-//      y_diff = 10'd0;
-//      bit_num = 3'b0;
-//      is_battleinfo_font = 1'b0;
-//    end
-//  end
-//endmodule
-//
+module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
+             input logic [6:0] maxHP, input logic [6:0] curHP,
+             input logic [9:0] start_x, input logic [9:0] start_y,
+             output logic [7:0] hp_r,
+             output logic [7:0] hp_g,
+             output logic [7:0] hp_b,
+             output logic is_hpbar);
+
+ parameter [5:0] width = 6'd50;
+ parameter [5:0] height = 6'd5;
+
+ logic [9:0] border_x;
+ assign border_x = start_x - 1;
+ logic [9:0] border_y;
+ assign border_y = start_y - 1;
+ logic [5:0] border_width;
+ assign border_width = width + 2;
+ logic [5:0] border_height;
+ assign border_height = height + 2;
+ logic [15:0] fill_width;
+ assign fill_width = ((width*curHP)/maxHP);
+
+ //black hp bar border
+ always_comb begin
+ if( ((DrawX>=border_x)&&(DrawX<(border_x+border_width))&&(DrawY==border_y || DrawY==(border_y+border_height-1)) )
+     || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height)))) begin
+       hp_r = 8'h00;
+       hp_g = 8'h00;
+       hp_b = 8'h00;
+       is_hpbar = 1'b1;
+     end
+ //filled hp
+ else if(DrawX>=start_x && DrawX<(start_x+fill_width) && DrawY>=start_y && DrawY<(start_y+height))begin
+   is_hpbar = 1'b1;
+   if(fill_width*2>width)begin //100% to 50% health
+     hp_r = 8'h41;   //green
+     hp_g = 8'hff;
+     hp_b = 8'h74;
+   end
+   if(fill_width*5>width)begin //50% to 20% health
+     hp_r = 8'h41;   //orange-yellow
+     hp_g = 8'hcc;
+     hp_b = 8'h00;
+   end
+   else begin //20% to 0% health
+     hp_r = 8'hff;   //red
+     hp_g = 8'h33;
+     hp_b = 8'h00;
+   end
+ end
+ //unfilled hp
+ else if(DrawX>=(start_x+fill_width) && DrawX<(start_x+width) && DrawY>=start_y && DrawY<(start_y+height))begin
+   hp_r = 8'hff;
+   hp_g = 8'hff;
+   hp_b = 8'hff;
+   is_hpbar = 1'b1;
+ end
+ else begin
+   hp_r = 8'hff;
+   hp_g = 8'hff;
+   hp_b = 8'hff;
+   is_hpbar = 1'b0;
+ end
+end
+endmodule
+
+
+//top level module of hp bar, hp indicator and pokemon name
+module battle_info(input logic [9:0] DrawX, input logic [9:0] DrawY,
+             input logic [6:0] maxHP, input logic [6:0] curHP,
+             input logic [9:0] start_x, input logic [9:0] start_y, //indicates the start of pokemon name
+             input logic [2:0] poke_id,
+             input logic is_user_info, //only show user hp (curHP/maxHP), not enemy hp
+             output logic [2:0] bit_num,
+             output logic [7:0] info_hex,
+             output logic [9:0] y_diff,
+             output logic is_battleinfo_font,
+             output logic [7:0] hp_r,
+             output logic [7:0] hp_g,
+             output logic [7:0] hp_b,
+             output logic is_battleinfo_bar);
+ logic [7:0] pname_hex;
+ logic [2:0] pname_bitnum;
+ logic is_pname;
+ logic [9:0] name_ydiff;
+
+ logic [7:0] hp_hex;
+ logic [2:0] hp_bitnum;
+ logic is_hptext;
+ logic [9:0] hp_ydiff;
+
+ logic [7:0] hp2_hex;
+ logic [2:0] hp2_bitnum;
+ logic is_hp2text;
+ logic [9:0] hp2_ydiff;
+
+ poke_names pnb(.DrawX(DrawX),.DrawY(DrawY),.start_x(start_x),.start_y(start_y),.poke_id(poke_id),
+                .bit_num(pname_bitnum),.pname_hex(pname_hex),.is_pname(is_pname), .y_diff(name_ydiff));
+ //HP bar
+ hp_bar bar_bar_jinks(.DrawX(DrawX), .DrawY(DrawY),
+              .start_x(start_x+30), .start_y(start_y + 20),
+              .maxHP(maxHP), .curHP(curHP),
+              .hp_r(hp_r), .hp_g(hp_g), .hp_b(hp_b),
+              .is_hpbar(is_battleinfo_bar));
+ //Just the word: HP
+ hp_text HP_HP(.DrawX(DrawX), .DrawY(DrawY),
+               .start_x(start_x+3), .start_y(start_y + 22),
+               .bit_num(hp_bitnum),
+               .hp_hex(hp_hex),
+               .is_hptext(is_hptext),
+               .y_diff(hp_ydiff));
+ hp_text2 HP2_HP2(.DrawX(DrawX), .DrawY(DrawY),
+                 .start_x(start_x+7), .start_y(start_y+40),
+                 .maxHP(maxHP),.curHP(curHP),
+                 .bit_num(hp2_bitnum),
+                 .hp2_hex(hp2_hex),
+                 .is_hp2text(is_hp2text),
+                 .y_diff(hp2_ydiff));
+ always_comb begin
+   if(is_pname)begin
+     info_hex = pname_hex;
+     y_diff = name_ydiff;
+     bit_num = pname_bitnum;
+     is_battleinfo_font = 1'b1;
+   end
+   else if(is_hptext) begin
+     info_hex = hp_hex;
+     y_diff = hp_ydiff;
+     bit_num = hp_bitnum;
+     is_battleinfo_font = 1'b1;
+   end
+   else if(is_hp2text && is_user_info)begin
+     info_hex = hp2_hex;
+     y_diff = hp2_ydiff;
+     bit_num = hp2_bitnum;
+     is_battleinfo_font = 1'b1;
+   end
+   else begin
+     info_hex = 8'h20;
+     y_diff = 10'd0;
+     bit_num = 3'b0;
+     is_battleinfo_font = 1'b0;
+   end
+ end
+endmodule
+
 //module move_select(input logic [9:0] DrawX, input logic [9:0] DrawY,
 //              input logic [9:0] start_x, input logic [9:0] start_y, //start of move 0 text
 //              input logic [1:0][4:0] user_moves, //4 moves of the 26 available
