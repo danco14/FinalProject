@@ -176,13 +176,13 @@ module battle(input logic Clk,
       info_hex = move_hex;
       is_battleinfo_font = 1'b1;
     end
-    else if(is_useratk && State==Player)begin
+    else if(is_useratk && State==Player_text)begin
       bit_num_batinfo = uatk_bnum;
       y_diff_batinfo = uatk_ydiff;
       info_hex = useratk_hex;
       is_battleinfo_font = 1'b1;
     end
-    else if(is_enemyatk && State==Enemy)begin
+    else if(is_enemyatk && State==Enemy_text)begin
       bit_num_batinfo = en_bnum;
       y_diff_batinfo = en_ydiff;
       info_hex = enemyatk_hex;
@@ -299,7 +299,7 @@ module battle(input logic Clk,
 
       Player: //show player 1 move used: <poke name> used <move name>
 			Next_state = Player_text;
-		
+
 		Player_text:
 		begin
         if(keycode == ENTER)
@@ -315,7 +315,7 @@ module battle(input logic Clk,
 
       Enemy: //show player 2 move used: Enemy <poke name> used <move name>
 			Next_state = Enemy_text;
-		
+
 		Enemy_text:
 		begin
         if(keycode == ENTER)
@@ -399,7 +399,7 @@ module battle(input logic Clk,
         if(player_hp[cur_mon] > 8'b0)
           opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
       end
-		
+
 		Player_text: ;
 
       Enemy:
@@ -407,7 +407,7 @@ module battle(input logic Clk,
         if(opponent_hp[opp_mon] > 8'b0)
           player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
       end
-		
+
 		Enemy_text: ;
 
       Win:
