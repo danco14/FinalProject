@@ -147,8 +147,8 @@ module battle(input logic Clk,
     end
     else if(is_movesel)begin
       bit_num_batinfo = move_bit_num;
-      y_diff_batinfo = y_diff_enemy;
-      info_hex = y_diff_move;
+      y_diff_batinfo = y_diff_move;
+      info_hex = move_hex;
       is_battleinfo_font = 1'b1;
     end
     else begin
