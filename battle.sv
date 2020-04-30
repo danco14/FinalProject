@@ -106,7 +106,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[8 + move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_data[3];
+	 EXPORT_DATA = player_data[0];
 
     unique case(State)
       Wait:

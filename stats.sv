@@ -8,32 +8,32 @@ module stats(input logic [2:0] pokemon_addr1,
              output logic [4:0][7:0] move_data2
              );
 
-  parameter [7:0] normal = 8'd0;
-  parameter [7:0] fighting = 8'd1;
-  parameter [7:0] flying = 8'd2;
-  parameter [7:0] poison = 8'd3;
-  parameter [7:0] ground = 8'd4;
-  parameter [7:0] rock = 8'd5;
-  parameter [7:0] bug = 8'd6;
-  parameter [7:0] ghost = 8'd7;
-  parameter [7:0] steel = 8'd8;
-  parameter [7:0] fire = 8'd9;
-  parameter [7:0] water = 8'd10;
-  parameter [7:0] grass = 8'd11;
-  parameter [7:0] electric = 8'd12;
-  parameter [7:0] psychic = 8'd13;
-  parameter [7:0] ice = 8'd14;
-  parameter [7:0] dragon = 8'd15;
-  parameter [7:0] dark = 8'd16;
-  parameter [7:0] fairy = 8'd17;
-  parameter [7:0] none = 8'd18;
+  parameter bit [7:0] normal = 8'd0;
+  parameter bit [7:0] fighting = 8'd1;
+  parameter bit [7:0] flying = 8'd2;
+  parameter bit [7:0] poison = 8'd3;
+  parameter bit [7:0] ground = 8'd4;
+  parameter bit [7:0] rock = 8'd5;
+  parameter bit [7:0] bug = 8'd6;
+  parameter bit [7:0] ghost = 8'd7;
+  parameter bit [7:0] steel = 8'd8;
+  parameter bit [7:0] fire = 8'd9;
+  parameter bit [7:0] water = 8'd10;
+  parameter bit [7:0] grass = 8'd11;
+  parameter bit [7:0] electric = 8'd12;
+  parameter bit [7:0] psychic = 8'd13;
+  parameter bit [7:0] ice = 8'd14;
+  parameter bit [7:0] dragon = 8'd15;
+  parameter bit [7:0] dark = 8'd16;
+  parameter bit [7:0] fairy = 8'd17;
+  parameter bit [7:0] none = 8'd18;
 
-  parameter [7:0] physical = 8'd1;
-  parameter [7:0] special = 8'd0;
+  parameter bit [7:0] physical = 8'd1;
+  parameter bit [7:0] special = 8'd0;
 
-  parameter [7:0][11:0][7:0] Pokemon = {
+  parameter bit [0:11][7:0] Pokemon [0:7] = '{
     // Blastoise
-    {water,
+    '{water,
     none,
     8'd79,  // HP
     8'd83,  // Attack
@@ -44,7 +44,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd0, 8'd1, 8'd2, 8'd3}, // Move addresses
     // hydro_pump, crunch, ice_beam, aura_sphere,
     // Charizard
-    {fire,
+    '{fire,
     flying,
     8'd78,
     8'd84,
@@ -55,7 +55,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd4, 8'd5, 8'd6, 8'd7},
     // flamethrower, thunder_punch, air_slash, dragon_claw,
     // Dragonite
-    {dragon,
+    '{dragon,
     flying,
     8'd91,
     8'd134,
@@ -66,7 +66,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd24, 8'd23, 8'd25, 8'd5},
     // dragon_pulse, rock_slide, blizzard, thunder_punch
     // Gengar
-    {ghost,
+    '{ghost,
     poison,
     8'd60,
     8'd65,
@@ -77,7 +77,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd17, 8'd16, 8'd9, 8'd12},
     // shadow_ball, dark_pulse, sludge_bomb, thunderbolt,
     // Mew
-    {psychic,
+    '{psychic,
     none,
     8'd100,
     8'd100,
@@ -88,7 +88,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd18, 8'd21, 8'd20, 8'd19},
     // psychic_move, bug_buzz, flash_cannon, play_rough,
     // Pikachu
-    {electric,
+    '{electric,
     none,
     8'd35,
     8'd55,
@@ -99,7 +99,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd12, 8'd13, 8'd14, 8'd15},
     // thunderbolt, slam, surf, thunder,
     // Venusaur
-    {grass,
+    '{grass,
     poison,
     8'd80,
     8'd82,
@@ -110,7 +110,7 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd8, 8'd9, 8'd10, 8'd11},
     // energy_ball, sludge_bomb, earthquake, petal_dance,
     // Weezing
-    {poison,
+    '{poison,
     none,
     8'd65,
     8'd90,
@@ -125,7 +125,7 @@ module stats(input logic [2:0] pokemon_addr1,
   assign pokemon_data1 = Pokemon[pokemon_addr1];
   assign pokemon_data2 = Pokemon[pokemon_addr2];
 
-  parameter [25:0][4:0][7:0] Move = {
+  parameter bit [0:4][7:0] Move [0:25] = '{
     // Struggle
     // {none,
     // physical,
@@ -133,7 +133,7 @@ module stats(input logic [2:0] pokemon_addr1,
     // 110,
     // 100},
     // Hydro pump
-    {water,
+    '{water,
     special,
     8'd110, // Power
     8'd80, // Accuracy
@@ -145,79 +145,79 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd100,
     8'd10},
     // Crunch
-    {dark,
+    '{dark,
     physical,
     8'd80,
     8'd100,
     8'd15},
     // Aura sphere
-    {fighting,
+    '{fighting,
     special,
     8'd80,
     8'd110,
     8'd20},
     // Flamethrower
-    {fire,
+    '{fire,
     special,
     8'd90,
     8'd100,
     8'd15},
     // Thunder punch
-    {electric,
+    '{electric,
     physical,
     8'd75,
     8'd100,
     8'd15},
     // Air slash
-    {flying,
+    '{flying,
     special,
     8'd75,
     8'd95,
     8'd15},
     // Dragon claw
-    {dragon,
+    '{dragon,
     physical,
     8'd80,
     8'd100,
     8'd15},
     // Energy ball
-    {grass,
+    '{grass,
     physical,
     8'd90,
     8'd100,
     8'd10},
     // Sludge bomb
-    {poison,
+    '{poison,
     special,
     8'd90,
     8'd100,
     8'd10},
     // Earthquake
-    {ground,
+    '{ground,
     physical,
     8'd100,
     8'd100,
     8'd10},
     // Petal dance
-    {grass,
+    '{grass,
     special,
     8'd120,
     8'd100,
     8'd10},
     // Thunderbolt
-    {electric,
+    '{electric,
     special,
     8'd90,
     8'd100,
     8'd15},
     // Slam
-    {normal,
+    '{normal,
     physical,
     8'd80,
     8'd75,
     8'd20},
     // Surf
-    {water,
+    '{water,
     special,
     8'd90,
     8'd100,
@@ -229,61 +229,61 @@ module stats(input logic [2:0] pokemon_addr1,
     8'd70,
     8'd10},
     // Dark pulse
-    {dark,
+    '{dark,
     special,
     8'd80,
     8'd100,
     8'd15},
     // Shadow ball
-    {ghost,
+    '{ghost,
     special,
     8'd80,
     8'd100,
     8'd15},
     // Psychic
-    {psychic,
+    '{psychic,
     special,
     8'd90,
     8'd100,
     8'd10},
     // Play rough
-    {fairy,
+    '{fairy,
     physical,
     8'd90,
     8'd90,
     8'd10},
     // Flash cannon
-    {steel,
+    '{steel,
     special,
     8'd80,
     8'd100,
     8'd10},
     // Bug buzz
-    {bug,
+    '{bug,
     special,
     8'd90,
     8'd100,
     8'd10},
     // Fire Blast
-    {fire,
+    '{fire,
     special,
     8'd110,
     8'd85,
     8'd5},
     // Rock slide
-    {rock,
+    '{rock,
     physical,
     8'd75,
     8'd90,
     8'd10},
     // Dragon pulse
-    {dragon,
+    '{dragon,
     special,
     8'd85,
     8'd1,
     8'd10},
     // Blizzard
-    {ice,
+    '{ice,
     special,
     8'd110,
     8'd70,
