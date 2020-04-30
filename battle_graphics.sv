@@ -439,7 +439,7 @@ module user_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
      is_useratk=1'b0;
    end
  end
-endmodule;
+endmodule
 
 module enemy_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
              input logic [9:0] start_x, input logic [9:0] start_y, //start of first row of text
@@ -517,4 +517,4 @@ module enemy_attack(input logic [9:0] DrawX, input logic [9:0] DrawY,
      is_enemyatk=1'b0;
    end
  end
-endmodule;
+endmodule

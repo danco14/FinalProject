@@ -19,7 +19,7 @@ module battle(input logic Clk,
               output logic is_battleinfo_bar
               );
 
-  enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, CPU_Move, Enemy, Win, Lose} Next_state, State;
+  enum logic [20:0] {Wait, Battle_Start, End_Turn, Select_Move, Player, Player_text, CPU_Move, Enemy, Enemy_text, Win, Lose} Next_state, State;
 
   // Keycodes
   parameter [7:0] W = 8'h1A;
@@ -223,8 +223,8 @@ module battle(input logic Clk,
                    .player_move(player_move_data),
                    .enemy_move(enemy_move_data),
                    .is_player(is_player),
-                   .damage(damage),
-						 .EXPORT(EXPORT_DATA)
+                   .damage(damage)
+//						 .EXPORT(EXPORT_DATA)
                    );
 
   // AI for enemy player
@@ -269,7 +269,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-//	 EXPORT_DATA = player_move_data[4];
+	 EXPORT_DATA = player_hp[cur_mon];
 	 enemy_team[2'b0] = 3; // Change when random gen is implemented
         enemy_team[2'b01] = 1;
         enemy_team[2'b10] = 2;
@@ -298,7 +298,10 @@ module battle(input logic Clk,
       end
 
       Player: //show player 1 move used: <poke name> used <move name>
-      begin
+			Next_state = Player_text;
+		
+		Player_text:
+		begin
         if(keycode == ENTER)
         begin
           Next_state = Lose;
@@ -311,7 +314,10 @@ module battle(input logic Clk,
       end
 
       Enemy: //show player 2 move used: Enemy <poke name> used <move name>
-      begin
+			Next_state = Enemy_text;
+		
+		Enemy_text:
+		begin
         if(keycode == ENTER)
         begin
           Next_state = Win;
@@ -393,12 +399,16 @@ module battle(input logic Clk,
         if(player_hp[cur_mon] > 8'b0)
           opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
       end
+		
+		Player_text: ;
 
       Enemy:
       begin
         if(opponent_hp[opp_mon] > 8'b0)
           player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
       end
+		
+		Enemy_text: ;
 
       Win:
       begin
