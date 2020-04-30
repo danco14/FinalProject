@@ -126,7 +126,7 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
    fill_width = 6'd50;
  end
  else begin
-   fill_width = ((width*curHP)/maxHP);
+   fill_width = ((width*curHP)/maxHP)%width;
  end
  if( ((DrawX>=border_x)&&(DrawX<(border_x+border_width))&&(DrawY==border_y || DrawY==(border_y+border_height-1)) )
      || (((DrawX==border_x)||(DrawX==(border_x+border_width-1)))&&(DrawY>=border_y && DrawY<=(border_y+border_height-1)))) begin
@@ -144,9 +144,9 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
      hp_b = 8'h74;
    end
    else if(fill_width*5>width)begin //50% to 20% health
-     hp_r = 8'h41;   //orange-yellow
-     hp_g = 8'hcc;
-     hp_b = 8'h00;
+     hp_r = 8'hff;   //orange-yellow
+     hp_g = 8'hae;
+     hp_b = 8'h42;
    end
    else begin //20% to 0% health
      hp_r = 8'hff;   //red
@@ -154,13 +154,13 @@ module hp_bar(input logic [9:0] DrawX, input logic [9:0] DrawY,
      hp_b = 8'h00;
    end
  end
- //unfilled hp
- else if(DrawX>=(start_x+fill_width) && DrawX<(start_x+width) && DrawY>=start_y && DrawY<(start_y+height))begin
-   hp_r = 8'hff;
-   hp_g = 8'hff;
-   hp_b = 8'hff;
-   is_hpbar = 1'b1;
- end
+ // //unfilled hp
+ // else if(DrawX>=(start_x+fill_width) && DrawX<(start_x+width) && DrawY>=start_y && DrawY<(start_y+height))begin
+ //   hp_r = 8'hff;
+ //   hp_g = 8'hff;
+ //   hp_b = 8'hff;
+ //   is_hpbar = 1'b1;
+ // end
  else begin
    hp_r = 8'hff;
    hp_g = 8'hff;
