@@ -58,7 +58,7 @@ module color_palette(        // Whether current pixel belongs to background (com
           Blue = 8'hff;
   			end
        end
-       else if(is_battleinfo_bar && is_battle)begin
+       else if(is_battleinfo_font && is_battle)begin
          font_addr = (y_diff_batinfo) + 16*info_hex;
          if(font_data[7-bit_num_batinfo]==1'b1) begin
            Red = 8'h00;

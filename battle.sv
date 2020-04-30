@@ -99,7 +99,7 @@ module battle(input logic Clk,
                .hp_b(hp_b_user),
                .is_battleinfo_bar(is_battleinfo_bar_user));
    battle_info enemy_batinfo(.DrawX(DrawX), .DrawY(DrawY),
-                .maxHP(my_maxhp[cur_mon]), .curHP(player_hp[cur_mon]),
+                .maxHP(enemy_maxhp[opp_mon]), .curHP(opponent_hp[opp_mon]),
                 .start_x(90), .start_y(280),
                 .poke_id(enemy_addr),
                 .is_user_info(0),
