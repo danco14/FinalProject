@@ -412,7 +412,7 @@ module battle(input logic Clk,
         is_player = 1'b1;
 		  if((num % 100) + 1 <= player_move_data[1])
 		  begin
-			  if(opponent_hp[opp_mon] - damage > enemy_maxhp[opp_mon])
+			  if(opponent_hp[opp_mon] - damage > opponent_hp[opp_mon])
 				 opponent_hp_in[opp_mon] = 8'b0;
 			  else
 				 opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
@@ -425,7 +425,7 @@ module battle(input logic Clk,
       begin
 			if((num % 100) + 1 <= enemy_move_data[1])
 			begin
-			  if(player_hp[cur_mon] - damage > my_maxhp[cur_mon])
+			  if(player_hp[cur_mon] - damage > player_hp[cur_mon])
 				 player_hp_in[cur_mon] = 8'b0;
 			  else
 				 player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
