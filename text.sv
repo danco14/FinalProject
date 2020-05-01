@@ -291,7 +291,7 @@ module used_text(input logic [9:0] DrawX, DrawY,
  if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
 	  is_usedtext=1'b1;
 	  bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
-	  used_hex= used_hexcodes[4-((DrawX-start_x)/width)];
+	  used_hex= used_hexcodes[((DrawX-start_x)/width)];
 //   if(DrawX>=start_x && DrawX<start_x+width)begin
 //     is_usedtext=1'b1;
 //     bit_num = DrawX - start_x;
