@@ -32,7 +32,7 @@ module poke_names(input logic [9:0] DrawX, DrawY,
   always_comb begin
     if(DrawY>= start_y && DrawY < (start_y + height) && DrawX>=start_x && DrawX < start_x+width*length)begin
 					is_pname = 1'b1;
-					bit_num = DrawX - ((DrawX-start_x)/width)*width*start_x;
+					bit_num = DrawX - (((DrawX-start_x)/width)*width)+start_x;
 					pname_hex = pokemon_names[poke_id][((DrawX-start_x)/width)];
 
 //        if(DrawX>=start_x && DrawX < (start_x + width))begin
@@ -283,14 +283,14 @@ module used_text(input logic [9:0] DrawX, DrawY,
  parameter width = 8;
  parameter height = 16;
  parameter length = 5;
- parameter [2:0][7:0]used_hexcodes = '{8'h55,8'h53,8'h45,8'h44,8'h20}; 
+ parameter [2:0][7:0]used_hexcodes = '{8'h55,8'h53,8'h45,8'h44,8'h20};
 
  assign y_diff = DrawY - start_y;
 
  always_comb begin
  if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
 	  is_usedtext=1'b1;
-	  bit_num = DrawX - ((DrawX-start_x)/width)*width*start_x;
+	  bit_num = DrawX - (((DrawX-start_x)/width)*width)+start_x;
 	  used_hex= used_hexcodes[((DrawX-start_x)/width)];
 //   if(DrawX>=start_x && DrawX<start_x+width)begin
 //     is_usedtext=1'b1;
