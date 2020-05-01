@@ -31,11 +31,11 @@ module battle(input logic Clk,
   logic [2:0][2:0] enemy_team;
 
   // Registers to hold pokemon health status
-  logic [7:0] player_hp[3];
-  logic [7:0] opponent_hp[3];
-  logic [7:0] player_hp_in[3], opponent_hp_in[3], my_maxhp_in[3], enemy_maxhp_in[3];
-  logic [7:0] my_maxhp [3];
-  logic [7:0] enemy_maxhp [3];
+  logic signed [7:0] player_hp[3];
+  logic signed [7:0] opponent_hp[3];
+  logic signed [7:0] player_hp_in[3], opponent_hp_in[3], my_maxhp_in[3], enemy_maxhp_in[3];
+  logic signed [7:0] my_maxhp [3];
+  logic signed [7:0] enemy_maxhp [3];
 
   // logic [3:0][7:0] moves;
 
@@ -214,7 +214,7 @@ module battle(input logic Clk,
     end
   end
 
-  logic [7:0] damage;
+  logic signed [7:0] damage;
   logic is_player;
 
   // Damage calculation
@@ -273,7 +273,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[move_index];
     enemy_move = 2'b0; // change when AI is added
-	 EXPORT_DATA = player_move_data[1];
+	 EXPORT_DATA = damage;
 
     unique case(State)
       Wait:
@@ -308,9 +308,9 @@ module battle(input logic Clk,
 		begin
         if(keycode == ENTER)
         begin
-		    if(opponent_hp[opp_mon] == 8'b0 && opp_mon == 2)
+		    if(opponent_hp[opp_mon] == 8'sb0 && opp_mon == 2)
 				Next_state = Win;
-			 else if(opponent_hp[opp_mon] == 8'b0 || player_data[4] <= enemy_data[4])
+			 else if(opponent_hp[opp_mon] == 8'sb0 || player_data[4] <= enemy_data[4])
 				Next_state = End_Turn;
           else
             Next_state = Enemy;
@@ -324,9 +324,9 @@ module battle(input logic Clk,
 		begin
         if(keycode == ENTER)
         begin
-			 if(player_hp[cur_mon] == 8'b0 && cur_mon == 2)
+			 if(player_hp[cur_mon] == 8'sb0 && cur_mon == 2)
 				Next_state = Lose;
-			 else if(player_hp[cur_mon] == 8'b0 || player_data[4] > enemy_data[4])
+			 else if(player_hp[cur_mon] == 8'sb0 || player_data[4] > enemy_data[4])
 				Next_state = End_Turn;
           else
 				Next_state = Player;
@@ -360,14 +360,14 @@ module battle(input logic Clk,
 
       End_Turn:
       begin
-        if(player_hp[cur_mon] == 8'b0)
+        if(player_hp[cur_mon] == 8'sb0)
         begin
           cur_mon_in = cur_mon + 2'b01;
 			 player_addr = team[cur_mon_in];
 			 player_hp_in[cur_mon_in] = player_data[9];
 			 my_maxhp_in[cur_mon_in] = player_data[9];
         end
-        if(opponent_hp[opp_mon] == 8'b0)
+        if(opponent_hp[opp_mon] == 8'sb0)
         begin
           opp_mon_in = opp_mon + 2'b01;
 			 enemy_addr = enemy_team[opp_mon_in];
@@ -412,8 +412,8 @@ module battle(input logic Clk,
         is_player = 1'b1;
 		  if((num % 100) + 1 <= player_move_data[1])
 		  begin
-			  if(opponent_hp[opp_mon] - damage > enemy_maxhp[opp_mon])
-				 opponent_hp_in[opp_mon] = 8'b0;
+			  if(opponent_hp[opp_mon] - damage <= 8'sb0)
+				 opponent_hp_in[opp_mon] = 8'sb0;
 			  else
 				 opponent_hp_in[opp_mon] = opponent_hp[opp_mon] - damage;
 			end
@@ -425,8 +425,8 @@ module battle(input logic Clk,
       begin
 			if((num % 100) + 1 <= enemy_move_data[1])
 			begin
-			  if(player_hp[cur_mon] - damage > my_maxhp[cur_mon])
-				 player_hp_in[cur_mon] = 8'b0;
+			  if(player_hp[cur_mon] - damage <= 8'sb0)
+				 player_hp_in[cur_mon] = 8'sb0;
 			  else
 				 player_hp_in[cur_mon] = player_hp[cur_mon] - damage;
 			end
