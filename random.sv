@@ -26,7 +26,7 @@ module random(input logic Clk,
     b = a ^ (a >> 17);
     shift_in = b ^ (b << 5);
 
-    num = shift[15:8];
+    num = shift[7:0];
   end
 
 endmodule
