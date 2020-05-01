@@ -283,7 +283,7 @@ module used_text(input logic [9:0] DrawX, DrawY,
  parameter width = 8;
  parameter height = 16;
  parameter length = 5;
- parameter [2:0][7:0]used_hexcodes = '{8'h55,8'h53,8'h45,8'h44,8'h20};
+ parameter [0:4][7:0]used_hexcodes = '{8'h55,8'h53,8'h45,8'h44,8'h20};
 
  assign y_diff = DrawY - start_y;
 
