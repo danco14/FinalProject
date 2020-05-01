@@ -105,11 +105,12 @@ module pokemon( input               CLOCK_50,
 
    logic [9:0] DrawX, DrawY;
    logic is_ball;
-   logic [4:0] palette_idx;
-   logic is_sprite;
+   logic is_sb_sprite;
    logic is_chooser;
    logic is_start;
    logic is_battle;
+   logic is_roam;
+   logic is_sprite;
    logic [7:0] EXPORT_DATA;
    logic [2:0] cur_choice_id;
    logic [2:0][2:0] team;
@@ -128,9 +129,27 @@ module pokemon( input               CLOCK_50,
    logic [7:0] hp_g;
    logic [7:0] hp_b;
    logic is_battleinfo_bar;
+   logic [5:0] roam_palette;
+   logic [5:0] sb_palette;
+
+   always_comb begin
+     if(is_sb_sprite || is_roam_sprite)begin
+       is_sprite = 1'b1;
+     end
+     else begin
+       is_sprite = 1'b0;
+     end
+   end
 
 	 key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key));
-
+   roam roam0(.Clk(Clk),
+              .cur_battle(2),
+              .is_roam(is_roam),
+              .DrawX(DrawX), .DrawY(DrawY),
+              .keycode(key),
+              .is_sprite(is_roam_sprite),
+              .roam_palette(roam_palette)
+             );
    game_state game(.Clk(Clk),
                    .Reset(Reset_h),
                    .DrawX(DrawX),
@@ -138,11 +157,12 @@ module pokemon( input               CLOCK_50,
                    .keycode(key),
                    .result(result),
                    .end_battle(end_battle),
-                   .palette_idx(palette_idx),
-                   .is_sprite(is_sprite),
+                   .sb_palette(sb_palette),
+                   .is_sprite(is_sb_sprite),
                    .is_chooser(is_chooser),
                    .is_battle(is_battle),
                    .is_start(is_start),
+                   .is_roam(is_roam),
                    .cur_choice(cur_choice_id),
                    .my_team(team),
                    .my_cur(my_cur),
@@ -169,7 +189,9 @@ module pokemon( input               CLOCK_50,
                     .is_sprite(is_sprite),
                     .is_start(is_start),
                     .is_battle(is_battle),
-                    .palette_idx(palette_idx),
+                    .is_roam(is_roam),
+                    .sb_palette(sb_palette),
+                    .roam_palette(roam_palette),
                     .DrawX(DrawX),
                     .DrawY(DrawY),
                     .cur_choice_id(cur_choice_id),

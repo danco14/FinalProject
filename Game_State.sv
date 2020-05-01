@@ -5,11 +5,12 @@ module game_state(input logic Clk, input logic Reset,
                   input logic end_battle,
                   input logic [1:0] my_cur,
                   input logic [2:0] enemy_cur_id,
-                  output logic [4:0] palette_idx,
+                  output logic [5:0] sb_palette,
                   output logic is_sprite,
                   output logic is_chooser,
                   output logic is_battle,
                   output logic is_start,
+                  output logic is_roam,
                   output logic [2:0] cur_choice,
                   output logic [2:0][2:0] my_team,
                   // output logic [1:0] direction,
@@ -68,10 +69,10 @@ module game_state(input logic Clk, input logic Reset,
   logic [18:0] poke_sprite_addr;
   logic [18:0] psprite_myteam;
   logic [18:0] psprite_enemy;
-  
+
   logic is_myteam, is_enemyteam;
 
-  pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(palette_idx),.read_address(poke_sprite_addr));
+  pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(sb_palette),.read_address(poke_sprite_addr));
 
  my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
                 .poke_id(my_team[my_cur]),
@@ -111,6 +112,7 @@ module game_state(input logic Clk, input logic Reset,
     is_chooser = 1'b0;
     is_battle = 1'b0;
     is_start = 1'b0;
+    is_roam = 1'b0;
     cur_choice_in = cur_choice;
     num_chosen_in = num_chosen;
     my_team_in = my_team;
@@ -121,8 +123,8 @@ module game_state(input logic Clk, input logic Reset,
         if(keycode && done_select) // Press any key to continue after selecting team
           Next_state = Roam;
       Roam:
-        //if()
-        Next_state = Battle;
+        if(keycode==ENTER)
+          Next_state = Battle;
       Battle:
       begin
         if(end_battle)
@@ -225,7 +227,8 @@ module game_state(input logic Clk, input logic Reset,
         end
       end
 
-      Roam: ;
+      Roam:
+        is_roam = 1'b1;
         // if(keycode == W)
         //   direction = 2'b00;
         // else if(keycode == A)
