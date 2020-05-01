@@ -32,7 +32,7 @@ module poke_names(input logic [9:0] DrawX, DrawY,
   always_comb begin
     if(DrawY>= start_y && DrawY < (start_y + height) && DrawX>=start_x && DrawX < start_x+width*length)begin
 					is_pname = 1'b1;
-					bit_num = DrawX - (((DrawX-start_x)/width)*width)+start_x;
+					bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
 					pname_hex = pokemon_names[poke_id][((DrawX-start_x)/width)];
 
 //        if(DrawX>=start_x && DrawX < (start_x + width))begin
@@ -290,7 +290,7 @@ module used_text(input logic [9:0] DrawX, DrawY,
  always_comb begin
  if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
 	  is_usedtext=1'b1;
-	  bit_num = DrawX - (((DrawX-start_x)/width)*width)+start_x;
+	  bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
 	  used_hex= used_hexcodes[((DrawX-start_x)/width)];
 //   if(DrawX>=start_x && DrawX<start_x+width)begin
 //     is_usedtext=1'b1;
