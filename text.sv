@@ -25,64 +25,68 @@ module poke_names(input logic [9:0] DrawX, DrawY,
   '{8'h57, 8'h45, 8'h45, 8'h5a, 8'h49, 8'h4e, 8'h47, 8'h20, 8'h20}};
 
 
-
   parameter width = 8;
   parameter height = 16;
+  parameter length=9;
   assign y_diff = (DrawY - start_y);
   always_comb begin
-    if(DrawY>= start_y && DrawY < (start_y + height))begin
-        if(DrawX>=start_x && DrawX < (start_x + width))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - start_x;
-          pname_hex = pokemon_names[poke_id][0];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(1)));
-          pname_hex = pokemon_names[poke_id][1];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(2)));
-          pname_hex = pokemon_names[poke_id][2];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(3)));
-          pname_hex = pokemon_names[poke_id][3];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(4)));
-          pname_hex = pokemon_names[poke_id][4];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(5)));
-          pname_hex = pokemon_names[poke_id][5];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(6)));
-          pname_hex = pokemon_names[poke_id][6];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(7)));
-          pname_hex = pokemon_names[poke_id][7];
-        end
-        else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
-          is_pname = 1'b1;
-          bit_num = DrawX - (start_x + (width*(8)));
-          pname_hex = pokemon_names[poke_id][8];
-        end
-   else begin
-      is_pname = 1'b0;
-      bit_num = 3'b0;
-      pname_hex = 8'h20;
-   end
+    if(DrawY>= start_y && DrawY < (start_y + height) && DrawX>=start_x && DrawX < start_x+width*length)begin
+					is_pname = 1'b1;
+					bit_num = DrawX - ((DrawX-start_x)/width)*width*start_x;
+					pname_hex = pokemon_names[poke_id][((DrawX-start_x)/width)];
 
-    end
+//        if(DrawX>=start_x && DrawX < (start_x + width))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - start_x;
+//          pname_hex = pokemon_names[poke_id][0];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(1)));
+//          pname_hex = pokemon_names[poke_id][1];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(2)));
+//          pname_hex = pokemon_names[poke_id][2];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(3)));
+//          pname_hex = pokemon_names[poke_id][3];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(4)));
+//          pname_hex = pokemon_names[poke_id][4];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(5)));
+//          pname_hex = pokemon_names[poke_id][5];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(6)));
+//          pname_hex = pokemon_names[poke_id][6];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(7)));
+//          pname_hex = pokemon_names[poke_id][7];
+//        end
+//        else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
+//          is_pname = 1'b1;
+//          bit_num = DrawX - (start_x + (width*(8)));
+//          pname_hex = pokemon_names[poke_id][8];
+//        end
+//   else begin
+//      is_pname = 1'b0;
+//      bit_num = 3'b0;
+//      pname_hex = 8'h20;
+//   end
+//   end
+	end
   else begin
       is_pname = 1'b0;
       bit_num = 3'b0;
@@ -278,41 +282,46 @@ module used_text(input logic [9:0] DrawX, DrawY,
  // 'U' 'S' 'E' 'D' ' ' = 5 chars
  parameter width = 8;
  parameter height = 16;
+ parameter length = 5;
+ parameter [2:0][7:0]used_hexcodes = '{8'h55,8'h53,8'h45,8'h44,8'h20}; 
 
  assign y_diff = DrawY - start_y;
 
  always_comb begin
- if(DrawY>=start_y && DrawY < (start_y+height))begin
-   if(DrawX>=start_x && DrawX<start_x+width)begin
-     is_usedtext=1'b1;
-     bit_num = DrawX - start_x;
-     used_hex = 8'h55;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-     is_usedtext=1'b1;
-     bit_num = DrawX - (start_x+width);
-     used_hex = 8'h53;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-     is_usedtext=1'b1;
-     bit_num = DrawX - (start_x+(width*2));
-     used_hex = 8'h45;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-     is_usedtext=1'b1;
-     bit_num = DrawX - (start_x+(width*3));
-     used_hex = 8'h44;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-     is_usedtext=1'b1;
-     bit_num = DrawX - (start_x+(width*4));
-     used_hex = 8'h20;
-   end
-   else begin
-     is_usedtext=1'b0;
-     bit_num = 3'b0;
-     used_hex = 8'h20;
-   end
+ if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+	  is_usedtext=1'b1;
+	  bit_num = DrawX - ((DrawX-start_x)/width)*width*start_x;
+	  used_hex= used_hexcodes[((DrawX-start_x)/width)];
+//   if(DrawX>=start_x && DrawX<start_x+width)begin
+//     is_usedtext=1'b1;
+//     bit_num = DrawX - start_x;
+//     used_hex = 8'h55;
+//   end
+//   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
+//     is_usedtext=1'b1;
+//     bit_num = DrawX - (start_x+width);
+//     used_hex = 8'h53;
+//   end
+//   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
+//     is_usedtext=1'b1;
+//     bit_num = DrawX - (start_x+(width*2));
+//     used_hex = 8'h45;
+//   end
+//   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
+//     is_usedtext=1'b1;
+//     bit_num = DrawX - (start_x+(width*3));
+//     used_hex = 8'h44;
+//   end
+//   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
+//     is_usedtext=1'b1;
+//     bit_num = DrawX - (start_x+(width*4));
+//     used_hex = 8'h20;
+//   end
+//   else begin
+//     is_usedtext=1'b0;
+//     bit_num = 3'b0;
+//     used_hex = 8'h20;
+//   end
  end
  else begin
    is_usedtext = 1'b0;
