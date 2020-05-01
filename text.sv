@@ -34,58 +34,6 @@ module poke_names(input logic [9:0] DrawX, DrawY,
 					is_pname = 1'b1;
 					bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
 					pname_hex = pokemon_names[poke_id][((DrawX-start_x)/width)];
-
-//        if(DrawX>=start_x && DrawX < (start_x + width))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - start_x;
-//          pname_hex = pokemon_names[poke_id][0];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(1)));
-//          pname_hex = pokemon_names[poke_id][1];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(2)));
-//          pname_hex = pokemon_names[poke_id][2];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(3)));
-//          pname_hex = pokemon_names[poke_id][3];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(4)));
-//          pname_hex = pokemon_names[poke_id][4];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(5)));
-//          pname_hex = pokemon_names[poke_id][5];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(6)));
-//          pname_hex = pokemon_names[poke_id][6];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(7)));
-//          pname_hex = pokemon_names[poke_id][7];
-//        end
-//        else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
-//          is_pname = 1'b1;
-//          bit_num = DrawX - (start_x + (width*(8)));
-//          pname_hex = pokemon_names[poke_id][8];
-//        end
-//   else begin
-//      is_pname = 1'b0;
-//      bit_num = 3'b0;
-//      pname_hex = 8'h20;
-//   end
-//   end
 	end
   else begin
       is_pname = 1'b0;
@@ -134,82 +82,19 @@ module moves_names(input logic [9:0] DrawX, DrawY,
 
  parameter width = 8;
  parameter height = 16;
-
+ parameter length = 12;
  assign y_diff = DrawY - start_y;
 
  always_comb begin
-   if(DrawY>= start_y && DrawY < (start_y + height))begin
-       if(DrawX>=start_x && DrawX < (start_x + width))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - start_x;
-         move_hex = move_names[move_id][0];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(2)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(1)));
-         move_hex = move_names[move_id][1];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(3)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(2)));
-         move_hex = move_names[move_id][2];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(4)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(3)));
-         move_hex = move_names[move_id][3];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(5)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(4)));
-         move_hex = move_names[move_id][4];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(6)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(5)));
-         move_hex = move_names[move_id][5];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(7)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(6)));
-         move_hex = move_names[move_id][6];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(8)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(7)));
-         move_hex = move_names[move_id][7];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(9)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(8)));
-         move_hex = move_names[move_id][8];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(10)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(9)));
-         move_hex = move_names[move_id][9];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(11)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(10)));
-         move_hex = move_names[move_id][10];
-       end
-       else if(DrawX>=start_x && DrawX < start_x + (width*(12)))begin
-         is_movename = 1'b1;
-         bit_num = DrawX - (start_x + (width*(11)));
-         move_hex = move_names[move_id][11];
-       end
+   if(DrawY>= start_y && DrawY < (start_y + height) && DrawX>=start_x && DrawX < start_x+width*length)begin
+      is_movename = 1'b1;
+      bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+      move_hex = move_names[move_id][((DrawX-start_x)/width)];
+   end
   else begin
      is_movename = 1'b0;
      bit_num = 3'b0;
      move_hex = 8'h20;
-  end
-
-   end
- else begin
-   is_movename = 1'b0;
-   bit_num = 3'b0;
-   move_hex = 8'h20;
  end
  end
 
@@ -224,46 +109,14 @@ module enemy_text(input logic [9:0] DrawX, DrawY,
  // 'E' 'N' 'E' 'M' 'Y' ' ' = 6 chars
  parameter width = 8;
  parameter height = 16;
-
+ parameter length = 6;
  assign y_diff = DrawY - start_y;
-
+ parameter [0:5][7:0] enemy_hexcodes = '{8'h45,8'h4e,8'h45,8'h4d,8'h59,8'h20};
  always_comb begin
- if(DrawY>=start_y && DrawY < (start_y+height))begin
-   if(DrawX>=start_x && DrawX<start_x+width)begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - start_x;
-     enemy_hex = 8'h45;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - (start_x+width);
-     enemy_hex = 8'h4e;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - (start_x+(width*2));
-     enemy_hex = 8'h45;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - (start_x+(width*3));
-     enemy_hex = 8'h4d;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - (start_x+(width*4));
-     enemy_hex = 8'h59;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
-     is_enemytext=1'b1;
-     bit_num = DrawX - (start_x+(width*5));
-     enemy_hex = 8'h20;
-   end
-   else begin
-     bit_num = 3'b0;
-     enemy_hex = 8'h20;
-     is_enemytext=1'b0;
-   end
+ if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+   is_enemytext=1'b1;
+   bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+   enemy_hex= enemy_hexcodes[((DrawX-start_x)/width)];
  end
  else begin
    bit_num = 3'b0;
@@ -292,36 +145,6 @@ module used_text(input logic [9:0] DrawX, DrawY,
 	  is_usedtext=1'b1;
 	  bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
 	  used_hex= used_hexcodes[((DrawX-start_x)/width)];
-//   if(DrawX>=start_x && DrawX<start_x+width)begin
-//     is_usedtext=1'b1;
-//     bit_num = DrawX - start_x;
-//     used_hex = 8'h55;
-//   end
-//   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-//     is_usedtext=1'b1;
-//     bit_num = DrawX - (start_x+width);
-//     used_hex = 8'h53;
-//   end
-//   else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-//     is_usedtext=1'b1;
-//     bit_num = DrawX - (start_x+(width*2));
-//     used_hex = 8'h45;
-//   end
-//   else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-//     is_usedtext=1'b1;
-//     bit_num = DrawX - (start_x+(width*3));
-//     used_hex = 8'h44;
-//   end
-//   else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-//     is_usedtext=1'b1;
-//     bit_num = DrawX - (start_x+(width*4));
-//     used_hex = 8'h20;
-//   end
-//   else begin
-//     is_usedtext=1'b0;
-//     bit_num = 3'b0;
-//     used_hex = 8'h20;
-//   end
  end
  else begin
    is_usedtext = 1'b0;
@@ -341,26 +164,15 @@ module hp_text(input logic [9:0] DrawX, DrawY,
  // 'H' 'P' = 2 chars
  parameter width = 8;
  parameter height = 16;
-
+ parameter length = 2;
+ parameter [0:1][7:0] hp_hexcodes = '{8'h48,8'h50};
  assign y_diff = DrawY - start_y;
 
  always_comb begin
- if(DrawY>=start_y && DrawY < (start_y+height))begin
-   if(DrawX>=start_x && DrawX<start_x+width)begin
-     is_hptext=1'b1;
-     bit_num = DrawX - start_x;
-     hp_hex = 8'h48;
-   end
-   else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-     is_hptext=1'b1;
-     bit_num = DrawX - (start_x+width);
-     hp_hex = 8'h50;
-   end
-   else begin
-     is_hptext=1'b0;
-     bit_num = 3'b0;
-     hp_hex = 8'h20;
-   end
+ if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+   is_hptext = 1'b1;
+   bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+   hp_hex = hp_hexcodes[((DrawX-start_x)/width)];
  end
  else begin
    is_hptext = 1'b0;
@@ -379,79 +191,43 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
                  output logic is_hp2text,
                  output logic [9:0] y_diff);
  //max hp is currently <200 hp, => _ _ _ / _ _ _ = 7 characters
- //ascii 0 = 0x30
  parameter width = 8;
  parameter height = 16;
-
+ parameter length = 7;
  assign y_diff = DrawY - start_y;
 
  logic [7:0] first_hp [0:2];
  logic [7:0] second_hp [0:2];
-
+ logic [7:0] hp_hexcodes [0:6];
+ assign hp_hexcodes[3] = 8'h2f;
  always_comb begin
    if(curHP>=100)begin
-     first_hp[0] = 8'h31;
+     hp_hexcodes[0] = 8'h31;
    end
    else begin
-     first_hp[0] = 8'h20;
+     hp_hexcodes[0] = 8'h20;
    end
    if(maxHP>=100)begin
-     second_hp[0] = 8'h31;
+     hp_hexcodes[4] = 8'h31;
    end
    else begin
-     second_hp[0] = 8'h20;
+     hp_hexcodes[4] = 8'h20;
    end
-	 first_hp[1] = ((curHP % 100) / 10) + 8'h30;
-   second_hp[1] = ((maxHP % 100) / 10)+ 8'h30;
-   first_hp[2] = (curHP % 10) + 8'h30;
-   second_hp[2] = (maxHP % 10) + 8'h30;
-	 if(first_hp[0]==8'h20 && first_hp[1]==8'h30)begin
-		first_hp[1] = 8'h20;
+   hp_hexcodes[1] = ((curHP % 100) / 10) + 8'h30;
+   hp_hexcodes[5] = ((maxHP % 100) / 10)+ 8'h30;
+   hp_hexcodes[2] = (curHP % 10) + 8'h30;
+   hp_hexcodes[6] = (maxHP % 10) + 8'h30;
+
+	 if(hp_hexcodes[0]==8'h20 && hp_hexcodes[1]==8'h30)begin
+		hp_hexcodes[1] = 8'h20;
 	 end
 	 else begin
-		first_hp[1] = ((curHP % 100) / 10) + 8'h30;
+		hp_hexcodes[1] = ((curHP % 100) / 10) + 8'h30;
 	 end
-   if(DrawY>=start_y && DrawY < (start_y+height))begin
-     if(DrawX>=start_x && DrawX<start_x+width)begin
-       hp2_hex = first_hp[0];
-       bit_num = DrawX - start_x;
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(2*width))begin
-       hp2_hex = first_hp[1];
-       bit_num = DrawX - (start_x+width);
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(3*width))begin
-       hp2_hex = first_hp[2];
-       bit_num = DrawX - (start_x+(width*2));
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(4*width))begin
-       hp2_hex = 8'h2f; // front slash /
-       bit_num = DrawX - (start_x+(width*3));
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(5*width))begin
-       hp2_hex = second_hp[0];
-       bit_num = DrawX - (start_x+(width*4));
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(6*width))begin
-       hp2_hex = second_hp[1];
-       bit_num = DrawX - (start_x+(width*5));
-       is_hp2text=1'b1;
-     end
-     else if(DrawX>=start_x && DrawX<start_x+(7*width))begin
-       hp2_hex = second_hp[2];
-       bit_num = DrawX - (start_x+(width*6));
-       is_hp2text=1'b1;
-     end
-     else begin
-       is_hp2text=1'b0;
-		  hp2_hex = 8'h30;
-		  bit_num = 3'b0;
-     end
+   if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+     hp2_hex = hp_hexcodes[((DrawX-start_x)/width)];
+     bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+     is_hp2text=1'b1;
    end
    else begin
      hp2_hex = 8'h30;
