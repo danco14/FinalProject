@@ -6,7 +6,8 @@ module roam(input logic Clk,
             input logic [9:0] DrawX, input logic [9:0] DrawY,
             input logic [7:0] keycode,
             output logic is_sprite,
-            output logic [5:0] roam_palette
+            output logic [5:0] roam_palette,
+				output logic [9:0] EXPORT_DATA
             );
   parameter [9:0] map_x = 10'd300;
   parameter [9:0] map_y = 10'd100;
@@ -18,8 +19,8 @@ module roam(input logic Clk,
   parameter [7:0] enemy_height = 8'd16;
   parameter [7:0] trainer_width = 8'd14;
   parameter [7:0] trainer_height = 8'd16;
-  parameter [2:0] x_step = 3'd1;
-  parameter [2:0] y_step = 3'd1;
+  parameter [9:0] x_step = 10'd1;
+  parameter [9:0] y_step = 10'd1;
 
   parameter [7:0] W = 8'h1A;
   parameter [7:0] A = 8'h04;
@@ -39,11 +40,8 @@ module roam(input logic Clk,
   logic [9:0] trainer_y;
   logic [9:0] trainer_x_in;
   logic [9:0] trainer_y_in;
-  logic [2:0] motion_x;
-  logic [2:0] motion_y;
-  logic [2:0] motion_x_in;
-  logic [2:0] motion_y_in;
-
+  logic [9:0] motion_x;
+  logic [9:0] motion_y;
 
   logic frame_clk_delayed, frame_clk_rising_edge;
   always_ff @ (posedge Clk) begin
@@ -51,73 +49,56 @@ module roam(input logic Clk,
       frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
   end
 
-  logic frame_clk_delayed, frame_clk_rising_edge;
-  always_ff(@posedge Clk)begin
+  always_ff @ (posedge Clk)begin
     if(Reset || !is_roam) begin
       trainer_x <= 10'd387;  //300+87
       trainer_y <= 10'd336; //100 + 236
       trainer_dir <= 2'b0; //show back of trainer
-      motion_x <= 3'b0;
-      motion_y <= 3'b0;
     end
     else begin
       trainer_x <= trainer_x_in;
       trainer_y <= trainer_y_in;
       trainer_dir <= trainer_dir_in;
-      motion_x <= motion_x_in;
-      motion_y <= motion_y_in;
     end
   end
   always_comb begin
-    trainer_x_in <= trainer_x;
-    trainer_y_in <= trainer_y;
-    trainer_dir_in <= trainer_dir;
-    motion_x_in <= motion_x;
-    motion_y_in <= motion_y;
+    trainer_x_in = trainer_x;
+    trainer_y_in = trainer_y;
+    trainer_dir_in = trainer_dir;
+    motion_x = 10'd0;
+    motion_y = 10'd0;
 
     if(frame_clk_rising_edge)begin
       if(keycode == W) begin
           if(trainer_dir!=2'd0) begin
             trainer_dir_in = 2'b0;
-            motion_x_in = 3'd0;
-  					motion_y_in = 3'd0;
           end
           else begin
-            motion_x_in = 3'd0;
-  					motion_y_in = (~y_step) + 1'b1;
+  					motion_y = (~y_step) + 1'b1;
           end
 			end
       else if(keycode == S) begin
         if(trainer_dir!=2'd1) begin
           trainer_dir_in = 2'd1;
-          motion_x_in = 3'd0;
-          motion_y_in = 3'd0;
         end
         else begin
-          motion_x_in = 3'd0;
-          motion_y_in = y_step;
+          motion_y = y_step;
         end
       end
       else if(keycode == A) begin
         if(trainer_dir!=2'd2) begin
           trainer_dir_in = 2'd2;
-          motion_x_in = 3'd0;
-          motion_y_in = 3'd0;
         end
         else begin
-          motion_x_in = (~x_step) + 1'b1;
-          motion_y_in = 3'd0;
+          motion_x = (~x_step) + 1'b1;
         end
       end
       else if(keycode == D) begin
         if(trainer_dir!=2'd3) begin
           trainer_dir_in = 2'd3;
-          motion_x_in = 3'd0;
-          motion_y_in = 3'd0;
         end
         else begin
-          motion_x_in = x_step;
-          motion_y_in = 3'd0;
+          motion_x = x_step;
         end
       end
 

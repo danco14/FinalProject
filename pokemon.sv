@@ -141,7 +141,12 @@ module pokemon( input               CLOCK_50,
      end
    end
 
-	 key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key));
+	 key_press KP(.Clk(Clk),
+	 .Reset(Reset_h),
+	 .hold(is_roam),
+	 .keycode(keycode),
+	 .key(key));
+	 
    roam roam0(.Clk(Clk),
               .Reset(Reset_h),
               .frame_clk(VGA_VS),
@@ -150,8 +155,10 @@ module pokemon( input               CLOCK_50,
               .DrawX(DrawX), .DrawY(DrawY),
               .keycode(key),
               .is_sprite(is_roam_sprite),
-              .roam_palette(roam_palette)
+              .roam_palette(roam_palette),
+				  .EXPORT_DATA(test1)
              );
+				 
    game_state game(.Clk(Clk),
                    .Reset(Reset_h),
                    .DrawX(DrawX),
@@ -240,9 +247,10 @@ module pokemon( input               CLOCK_50,
 
   // Test random number generator
   logic [7:0] test;
+  logic [9:0] test1;
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (test[3:0], HEX0);
-    HexDriver hex_inst_1 (test[7:4], HEX1);
+    HexDriver hex_inst_0 (test1[3:0], HEX0);
+    HexDriver hex_inst_1 (test1[7:4], HEX1);
 
 endmodule

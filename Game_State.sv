@@ -123,7 +123,7 @@ module game_state(input logic Clk, input logic Reset,
         if(keycode && done_select) // Press any key to continue after selecting team
           Next_state = Roam;
       Roam:
-        if(keycode==ENTER)
+        if(keycode==8'h0e)
           Next_state = Battle;
       Battle:
       begin
