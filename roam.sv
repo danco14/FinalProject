@@ -95,7 +95,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd1;
         end
         else begin
-          if( ! (trainer_y>=(map_y+map_height-1) || (((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x)))
+          if( ! (trainer_y>=(map_y+map_height-1-trainer_height) || (((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x)))
             motion_y = y_step;
         end
       end
@@ -113,7 +113,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd3;
         end
         else begin
-          if(! ((trainer_x>=(map_x+map_width-1)) || (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x))))
+          if(! ((trainer_x>=(map_x+map_width-1-trainer_width)) || (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x))))
             motion_x = x_step;
         end
       end
