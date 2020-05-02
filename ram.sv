@@ -76,7 +76,7 @@ logic [5:0] mem [0:13727];
 
 initial
 begin
-	 $readmemh("gym.txt", mem);
+	 $readmemh("gym_map.txt", mem);
 end
 
 

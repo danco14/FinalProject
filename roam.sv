@@ -6,12 +6,12 @@ module roam(input logic Clk,
             output logic is_sprite,
             output logic [5:0] roam_palette
             );
-  parameter [9:0] map_x = 10'd280;
-  parameter [9:0] map_y = 10'd150;
-  parameter [7:0] map_width = 8'd96;
-  parameter [7:0] map_height = 8'd143;
-  parameter [9:0] enemy_x = 10'd321; //280 + 41
-  parameter [9:0] enemy_y = 10'd220; //150 + 70
+  parameter [9:0] map_x = 10'd300;
+  parameter [9:0] map_y = 10'd100;
+  parameter [7:0] map_width = 8'd192;
+  parameter [7:0] map_height = 8'd255;
+  parameter [9:0] enemy_x = 10'd389; //300 + 89
+  parameter [9:0] enemy_y = 10'd212; //100 + 112
   parameter [7:0] enemy_width = 8'd14;
   parameter [7:0] enemy_height = 8'd16;
   logic [5:0] elite_palette;
