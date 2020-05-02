@@ -5,9 +5,10 @@ module roam(input logic Clk,
             input logic is_roam,
             input logic [9:0] DrawX, input logic [9:0] DrawY,
             input logic [7:0] keycode,
+            output logic start_battle,
             output logic is_sprite,
             output logic [5:0] roam_palette,
-				output logic [9:0] EXPORT_DATA
+				    output logic [9:0] EXPORT_DATA
             );
   parameter [9:0] map_x = 10'd300;
   parameter [9:0] map_y = 10'd100;
@@ -26,6 +27,7 @@ module roam(input logic Clk,
   parameter [7:0] A = 8'h04;
   parameter [7:0] S = 8'h16;
   parameter [7:0] D = 8'h07;
+  parameter [7:0] ENTER = 8'h28;
 
   logic [5:0] elite_palette;
   logic [5:0] map_palette;
@@ -65,8 +67,18 @@ module roam(input logic Clk,
     trainer_x_in = trainer_x;
     trainer_y_in = trainer_y;
     trainer_dir_in = trainer_dir;
+    start_battle = 1'b0;
     motion_x = 10'd0;
     motion_y = 10'd0;
+
+    if(is_roam && keycode==ENTER) begin
+      if ((trainer_dir==2'd0 && trainer_x==enemy_x && (trainer_y == (enemy_y+enemy_height))) ||
+         (trainer_dir==2'd1 && ((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x ) ||
+         (trainer_dir==2'd2 && ((trainer_x == enemy_x+enemy_width) && (trainer_y == enemy_y))) ||
+         (trainer_dir==2'd3 && (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x)))) begin
+           start_battle = 1'b1;
+      end
+    end
 
     if(frame_clk_rising_edge)begin
       if(keycode == W) begin
@@ -74,6 +86,7 @@ module roam(input logic Clk,
             trainer_dir_in = 2'b0;
           end
           else begin
+            if( ! (trainer_y<=(map_y+25) || (trainer_x==enemy_x && (trainer_y == (enemy_y+enemy_height))) ))
   					motion_y = (~y_step) + 1'b1;
           end
 			end
@@ -82,7 +95,8 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd1;
         end
         else begin
-          motion_y = y_step;
+          if( ! (trainer_y>=(map_y+map_height-1) || (((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x)))
+            motion_y = y_step;
         end
       end
       else if(keycode == A) begin
@@ -90,7 +104,8 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd2;
         end
         else begin
-          motion_x = (~x_step) + 1'b1;
+          if(!(trainer_x <= map_x || ((trainer_x == enemy_x+enemy_width) && (trainer_y == enemy_y))))
+            motion_x = (~x_step) + 1'b1;
         end
       end
       else if(keycode == D) begin
@@ -98,12 +113,11 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd3;
         end
         else begin
-          motion_x = x_step;
+          if(! ((trainer_x>=(map_x+map_width-1)) || (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x))))
+            motion_x = x_step;
         end
       end
 
-      //boundary checking goes here ...
-      
       trainer_x_in = trainer_x + motion_x;
       trainer_y_in = trainer_y + motion_y;
     end

@@ -5,6 +5,7 @@ module game_state(input logic Clk, input logic Reset,
                   input logic end_battle,
                   input logic [1:0] my_cur,
                   input logic [2:0] enemy_cur_id,
+                  input logic start_battle,
                   output logic [5:0] sb_palette,
                   output logic is_sprite,
                   output logic is_chooser,
@@ -123,7 +124,7 @@ module game_state(input logic Clk, input logic Reset,
         if(keycode && done_select) // Press any key to continue after selecting team
           Next_state = Roam;
       Roam:
-        if(keycode==8'h0e)
+        if(start_battle)
           Next_state = Battle;
       Battle:
       begin

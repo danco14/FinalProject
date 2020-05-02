@@ -132,6 +132,7 @@ module pokemon( input               CLOCK_50,
    logic [5:0] roam_palette;
    logic [5:0] sb_palette;
    logic [5:0] is_roam_sprite;
+   logic start_battle;
    always_comb begin
      if(is_sb_sprite || is_roam_sprite)begin
        is_sprite = 1'b1;
@@ -146,7 +147,7 @@ module pokemon( input               CLOCK_50,
 	 .hold(is_roam),
 	 .keycode(keycode),
 	 .key(key));
-	 
+
    roam roam0(.Clk(Clk),
               .Reset(Reset_h),
               .frame_clk(VGA_VS),
@@ -156,9 +157,10 @@ module pokemon( input               CLOCK_50,
               .keycode(key),
               .is_sprite(is_roam_sprite),
               .roam_palette(roam_palette),
+              .start_battle(start_battle),
 				  .EXPORT_DATA(test1)
              );
-				 
+
    game_state game(.Clk(Clk),
                    .Reset(Reset_h),
                    .DrawX(DrawX),
@@ -172,6 +174,7 @@ module pokemon( input               CLOCK_50,
                    .is_battle(is_battle),
                    .is_start(is_start),
                    .is_roam(is_roam),
+                   .start_battle(start_battle),
                    .cur_choice(cur_choice_id),
                    .my_team(team),
                    .my_cur(my_cur),
