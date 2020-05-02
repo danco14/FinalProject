@@ -72,7 +72,7 @@ module mapRAM
 		output logic [5:0] palette_idx
 );
 
-logic [5:0] mem [0:13727];
+logic [5:0] mem [0:48959];
 
 initial
 begin
