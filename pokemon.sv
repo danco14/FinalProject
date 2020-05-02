@@ -143,7 +143,9 @@ module pokemon( input               CLOCK_50,
 
 	 key_press KP(.Clk(Clk), .Reset(Reset_h), .keycode(keycode), .key(key));
    roam roam0(.Clk(Clk),
-              .cur_battle(2),
+              .Reset(Reset_h),
+              .frame_clk(VGA_VS),
+              .cur_battle(3),
               .is_roam(is_roam),
               .DrawX(DrawX), .DrawY(DrawY),
               .keycode(key),
