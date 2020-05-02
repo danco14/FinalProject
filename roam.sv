@@ -49,7 +49,7 @@ module roam(input logic Clk,
   end
 endmodule
 
-module elite_sprites(input logic [9:0] DrawX, input logic [9:0] DrawY,
+module elite_sprites(input logic Clk, input logic [9:0] DrawX, input logic [9:0] DrawY,
                      input logic [2:0] cur_battle,
                      input logic [9:0] start_x, input logic [9:0] start_y,
                      input logic [7:0] width, input logic [7:0] height,
@@ -68,7 +68,7 @@ module elite_sprites(input logic [9:0] DrawX, input logic [9:0] DrawY,
   end
 endmodule
 
-module map_background(input logic [9:0] DrawX, input logic [9:0] DrawY,
+module map_background(input logic Clk, input logic [9:0] DrawX, input logic [9:0] DrawY,
                      input logic [9:0] start_x, input logic [9:0] start_y,
                      input logic [7:0] width, input logic [7:0] height,
                      output logic [5:0] map_palette, output logic is_map);

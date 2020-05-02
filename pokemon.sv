@@ -131,7 +131,7 @@ module pokemon( input               CLOCK_50,
    logic is_battleinfo_bar;
    logic [5:0] roam_palette;
    logic [5:0] sb_palette;
-
+   logic [5:0] is_roam_sprite;
    always_comb begin
      if(is_sb_sprite || is_roam_sprite)begin
        is_sprite = 1'b1;
