@@ -19,12 +19,12 @@ module roam(input logic Clk,
   logic is_elite;
   logic is_map;
    // trainerRAM trainer(.Clk(Clk),.read_address(),.palette_idx());
-  elite_sprites esprites(.DrawX(DrawX),.DrawY(DrawY),
+	elite_sprites esprites(.Clk(Clk),.DrawX(DrawX),.DrawY(DrawY),
                           .cur_battle(cur_battle),
                           .start_x(enemy_x),.start_y(enemy_y),
                           .width(enemy_width),.height(enemy_height),
                           .elite_palette(elite_palette),.is_elite(is_elite));
-  map_background map0(.DrawX(DrawX),.DrawY(DrawY),
+	map_background map0(.Clk(Clk),.DrawX(DrawX),.DrawY(DrawY),
                        .start_x(map_x),.start_y(map_y),
                        .width(map_width),.height(map_height),
                        .map_palette(map_palette),.is_map(is_map));
