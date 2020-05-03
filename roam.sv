@@ -35,7 +35,10 @@ module roam(input logic Clk,
   logic is_elite;
   logic is_map;
   logic is_trainer;
-  logic is_overlap;
+  logic is_overlap0;
+  logic is_overlap1;
+  logic is_overlap2;
+  logic is_overlap3;
 
   logic [1:0] trainer_dir;  //trainer direction: 0 = back, 1=front, 2=left, 3=right
   logic [1:0] trainer_dir_in;
@@ -46,8 +49,14 @@ module roam(input logic Clk,
   logic [9:0] motion_x;
   logic [9:0] motion_y;
 
-  overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
-                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap));
+  overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y+1),.y1bot(trainer_y+trainer_height),
+                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap0));
+  overlap overlap1(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y-1),.y1bot(trainer_y+trainer_height-2),
+                  .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap1));
+  overlap overlap2(.x1left(trainer_x-1),.x1right(trainer_x+trainer_width-2),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
+                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap2));
+  overlap overlap3(.x1left(trainer_x+1),.x1right(trainer_x+trainer_width),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
+                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap3));
 
   logic frame_clk_delayed, frame_clk_rising_edge;
   always_ff @ (posedge Clk) begin
@@ -90,7 +99,7 @@ module roam(input logic Clk,
             trainer_dir_in = 2'b0;
           end
           else begin
-            if( ! (trainer_y<=(map_y+25) || is_overlap)
+            if( ! (trainer_y<=(map_y+25) || is_overlap0))
   					motion_y = (~y_step) + 1'b1;
           end
 			end
@@ -99,7 +108,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd1;
         end
         else begin
-          if( ! (trainer_y>=(map_y+map_height-1-trainer_height) || is_overlap))
+          if( ! (trainer_y>=(map_y+map_height-1-trainer_height) || is_overlap1))
             motion_y = y_step;
         end
       end
@@ -108,7 +117,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd2;
         end
         else begin
-          if(!(trainer_x <= map_x || is_overlap))
+          if(!(trainer_x <= map_x || is_overlap2))
             motion_x = (~x_step) + 1'b1;
         end
       end
@@ -117,7 +126,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd3;
         end
         else begin
-          if(! ((trainer_x>=(map_x+map_width-1-trainer_width)) || is_overlap))
+          if(! ((trainer_x>=(map_x+map_width-1-trainer_width)) || is_overlap3))
             motion_x = x_step;
         end
       end
