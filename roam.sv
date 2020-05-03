@@ -40,7 +40,7 @@ module roam(input logic Clk,
   logic is_overlap2;
   logic is_overlap3;
 
-  logic [1:0] trainer_dir;  //trainer direction: 0 = back, 1=front, 2=left, 3=right
+  logic [1:0] trainer_dir;  //trainer direction: 0 = back (moving up), 1=front (moving down), 2=left (moving left), 3=right (moving right)
   logic [1:0] trainer_dir_in;
   logic [9:0] trainer_x;
   logic [9:0] trainer_y;
@@ -49,9 +49,9 @@ module roam(input logic Clk,
   logic [9:0] motion_x;
   logic [9:0] motion_y;
 
-  overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y+1),.y1bot(trainer_y+trainer_height),
+  overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y-1),.y1bot(trainer_y+trainer_height-2),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap0));
-  overlap overlap1(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y-1),.y1bot(trainer_y+trainer_height-2),
+  overlap overlap1(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y+1),.y1bot(trainer_y+trainer_height),
                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap1));
   overlap overlap2(.x1left(trainer_x-1),.x1right(trainer_x+trainer_width-2),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap2));
@@ -85,10 +85,10 @@ module roam(input logic Clk,
     motion_y = 10'd0;
 
     if(is_roam && keycode==ENTER) begin
-      if ((trainer_dir==2'd0 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y >= (enemy_y+enemy_height)) && (trainer_y <= (enemy_y+enemy_height+2))) ||
-         (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y <= (enemy_y-1)) && (trainer_y >= (enemy_y-1-2))) ||
-         (trainer_dir==2'd2 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x >= (enemy_x+enemy_width)) && (trainer_x <= (enemy_x+enemy_width+2))) ||
-         (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x <= (enemy_x-1)) && (trainer_x >= (enemy_x-1-2)))) begin
+      if ((trainer_dir==2'd0 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y >= (enemy_y+enemy_height)) && (trainer_y <= (enemy_y+enemy_height+3))) ||
+         (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y <= (enemy_y-1)) && (trainer_y >= (enemy_y-1-3))) ||
+         (trainer_dir==2'd2 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x >= (enemy_x+enemy_width)) && (trainer_x <= (enemy_x+enemy_width+3))) ||
+         (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x <= (enemy_x-1)) && (trainer_x >= (enemy_x-1-3)))) begin
            start_battle = 1'b1;
       end
     end
