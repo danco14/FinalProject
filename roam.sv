@@ -35,6 +35,7 @@ module roam(input logic Clk,
   logic is_elite;
   logic is_map;
   logic is_trainer;
+  logic is_overlap;
 
   logic [1:0] trainer_dir;  //trainer direction: 0 = back, 1=front, 2=left, 3=right
   logic [1:0] trainer_dir_in;
@@ -44,6 +45,9 @@ module roam(input logic Clk,
   logic [9:0] trainer_y_in;
   logic [9:0] motion_x;
   logic [9:0] motion_y;
+
+  overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
+                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap));
 
   logic frame_clk_delayed, frame_clk_rising_edge;
   always_ff @ (posedge Clk) begin
@@ -72,10 +76,10 @@ module roam(input logic Clk,
     motion_y = 10'd0;
 
     if(is_roam && keycode==ENTER) begin
-      if ((trainer_dir==2'd0 && trainer_x==enemy_x && (trainer_y == (enemy_y+enemy_height))) ||
-         (trainer_dir==2'd1 && ((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x ) ||
-         (trainer_dir==2'd2 && ((trainer_x == enemy_x+enemy_width) && (trainer_y == enemy_y))) ||
-         (trainer_dir==2'd3 && (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x)))) begin
+      if ((trainer_dir==2'd0 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y >= (enemy_y+enemy_height)) && (trainer_y <= (enemy_y+enemy_height+2))) ||
+         (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y <= (enemy_y-1)) && (trainer_y >= (enemy_y-1-2))) ||
+         (trainer_dir==2'd2 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x >= (enemy_x+enemy_width)) && (trainer_x <= (enemy_x+enemy_width+2))) ||
+         (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x <= (enemy_x-1)) && (trainer_x >= (enemy_x-1-2)))) begin
            start_battle = 1'b1;
       end
     end
@@ -86,7 +90,7 @@ module roam(input logic Clk,
             trainer_dir_in = 2'b0;
           end
           else begin
-            if( ! (trainer_y<=(map_y+25) || (trainer_x==enemy_x && (trainer_y == (enemy_y+enemy_height))) ))
+            if( ! (trainer_y<=(map_y+25) || is_overlap)
   					motion_y = (~y_step) + 1'b1;
           end
 			end
@@ -95,7 +99,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd1;
         end
         else begin
-          if( ! (trainer_y>=(map_y+map_height-1-trainer_height) || (((trainer_y+trainer_height) == enemy_y) && trainer_x == enemy_x)))
+          if( ! (trainer_y>=(map_y+map_height-1-trainer_height) || is_overlap))
             motion_y = y_step;
         end
       end
@@ -104,7 +108,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd2;
         end
         else begin
-          if(!(trainer_x <= map_x || ((trainer_x == enemy_x+enemy_width) && (trainer_y == enemy_y))))
+          if(!(trainer_x <= map_x || is_overlap))
             motion_x = (~x_step) + 1'b1;
         end
       end
@@ -113,7 +117,7 @@ module roam(input logic Clk,
           trainer_dir_in = 2'd3;
         end
         else begin
-          if(! ((trainer_x>=(map_x+map_width-1-trainer_width)) || (trainer_y == enemy_y && ((trainer_x+trainer_width) == enemy_x))))
+          if(! ((trainer_x>=(map_x+map_width-1-trainer_width)) || is_overlap))
             motion_x = x_step;
         end
       end
@@ -165,6 +169,23 @@ module roam(input logic Clk,
 		  roam_palette = 6'd1;
       is_sprite = 1'b0;
     end
+  end
+endmodule
+
+module overlap(input logic [9:0] x1left,
+               input logic [9:0] x1right,
+               input logic [9:0] y1top,
+               input logic [9:0] y1bot,
+               input logic [9:0] x2left,
+               input logic [9:0] x2right,
+               input logic [9:0] y2top,
+               input logic [9:0] y2bot,
+               output logic is_overlap);
+  if(x1left>x2right || x1right < x2left || y1top > y2bot || y1bot < y2top) begin
+    is_overlap = 1'b0;
+  end
+  else begin
+    is_overlap = 1'b1;
   end
 endmodule
 
