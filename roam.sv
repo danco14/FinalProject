@@ -190,12 +190,15 @@ module overlap(input logic [9:0] x1left,
                input logic [9:0] y2top,
                input logic [9:0] y2bot,
                output logic is_overlap);
+ always_comb
+ begin
   if(x1left>x2right || x1right < x2left || y1top > y2bot || y1bot < y2top) begin
     is_overlap = 1'b0;
   end
   else begin
-    is_overlap = 1'b1;
+     is_overlap = 1'b1;
   end
+ end
 endmodule
 
 module trainer_sprite(input logic Clk, input logic [9:0] DrawX, input logic [9:0] DrawY,
