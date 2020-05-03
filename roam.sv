@@ -86,9 +86,9 @@ module roam(input logic Clk,
 
     if(is_roam && keycode==ENTER) begin
       if ((trainer_dir==2'd0 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y >= (enemy_y+enemy_height)) && (trainer_y <= (enemy_y+enemy_height+3))) ||
-         (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y <= (enemy_y-1)) && (trainer_y >= (enemy_y-1-3))) ||
+         (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && ((trainer_y+trainer_height-1) <= (enemy_y-1)) && ((trainer_y+trainer_height-1) >= (enemy_y-1-3))) ||
          (trainer_dir==2'd2 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x >= (enemy_x+enemy_width)) && (trainer_x <= (enemy_x+enemy_width+3))) ||
-         (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x <= (enemy_x-1)) && (trainer_x >= (enemy_x-1-3)))) begin
+         (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && ((trainer_x+trainer_width-1) <= (enemy_x-1)) && ((trainer_x+trainer_width-1) >= (enemy_x-1-3)))) begin
            start_battle = 1'b1;
       end
     end
