@@ -147,7 +147,7 @@ module roam(input logic Clk,
 		begin
 			new_room = 1'b1;
 			battle_in = 1'b0;
-			trainer_x_in = 10'd387;
+			trainer_x_in = 10'd313;
 			trainer_y_in = 10'd336;
 		end
 		else
