@@ -13,11 +13,11 @@ module roam(input logic Clk,
 				    output logic [9:0] EXPORT_DATA
             );
 
-  parameter [9:0] map_x = 10'd300;
+  parameter [9:0] map_x = 10'd224;
   parameter [9:0] map_y = 10'd100;
   parameter [7:0] map_width = 8'd192;
   parameter [7:0] map_height = 8'd255;
-  parameter [9:0] enemy_x = 10'd389; //300 + 89
+  parameter [9:0] enemy_x = 10'd313; //300 + 89
   parameter [9:0] enemy_y = 10'd212; //100 + 112
   parameter [7:0] enemy_width = 8'd14;
   parameter [7:0] enemy_height = 8'd16;
@@ -44,13 +44,13 @@ module roam(input logic Clk,
   logic is_overlap3;
 
   logic [1:0] trainer_dir;  //trainer direction: 0 = back (moving up), 1=front (moving down), 2=left (moving left), 3=right (moving right)
-  logic [1:0] trainer_dir_in = 2'b0;
-  logic [9:0] trainer_x = 10'd387;
-  logic [9:0] trainer_y = 10'd336;
-  logic [9:0] trainer_x_in = 10'd387;
-  logic [9:0] trainer_y_in = 10'd336;
-  logic [9:0] motion_x = 10'd0;
-  logic [9:0] motion_y = 10'd0;
+  logic [1:0] trainer_dir_in;
+  logic [9:0] trainer_x;
+  logic [9:0] trainer_y;
+  logic [9:0] trainer_x_in;
+  logic [9:0] trainer_y_in;
+  logic [9:0] motion_x;
+  logic [9:0] motion_y;
   
   logic battle;
   logic battle_in = 1'b0;
@@ -75,7 +75,7 @@ module roam(input logic Clk,
 
   always_ff @ (posedge Clk)begin
     if(Reset || is_start) begin
-      trainer_x <= 10'd387;  //300+87
+      trainer_x <= 10'd313;  //300+87
       trainer_y <= 10'd336; //100 + 236
       trainer_dir <= 2'b0; //show back of trainer
 		battle <= 1'b0;

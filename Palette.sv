@@ -415,6 +415,12 @@ module color_palette(        // Whether current pixel belongs to background (com
             end
           endcase
        end
+		 else if(is_roam)
+		 begin
+			Red = 8'h00;
+        Green = 8'h00;
+        Blue = 8'h00;
+		 end
        else  //draw white background
        begin
         Red = 8'hff;

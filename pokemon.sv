@@ -110,6 +110,8 @@ module pokemon( input               CLOCK_50,
    logic is_start;
    logic is_battle;
    logic is_roam;
+	logic is_win;
+	logic is_lose;
    logic is_sprite;
    logic [7:0] EXPORT_DATA;
    logic [2:0] cur_choice_id;
@@ -179,6 +181,8 @@ module pokemon( input               CLOCK_50,
                    .is_battle(is_battle),
                    .is_start(is_start),
                    .is_roam(is_roam),
+						 .is_win(is_win),
+						 .is_lose(is_lose),
                    .start_battle(start_battle),
 						 .new_room(new_room),
                    .cur_choice(cur_choice_id),
@@ -209,6 +213,8 @@ module pokemon( input               CLOCK_50,
                     .is_start(is_start),
                     .is_battle(is_battle),
                     .is_roam(is_roam),
+						  .is_win(is_win),
+						  .is_lose(is_lose),
                     .sb_palette(sb_palette),
                     .roam_palette(roam_palette),
                     .DrawX(DrawX),
