@@ -236,6 +236,7 @@ module battle(input logic Clk,
 
   logic [7:0] damage;
   logic is_player;
+  logic First, First_in;
 
   // Damage calculation
   calculation calc(.player_mon(player_data),
@@ -289,6 +290,7 @@ module battle(input logic Clk,
   		opponent_hp <= opponent_hp_in;
   		my_maxhp <= my_maxhp_in;
   		enemy_maxhp <= enemy_maxhp_in;
+		First <= First_in;
     end
   end
 
@@ -311,6 +313,7 @@ module battle(input logic Clk,
     move_index_in = move_index;
     player_move = player_data[move_index];
 	 enemy_move = enemy_data[enemy_move_index];
+	 First_in = First;
 //	  EXPORT_DATA = player_move_data[1];
 
     unique case(State)
@@ -334,7 +337,7 @@ module battle(input logic Clk,
       CPU_Move:
       begin
         if(CPU_done)
-          if(player_data[4] > enemy_data[4])
+          if(First == 1'b1)
             Next_state = Player;
           else
             Next_state = Enemy;
@@ -349,7 +352,7 @@ module battle(input logic Clk,
         begin
   		    if(opponent_hp[opp_mon] == 8'b0 && opp_mon == 2)
   				  Next_state = Win;
-  			  else if(opponent_hp[opp_mon] == 8'b0 || player_data[4] <= enemy_data[4])
+  			  else if(opponent_hp[opp_mon] == 8'b0 || First == 1'b0)
   				  Next_state = End_Turn;
           else
             Next_state = Enemy;
@@ -365,7 +368,7 @@ module battle(input logic Clk,
         begin
   			  if(player_hp[cur_mon] == 8'b0 && cur_mon == 2)
   				  Next_state = Lose;
-  			  else if(player_hp[cur_mon] == 8'b0 || player_data[4] > enemy_data[4])
+  			  else if(player_hp[cur_mon] == 8'b0 || First == 1'b1)
   				  Next_state = End_Turn;
           else
   				  Next_state = Player;
@@ -438,7 +441,13 @@ module battle(input logic Clk,
             if(move_index != 2'b01 && move_index != 2'b11)
               move_index_in = move_index + 2'b01;
           end
-        endcase
+		  endcase
+			 if(player_data[4] == enemy_data[4])
+				First_in = num % 2;
+			 else if(player_data[4] > enemy_data[4])
+				First_in = 1'b1;
+			 else
+				First_in = 1'b0;
       end
 
       CPU_Move:
