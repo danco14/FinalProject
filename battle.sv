@@ -42,7 +42,7 @@ module battle(input logic Clk,
   logic [1:0] cur_mon_in = 2'b0;
   logic [1:0] opp_mon_in = 2'b0;
   logic [1:0] move_index, enemy_move_index;
-  logic [1:0] move_index_in = 2'b0
+  logic [1:0] move_index_in = 2'b0;
 
   assign my_cur = cur_mon;
   assign enemy_cur_id = enemy_team[opp_mon];
@@ -255,17 +255,15 @@ module battle(input logic Clk,
          .CPU_turn(CPU_turn),
          .player(player_data),
          .player_hp(player_hp[cur_mon]),
-         .player_max_hp(my_maxhp[cur_mon])
+         .player_max_hp(my_maxhp[cur_mon]),
          .CPU(enemy_data),
-         .CPU_hp(enemy_hp[opp_mon]),
+         .CPU_hp(opponent_hp[opp_mon]),
          .CPU_max_hp(enemy_maxhp[opp_mon]),
          .move_data(enemy_move_data),
          .damage(damage),
          .move(enemy_move_index),
          .CPU_done(CPU_done)
          );
-
-  assign enemy_move = enemy_data[enemy_move_index];
 
   // Generate random numbers
   logic [7:0] num;
@@ -312,7 +310,8 @@ module battle(input logic Clk,
 	  enemy_maxhp_in = enemy_maxhp;
     move_index_in = move_index;
     player_move = player_data[move_index];
-	  EXPORT_DATA = player_move_data[1];
+	 enemy_move = enemy_data[enemy_move_index];
+//	  EXPORT_DATA = player_move_data[1];
 
     unique case(State)
       Wait:
