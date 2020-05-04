@@ -5,7 +5,9 @@ module roam(input logic Clk,
             input logic is_roam,
             input logic [9:0] DrawX, input logic [9:0] DrawY,
             input logic [7:0] keycode,
+				input logic is_start,
             output logic start_battle,
+				output logic new_room,
             output logic is_sprite,
             output logic [5:0] roam_palette,
 				    output logic [9:0] EXPORT_DATA
@@ -42,14 +44,17 @@ module roam(input logic Clk,
   logic is_overlap3;
 
   logic [1:0] trainer_dir;  //trainer direction: 0 = back (moving up), 1=front (moving down), 2=left (moving left), 3=right (moving right)
-  logic [1:0] trainer_dir_in;
-  logic [9:0] trainer_x;
-  logic [9:0] trainer_y;
-  logic [9:0] trainer_x_in;
-  logic [9:0] trainer_y_in;
-  logic [9:0] motion_x;
-  logic [9:0] motion_y;
-
+  logic [1:0] trainer_dir_in = 2'b0;
+  logic [9:0] trainer_x = 10'd387;
+  logic [9:0] trainer_y = 10'd336;
+  logic [9:0] trainer_x_in = 10'd387;
+  logic [9:0] trainer_y_in = 10'd336;
+  logic [9:0] motion_x = 10'd0;
+  logic [9:0] motion_y = 10'd0;
+  
+  logic battle;
+  logic battle_in = 1'b0;
+  
   overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y-1),.y1bot(trainer_y+trainer_height-2),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap0));
 
@@ -69,31 +74,36 @@ module roam(input logic Clk,
   end
 
   always_ff @ (posedge Clk)begin
-    if(Reset || !is_roam) begin
+    if(Reset || is_start) begin
       trainer_x <= 10'd387;  //300+87
       trainer_y <= 10'd336; //100 + 236
       trainer_dir <= 2'b0; //show back of trainer
+		battle <= 1'b0;
     end
     else begin
       trainer_x <= trainer_x_in;
       trainer_y <= trainer_y_in;
       trainer_dir <= trainer_dir_in;
+		battle <= battle_in;
     end
   end
   always_comb begin
     trainer_x_in = trainer_x;
     trainer_y_in = trainer_y;
     trainer_dir_in = trainer_dir;
+	 battle_in = battle;
     start_battle = 1'b0;
     motion_x = 10'd0;
     motion_y = 10'd0;
+	 new_room = 1'b0;
 
-    if(is_roam && keycode==ENTER) begin
+    if(is_roam && keycode==ENTER && !battle) begin
       if ((trainer_dir==2'd0 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && (trainer_y >= (enemy_y+enemy_height)) && (trainer_y <= (enemy_y+enemy_height+3))) ||
          (trainer_dir==2'd1 && (trainer_x >= (enemy_x-3)) && (trainer_x <= (enemy_x+3)) && ((trainer_y+trainer_height-1) <= (enemy_y-1)) && ((trainer_y+trainer_height-1) >= (enemy_y-1-3))) ||
          (trainer_dir==2'd2 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && (trainer_x >= (enemy_x+enemy_width)) && (trainer_x <= (enemy_x+enemy_width+3))) ||
          (trainer_dir==2'd3 && (trainer_y >= (enemy_y-3)) && (trainer_y <= (enemy_y+3)) && ((trainer_x+trainer_width-1) <= (enemy_x-1)) && ((trainer_x+trainer_width-1) >= (enemy_x-1-3)))) begin
            start_battle = 1'b1;
+			  battle_in = 1'b1;
       end
     end
 
@@ -102,11 +112,9 @@ module roam(input logic Clk,
           if(trainer_dir!=2'd0) begin
             trainer_dir_in = 2'b0;
           end
-          else begin
-            if( ! (trainer_y<=(map_y+25) || is_overlap0))
+			 else if( ! (trainer_y<=(map_y+25) || is_overlap0))
   					motion_y = (~y_step) + 1'b1;
-          end
-			end
+		end
       else if(keycode == S) begin
         if(trainer_dir!=2'd1) begin
           trainer_dir_in = 2'd1;
@@ -135,8 +143,18 @@ module roam(input logic Clk,
         end
       end
 
-      trainer_x_in = trainer_x + motion_x;
-      trainer_y_in = trainer_y + motion_y;
+		if(trainer_y <= (map_y + 25) && (trainer_x >= (enemy_x-3) && trainer_x <= (enemy_x+3)) && battle)
+		begin
+			new_room = 1'b1;
+			battle_in = 1'b0;
+			trainer_x_in = 10'd387;
+			trainer_y_in = 10'd336;
+		end
+		else
+		begin
+			trainer_x_in = trainer_x + motion_x;
+			trainer_y_in = trainer_y + motion_y;
+		end
     end
   end
 	elite_sprites esprites(.Clk(Clk),.DrawX(DrawX),.DrawY(DrawY),

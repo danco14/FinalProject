@@ -6,6 +6,7 @@ module game_state(input logic Clk, input logic Reset,
                   input logic [1:0] my_cur,
                   input logic [2:0] enemy_cur_id,
                   input logic start_battle,
+						input logic new_room,
                   output logic [5:0] sb_palette,
                   output logic is_sprite,
                   output logic is_chooser,
@@ -139,7 +140,7 @@ module game_state(input logic Clk, input logic Reset,
       begin
         if(end_battle)
         begin
-          if(result == 1'b1 && cur_battle != 3'b100)
+          if(result == 1'b1 && cur_battle <= 3'b011)
               Next_state = Roam;
           else
             Next_state = End;
@@ -239,14 +240,14 @@ module game_state(input logic Clk, input logic Reset,
 
       Roam:
       begin
+			if(new_room)
+				cur_battle_in = cur_battle + 3'b001;
         is_roam = 1'b1;
       end
 
       Battle:
 		  begin
         is_battle = 1'b1;
-		  if(result == 1'b1 && cur_battle != 3'b100)
-				cur_battle_in = cur_battle + 3'b001;
         if(is_enemyteam)begin
           poke_sprite_addr = psprite_enemy;
           is_sprite = 1'b1;
@@ -261,6 +262,7 @@ module game_state(input logic Clk, input logic Reset,
       begin
         num_chosen_in = 2'b0;
         done_select_in = 1'b0;
+		  cur_battle_in = 3'b0;
       end
     endcase
   end
