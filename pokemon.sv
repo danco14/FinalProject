@@ -249,7 +249,7 @@ module pokemon( input               CLOCK_50,
   logic [9:0] test1;
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (test1[3:0], HEX0);
-    HexDriver hex_inst_1 (test1[7:4], HEX1);
+    HexDriver hex_inst_0 (EXPORT_DATA[3:0], HEX0);
+    HexDriver hex_inst_1 (EXPORT_DATA[7:4], HEX1);
 
 endmodule

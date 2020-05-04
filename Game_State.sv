@@ -106,7 +106,7 @@ module game_state(input logic Clk, input logic Reset,
       num_chosen <= num_chosen_in;
       my_team <= my_team_in;
       done_select <= done_select_in;
-      cur_battle_in <= cur_battle;
+      cur_battle <= cur_battle_in;
     end
   end
 
@@ -126,11 +126,12 @@ module game_state(input logic Clk, input logic Reset,
     my_team_in = my_team;
     done_select_in = done_select;
     cur_battle_in = cur_battle;
+	 EXPORT_DATA = cur_battle;
 
     unique case(State)
       Start:
         if(keycode && done_select) // Press any key to continue after selecting team
-          Next_state = Room_1;
+          Next_state = Roam;
       Roam:
         if(start_battle)
           Next_state = Battle;
@@ -140,7 +141,6 @@ module game_state(input logic Clk, input logic Reset,
         begin
           if(result == 1'b1 && cur_battle != 3'b100)
               Next_state = Roam;
-              cur_battle_in = cur_battle + 3'b001;
           else
             Next_state = End;
         end
@@ -245,6 +245,8 @@ module game_state(input logic Clk, input logic Reset,
       Battle:
 		  begin
         is_battle = 1'b1;
+		  if(result == 1'b1 && cur_battle != 3'b100)
+				cur_battle_in = cur_battle + 3'b001;
         if(is_enemyteam)begin
           poke_sprite_addr = psprite_enemy;
           is_sprite = 1'b1;
