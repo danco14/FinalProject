@@ -13,13 +13,15 @@ module game_state(input logic Clk, input logic Reset,
                   output logic is_battle,
                   output logic is_start,
                   output logic is_roam,
+						output logic is_win,
+						output logic is_lose,
                   output logic [2:0] cur_choice,
                   output logic [2:0][2:0] my_team,
                   output logic [2:0] cur_battle,
                   output logic [7:0] EXPORT_DATA
 						      );
 
-  enum logic [20:0] {Start, Roam, Battle, End} State, Next_state;
+  enum logic [20:0] {Start, Roam, Battle, Win, Lose} State, Next_state;
 
 
   parameter [9:0] poke0_x = 10'd160;
@@ -122,6 +124,8 @@ module game_state(input logic Clk, input logic Reset,
     is_battle = 1'b0;
     is_start = 1'b0;
     is_roam = 1'b0;
+	 is_win = 1'b0;
+	 is_lose = 1'b0;
     cur_choice_in = cur_choice;
     num_chosen_in = num_chosen;
     my_team_in = my_team;
@@ -142,13 +146,18 @@ module game_state(input logic Clk, input logic Reset,
         begin
           if(result == 1'b1 && cur_battle <= 3'b011)
               Next_state = Roam;
-          else
-            Next_state = End;
+          else if(result == 1'b1)
+            Next_state = Win;
+			 else
+				Next_state = Lose;
         end
       end
-      End:
-        if(keycode == W)
+      Win:
+        if(keycode)
           Next_state = Start;
+	   Lose:
+		  if(keycode)
+		    Next_state = Start;
     endcase
 
     case(State)
@@ -258,11 +267,20 @@ module game_state(input logic Clk, input logic Reset,
         end
 		  end
 
-      End:
+      Win:
       begin
         num_chosen_in = 2'b0;
         done_select_in = 1'b0;
 		  cur_battle_in = 3'b0;
+		  is_win = 1'b1;
+      end
+		
+		Lose:
+      begin
+        num_chosen_in = 2'b0;
+        done_select_in = 1'b0;
+		  cur_battle_in = 3'b0;
+		  is_lose = 1'b1;
       end
     endcase
   end

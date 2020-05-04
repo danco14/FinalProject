@@ -1,9 +1,11 @@
 module color_palette(        // Whether current pixel belongs to background (computed in game_state.sv)
                      input is_chooser,
                      input is_start,
-							       input is_sprite,
+							input is_sprite,
                      input is_battle,
                      input is_roam,
+							input is_win,
+							input is_lose,
                      input [9:0] DrawX,
                      input [9:0] DrawY,
                      input [2:0] cur_choice_id,
@@ -34,6 +36,37 @@ module color_palette(        // Whether current pixel belongs to background (com
    logic [9:0] ydiff_start;
    poke_names startscreen_names(.DrawX(DrawX), .DrawY(DrawY), .start_x(250), .start_y(275),
                     .is_pname(is_pname), .poke_id(cur_choice_id), .bit_num(bit_num), .pname_hex(pname_hex), .y_diff(ydiff_start));
+						  
+	logic is_wintext;
+	logic [2:0] win_bit_num;
+	logic [7:0] win_hex;
+	logic [9:0] ydiff_win;
+	
+	win_text win_screen(.DrawX(DrawX),
+							  .DrawY(DrawY), 
+							  .start_x(220), 
+							  .start_y(240), 
+							  .is_wintext(is_wintext), 
+							  .bit_num(win_bit_num), 
+							  .win_hex(win_hex), 
+							  .y_diff(ydiff_win)
+							  );
+	
+	logic is_losetext;
+	logic [2:0] lose_bit_num;
+	logic [7:0] lose_hex;
+	logic [9:0] ydiff_lose;
+	
+	lose_text lose_screen(.DrawX(DrawX),
+							  .DrawY(DrawY), 
+							  .start_x(284), 
+							  .start_y(240), 
+							  .is_losetext(is_losetext), 
+							  .bit_num(lose_bit_num), 
+							  .lose_hex(lose_hex), 
+							  .y_diff(ydiff_lose)
+							  );
+	
    font_rom f_rom(.addr(font_addr),.data(font_data));
 
    always_comb
@@ -66,6 +99,38 @@ module color_palette(        // Whether current pixel belongs to background (com
           Blue = 8'hff;
   			end
        end
+		 else if(is_win && is_wintext == 1'b1)
+		 begin
+			font_addr = (ydiff_win) + 16*win_hex;
+			if(font_data[7-win_bit_num] == 1'b1)
+			begin
+				Red = 8'h00;
+           Green = 8'h00;
+           Blue = 8'h00;
+			end
+			else
+			begin
+				Red = 8'hff;
+				 Green = 8'hff;
+				 Blue = 8'hff;
+			end
+		 end
+		 else if(is_lose && is_losetext == 1'b1)
+		 begin
+			font_addr = (ydiff_lose) + 16*lose_hex;
+			if(font_data[7-lose_bit_num] == 1'b1)
+			begin
+				Red = 8'h00;
+           Green = 8'h00;
+           Blue = 8'h00;
+			end
+			else
+			begin
+				Red = 8'hff;
+				 Green = 8'hff;
+				 Blue = 8'hff;
+			end
+		 end
        else if(is_battleinfo_font && is_battle)begin
          font_addr = (y_diff_batinfo) + 16*info_hex;
          if(font_data[7-bit_num_batinfo]==1'b1) begin

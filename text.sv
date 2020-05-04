@@ -236,3 +236,56 @@ module hp_text2(input logic [9:0] DrawX, DrawY,
    end
  end
 endmodule
+
+module win_text(input logic [9:0] DrawX, DrawY,
+                 input logic [9:0] start_x, input logic [9:0] start_y,
+                 output logic [2:0] bit_num,
+                 output logic [7:0] win_hex,
+                 output logic is_wintext,
+                 output logic [9:0] y_diff);
+ // 'C' 'O' 'N' 'G' 'R' 'A' 'T' 'U' 'L' 'A' 'T' 'I' 'O' 'N' 'S' ',' ' ' 'Y' 'O' 'U' ' ' 'W' 'I' 'N' '!!' = 25 chars
+ parameter width = 8;
+ parameter height = 16;
+ parameter length = 25;
+ assign y_diff = DrawY - start_y;
+ parameter [0:24][7:0] win_hexcodes = '{8'h43, 8'h4f, 8'h4e, 8'h47, 8'h52, 8'h41, 8'h54, 8'h55, 8'h4c, 8'h41, 8'h54, 8'h49, 8'h4f, 8'h4e, 8'h53, 8'h2c, 8'h20, 8'h59, 8'h4f, 8'h55, 8'h20, 8'h57, 8'h49, 8'h4e, 8'h13};
+ always_comb begin
+ if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+   is_wintext=1'b1;
+   bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+   win_hex= win_hexcodes[((DrawX-start_x)/width)];
+ end
+ else begin
+   bit_num = 3'b0;
+   win_hex = 8'h20;
+   is_wintext = 1'b0;
+ end
+ end
+ endmodule
+ 
+ module lose_text(input logic [9:0] DrawX, DrawY,
+                 input logic [9:0] start_x, input logic [9:0] start_y,
+                 output logic [2:0] bit_num,
+                 output logic [7:0] lose_hex,
+                 output logic is_losetext,
+                 output logic [9:0] y_diff);
+ // 'G' 'A' 'M' 'E' ' ' 'O' 'V' 'E' 'R' = 9 chars
+ parameter width = 8;
+ parameter height = 16;
+ parameter length = 9;
+ assign y_diff = DrawY - start_y;
+ parameter [0:8][7:0] lose_hexcodes = '{8'h47, 8'h41, 8'h4d, 8'h45, 8'h20, 8'h4f, 8'h56, 8'h45, 8'h52};
+ always_comb begin
+ if(DrawY>=start_y && DrawY < (start_y+height) && DrawX>=start_x && DrawX<start_x+width*length)begin
+   is_losetext=1'b1;
+   bit_num = DrawX - ((((DrawX-start_x)/width)*width)+start_x);
+   lose_hex= lose_hexcodes[((DrawX-start_x)/width)];
+ end
+ else begin
+   bit_num = 3'b0;
+   lose_hex = 8'h20;
+   is_losetext = 1'b0;
+ end
+ end
+ endmodule
+ 
