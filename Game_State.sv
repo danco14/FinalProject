@@ -14,7 +14,7 @@ module game_state(input logic Clk, input logic Reset,
                   output logic is_roam,
                   output logic [2:0] cur_choice,
                   output logic [2:0][2:0] my_team,
-                  // output logic [1:0] direction,
+                  output logic [2:0] cur_battle,
                   output logic [7:0] EXPORT_DATA
 						      );
 
@@ -73,16 +73,21 @@ module game_state(input logic Clk, input logic Reset,
 
   logic is_myteam, is_enemyteam;
 
-  pokemonRAM pokeSprites(.Clk(Clk),.palette_idx(sb_palette),.read_address(poke_sprite_addr));
+  logic [2:0] cur_battle_in = 3'b0;
 
- my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-                .poke_id(my_team[my_cur]),
-                .sprite_addr(psprite_myteam),
-                .is_myteam(is_myteam));
- enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
-             .poke_id(enemy_cur_id),
-             .sprite_addr(psprite_enemy),
-             .is_enemyteam(is_enemyteam));
+  pokemonRAM pokeSprites(.Clk(Clk), .palette_idx(sb_palette), .read_address(poke_sprite_addr));
+
+  my_sprites me_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+                        .poke_id(my_team[my_cur]),
+                        .sprite_addr(psprite_myteam),
+                        .is_myteam(is_myteam)
+                        );
+
+  enemy_sprites ene_pokemon(.DrawX(DrawX), .DrawY(DrawY),
+                            .poke_id(enemy_cur_id),
+                            .sprite_addr(psprite_enemy),
+                            .is_enemyteam(is_enemyteam)
+                            );
 
   always_ff @ (posedge Clk)
   begin
@@ -92,6 +97,7 @@ module game_state(input logic Clk, input logic Reset,
       num_chosen <= 2'b0;
       done_select <= 1'b0;
       cur_choice <= 3'b0;
+      cur_battle <= 3'b0;
     end
     else
     begin
@@ -100,6 +106,7 @@ module game_state(input logic Clk, input logic Reset,
       num_chosen <= num_chosen_in;
       my_team <= my_team_in;
       done_select <= done_select_in;
+      cur_battle_in <= cur_battle;
     end
   end
 
@@ -118,11 +125,12 @@ module game_state(input logic Clk, input logic Reset,
     num_chosen_in = num_chosen;
     my_team_in = my_team;
     done_select_in = done_select;
+    cur_battle_in = cur_battle;
 
     unique case(State)
       Start:
         if(keycode && done_select) // Press any key to continue after selecting team
-          Next_state = Roam;
+          Next_state = Room_1;
       Roam:
         if(start_battle)
           Next_state = Battle;
@@ -130,8 +138,9 @@ module game_state(input logic Clk, input logic Reset,
       begin
         if(end_battle)
         begin
-          if(result == 1'b1)
-            Next_state = Roam;
+          if(result == 1'b1 && cur_battle != 3'b100)
+              Next_state = Roam;
+              cur_battle_in = cur_battle + 3'b001;
           else
             Next_state = End;
         end
@@ -229,27 +238,23 @@ module game_state(input logic Clk, input logic Reset,
       end
 
       Roam:
+      begin
         is_roam = 1'b1;
-        // if(keycode == W)
-        //   direction = 2'b00;
-        // else if(keycode == A)
-        //   direction == 2'b01;
-        // else if(keycode == S)
-        //   direction == 2'b10;
-        // else if(keycode == D)
-        //   direction == 2'b11;
+      end
+
       Battle:
-		begin
-       is_battle = 1'b1;
-       if(is_enemyteam)begin
-         poke_sprite_addr = psprite_enemy;
-         is_sprite = 1'b1;
-       end
-       else if(is_myteam)begin
-         poke_sprite_addr = psprite_myteam;
-         is_sprite = 1'b1;
-       end
-		end
+		  begin
+        is_battle = 1'b1;
+        if(is_enemyteam)begin
+          poke_sprite_addr = psprite_enemy;
+          is_sprite = 1'b1;
+        end
+        else if(is_myteam)begin
+          poke_sprite_addr = psprite_myteam;
+          is_sprite = 1'b1;
+        end
+		  end
+
       End:
       begin
         num_chosen_in = 2'b0;

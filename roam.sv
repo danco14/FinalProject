@@ -10,6 +10,7 @@ module roam(input logic Clk,
             output logic [5:0] roam_palette,
 				    output logic [9:0] EXPORT_DATA
             );
+
   parameter [9:0] map_x = 10'd300;
   parameter [9:0] map_y = 10'd100;
   parameter [7:0] map_width = 8'd192;
@@ -51,10 +52,13 @@ module roam(input logic Clk,
 
   overlap overlap0(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y-1),.y1bot(trainer_y+trainer_height-2),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap0));
+
   overlap overlap1(.x1left(trainer_x),.x1right(trainer_x+trainer_width-1),.y1top(trainer_y+1),.y1bot(trainer_y+trainer_height),
                   .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap1));
+
   overlap overlap2(.x1left(trainer_x-1),.x1right(trainer_x+trainer_width-2),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap2));
+
   overlap overlap3(.x1left(trainer_x+1),.x1right(trainer_x+trainer_width),.y1top(trainer_y),.y1bot(trainer_y+trainer_height-1),
                    .x2left(enemy_x),.x2right(enemy_x+enemy_width-1),.y2top(enemy_y),.y2bot(enemy_y+enemy_height-1), .is_overlap(is_overlap3));
 
