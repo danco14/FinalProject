@@ -154,7 +154,7 @@ module stats(input logic [2:0] pokemon_addr1,
     '{fighting,
     special,
     8'd80,
-    8'd110,
+    8'd100,
     8'd20},
     // Flamethrower
     '{fire,
