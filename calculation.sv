@@ -29,8 +29,6 @@ module calculation(input logic [11:0][7:0] player_mon,
     '{4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4,   4'd4}
   };
 
-  int modifier;
-
   always_comb
   begin
     if(is_player)
